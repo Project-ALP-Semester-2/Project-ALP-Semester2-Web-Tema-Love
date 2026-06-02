@@ -10,7 +10,7 @@ public class Cerita {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id_cerita;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String isiCerita;
@@ -32,8 +32,8 @@ public class Cerita {
 
     
     // GETTER DAN SETTER
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() { return id_cerita; }
+    public void setId(Long id_cerita) { this.id_cerita = id_cerita; }
 
     public String getIsiCerita() { return isiCerita; }
     public void setIsiCerita(String isiCerita) { this.isiCerita = isiCerita; }

@@ -9,7 +9,7 @@ public class Komentar {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id_komentar;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String isiKomentar;
@@ -29,8 +29,8 @@ public class Komentar {
 
 
     // GETTER DAN SETTER
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() { return id_komentar; }
+    public void setId(Long id_komentar) { this.id_komentar = id_komentar; }
 
     public String getIsiKomentar() { return isiKomentar; }
     public void setIsiKomentar(String isiKomentar) { this.isiKomentar = isiKomentar; }
