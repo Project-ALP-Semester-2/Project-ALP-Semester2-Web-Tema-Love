@@ -15,9 +15,6 @@ public class Cerita {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String isiCerita;
 
-    private int countSehat = 0;
-    private int countTidakSehat = 0;
-
     private String namaAnonim;
     private LocalDateTime tanggalDibuat;
 
@@ -30,6 +27,10 @@ public class Cerita {
     @OneToMany(mappedBy = "cerita", cascade = CascadeType.ALL)
     private List<Komentar> daftarKomentar;
 
+    // HUBUNGAN: Satu cerita bisa punya banyak rating
+    @OneToMany(mappedBy = "cerita", cascade = CascadeType.ALL)
+    private List<Rating> daftarRating;
+
     
     // GETTER DAN SETTER
     public Long getId() { return id_cerita; }
@@ -38,11 +39,8 @@ public class Cerita {
     public String getIsiCerita() { return isiCerita; }
     public void setIsiCerita(String isiCerita) { this.isiCerita = isiCerita; }
 
-    public int getCountSehat() { return countSehat; }
-    public void setCountSehat(int countSehat) { this.countSehat = countSehat; }
-
-    public int getCountTidakSehat() { return countTidakSehat; }
-    public void setCountTidakSehat(int countTidakSehat) { this.countTidakSehat = countTidakSehat; }
+    public List<Rating> getDaftarRating() { return daftarRating; }
+    public void setDaftarRating(List<Rating> daftarRating) { this.daftarRating = daftarRating; }
 
     public String getNamaAnonim() { return namaAnonim; }
     public void setNamaAnonim(String namaAnonim) { this.namaAnonim = namaAnonim; }

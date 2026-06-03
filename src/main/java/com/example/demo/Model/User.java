@@ -30,6 +30,10 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Komentar> daftarKomentar;
 
+    // HUBUNGAN: Satu user bisa punya banyak rating
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Rating> daftarRating;
+
     
     // GETTER DAN SETTER
     public Long getId() { return id_user; }
@@ -52,4 +56,7 @@ public class User {
 
     public List<Komentar> getDaftarKomentar() { return daftarKomentar; }
     public void setDaftarKomentar(List<Komentar> daftarKomentar) { this.daftarKomentar = daftarKomentar; }
+
+    public List<Rating> getDaftarRating() { return daftarRating; }
+    public void setDaftarRating(List<Rating> daftarRating) { this.daftarRating = daftarRating; }
 }
