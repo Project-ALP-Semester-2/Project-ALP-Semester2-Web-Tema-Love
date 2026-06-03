@@ -1,0 +1,283 @@
+/* ── EXPLORE PAGE CSS ──
+   Extends homepage.css & index.css
+   No duplicate rules — only explore-specific styles
+*/
+
+/* ─── Search Bar ─── */
+.explore-search-wrap {
+  background-color: var(--tertiary);
+  border: 1.5px solid var(--neutral-pale);
+  transition: border-color 0.18s, background-color 0.18s, box-shadow 0.18s;
+}
+.explore-search-wrap:focus-within {
+  border-color: var(--primary);
+  background-color: var(--white);
+  box-shadow: 0 0 0 3px rgba(133, 193, 182, 0.15);
+}
+.explore-search-wrap input {
+  font-family: var(--font-body);
+}
+.explore-search-wrap input::placeholder {
+  color: var(--neutral-light);
+}
+
+/* ─── Section Title ─── */
+.explore-section-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--neutral);
+  letter-spacing: -0.1px;
+}
+
+/* ─── Mood Chips ─── */
+.mood-chip {
+  padding: 6px 16px;
+  border-radius: 50px;
+  border: 1.5px solid var(--neutral-pale);
+  background-color: var(--white);
+  color: var(--neutral);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+.mood-chip:hover {
+  border-color: var(--primary);
+  background-color: rgba(133, 193, 182, 0.08);
+  color: var(--primary-dark);
+}
+.mood-chip.active {
+  background-color: var(--primary-dark);
+  color: var(--white);
+  border-color: var(--primary-dark);
+  font-weight: 600;
+}
+
+/* ─── Category Grid ─── */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+@media (min-width: 480px) {
+  .categories-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1.5px solid var(--neutral-pale);
+  background-color: var(--white);
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: left;
+  font-family: var(--font-body);
+  position: relative;
+  overflow: hidden;
+}
+
+.category-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+  border-radius: inherit;
+}
+
+.category-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(70, 74, 77, 0.1);
+}
+
+.category-card:hover::before { opacity: 1; }
+
+.category-card.active-cat {
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(70, 74, 77, 0.12);
+}
+
+.cat-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.cat-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--neutral);
+  line-height: 1.2;
+}
+
+.cat-count {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--neutral-light);
+}
+
+/* Per-category tints */
+.cat-heartbreak { background: linear-gradient(135deg, #fff 60%, rgba(217, 163, 181, 0.2)); }
+.cat-heartbreak.active-cat, .cat-heartbreak:hover { background: linear-gradient(135deg, rgba(217, 163, 181, 0.15), rgba(176, 112, 128, 0.12)); border-color: rgba(176, 112, 128, 0.3); }
+.cat-heartbreak .cat-label { color: var(--secondary-dark); }
+
+.cat-firstlove { background: linear-gradient(135deg, #fff 60%, rgba(255, 200, 220, 0.2)); }
+.cat-firstlove:hover, .cat-firstlove.active-cat { background: linear-gradient(135deg, rgba(255, 200, 220, 0.15), rgba(255, 160, 190, 0.12)); border-color: rgba(255, 160, 190, 0.3); }
+
+.cat-toxic { background: linear-gradient(135deg, #fff 60%, rgba(255, 120, 100, 0.12)); }
+.cat-toxic:hover, .cat-toxic.active-cat { background: linear-gradient(135deg, rgba(255, 120, 100, 0.1), rgba(200, 80, 60, 0.08)); border-color: rgba(200, 80, 60, 0.25); }
+.cat-toxic .cat-label { color: #a63020; }
+
+.cat-healing { background: linear-gradient(135deg, #fff 60%, rgba(133, 193, 182, 0.2)); }
+.cat-healing:hover, .cat-healing.active-cat { background: linear-gradient(135deg, rgba(133, 193, 182, 0.15), rgba(45, 106, 95, 0.1)); border-color: rgba(133, 193, 182, 0.4); }
+.cat-healing .cat-label { color: var(--primary-dark); }
+
+.cat-platonic { background: linear-gradient(135deg, #fff 60%, rgba(100, 160, 240, 0.12)); }
+.cat-platonic:hover, .cat-platonic.active-cat { background: linear-gradient(135deg, rgba(100, 160, 240, 0.1), rgba(60, 120, 200, 0.08)); border-color: rgba(100, 160, 240, 0.3); }
+
+.cat-selflove { background: linear-gradient(135deg, #fff 60%, rgba(255, 210, 120, 0.15)); }
+.cat-selflove:hover, .cat-selflove.active-cat { background: linear-gradient(135deg, rgba(255, 210, 120, 0.12), rgba(220, 170, 60, 0.1)); border-color: rgba(220, 170, 60, 0.3); }
+
+.cat-family { background: linear-gradient(135deg, #fff 60%, rgba(133, 193, 182, 0.15)); }
+.cat-family:hover, .cat-family.active-cat { background: linear-gradient(135deg, rgba(133, 193, 182, 0.12), rgba(45, 106, 95, 0.08)); border-color: rgba(45, 106, 95, 0.25); }
+
+.cat-anxiety { background: linear-gradient(135deg, #fff 60%, rgba(180, 150, 220, 0.15)); }
+.cat-anxiety:hover, .cat-anxiety.active-cat { background: linear-gradient(135deg, rgba(180, 150, 220, 0.12), rgba(130, 100, 180, 0.1)); border-color: rgba(130, 100, 180, 0.25); }
+
+.cat-friendship { background: linear-gradient(135deg, #fff 60%, rgba(255, 180, 100, 0.15)); }
+.cat-friendship:hover, .cat-friendship.active-cat { background: linear-gradient(135deg, rgba(255, 180, 100, 0.12), rgba(210, 130, 50, 0.1)); border-color: rgba(210, 130, 50, 0.25); }
+
+.cat-nostalgia { background: linear-gradient(135deg, #fff 60%, rgba(200, 180, 140, 0.15)); }
+.cat-nostalgia:hover, .cat-nostalgia.active-cat { background: linear-gradient(135deg, rgba(200, 180, 140, 0.12), rgba(150, 120, 80, 0.1)); border-color: rgba(150, 120, 80, 0.25); }
+
+/* ─── Trending Rank Badge ─── */
+.trending-rank-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #c2185b;
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--white);
+  font-family: var(--font-body);
+}
+.trending-rank-badge.rank-2 { background-color: var(--primary-dark); }
+.trending-rank-badge.rank-3 { background-color: #8a7060; }
+.trending-rank-badge.rank-4 { background-color: var(--neutral-light); }
+.trending-rank-badge.rank-5 { background-color: var(--neutral-light); }
+
+/* ─── Trending Spark ─── */
+.trending-spark {
+  font-size: 12px;
+  color: #c2185b;
+  font-weight: 600;
+  background-color: rgba(194, 24, 91, 0.06);
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-left: auto;
+}
+
+/* ─── Vote Bar ─── */
+.vote-bar-wrap {
+  height: 6px;
+  background-color: rgba(176, 112, 128, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.vote-bar-healthy {
+  height: 100%;
+  background-color: var(--primary-dark);
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+/* ─── Trending Tags ─── */
+.trending-tag-btn {
+  padding: 6px 14px;
+  border-radius: 50px;
+  border: 1.5px solid var(--neutral-pale);
+  background-color: var(--white);
+  color: var(--neutral);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.18s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.trending-tag-btn:hover {
+  border-color: var(--primary);
+  background-color: rgba(133, 193, 182, 0.08);
+  color: var(--primary-dark);
+}
+.trending-tag-btn.active {
+  background-color: rgba(133, 193, 182, 0.15);
+  border-color: var(--primary);
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+.tag-count {
+  font-size: 11px;
+  color: var(--neutral-light);
+  font-weight: 400;
+}
+
+/* ─── Category Results Back Button ─── */
+#btnBackCat {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── Search Highlight ─── */
+mark.search-highlight {
+  background-color: rgba(133, 193, 182, 0.35);
+  color: var(--primary-dark);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+/* ─── Entrance Animations ─── */
+.category-card {
+  animation: fadeInDown 0.3s ease both;
+}
+.categories-grid .category-card:nth-child(1) { animation-delay: 0.02s; }
+.categories-grid .category-card:nth-child(2) { animation-delay: 0.04s; }
+.categories-grid .category-card:nth-child(3) { animation-delay: 0.06s; }
+.categories-grid .category-card:nth-child(4) { animation-delay: 0.08s; }
+.categories-grid .category-card:nth-child(5) { animation-delay: 0.10s; }
+.categories-grid .category-card:nth-child(6) { animation-delay: 0.12s; }
+.categories-grid .category-card:nth-child(7) { animation-delay: 0.14s; }
+.categories-grid .category-card:nth-child(8) { animation-delay: 0.16s; }
+.categories-grid .category-card:nth-child(9) { animation-delay: 0.18s; }
+.categories-grid .category-card:nth-child(10) { animation-delay: 0.20s; }
+
+#trendingFeed .post-card {
+  animation: fadeInDown 0.35s ease both;
+}
+#trendingFeed .post-card:nth-child(1) { animation-delay: 0.1s; }
+#trendingFeed .post-card:nth-child(2) { animation-delay: 0.18s; }
+#trendingFeed .post-card:nth-child(3) { animation-delay: 0.26s; }
+#trendingFeed .post-card:nth-child(4) { animation-delay: 0.34s; }
+#trendingFeed .post-card:nth-child(5) { animation-delay: 0.42s; }
