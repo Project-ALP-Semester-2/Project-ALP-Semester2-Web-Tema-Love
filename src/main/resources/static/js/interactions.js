@@ -12,9 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* 2. MODAL & THREAD VARIABLES */
     const imageModalEl = document.getElementById('imageModal');
-    if (!imageModalEl) return; // Mencegah error di halaman login
 
-    const imageModal = new bootstrap.Modal(imageModalEl);
+    const imageModal = imageModalEl ? new bootstrap.Modal(imageModalEl) : null;
     const fullSizeImage = document.getElementById('fullSizeImage');
 
     const threadView         = document.getElementById('threadView');
@@ -54,10 +53,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* 3. FUNGSI THREAD */
     function openThread(postCard) {
+        if (!threadView) return;
+
         activePostCard = postCard;
         threadImgBase64 = '';
-        threadImgPreviewWrap.classList.add('d-none');
-        threadImgPreview.src = ''; threadImgInput.value = ''; threadCommentInput.value = '';
+        if(threadImgPreviewWrap) threadImgPreviewWrap.classList.add('d-none');
+        if(threadImgPreview) threadImgPreview.src = ''; 
+        if(threadImgInput) threadImgInput.value = ''; 
+        if(threadCommentInput) threadCommentInput.value = '';
 
         const clone = postCard.cloneNode(true);
         clone.classList.remove('hover-effect', 'post-card');
@@ -154,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(() => threadCommentInput.focus(), 300);
     }
 
-    btnBackThread.addEventListener('click', () => {
+    btnBackThread?.addEventListener('click', () => {
         threadView.classList.add('d-none');
         document.body.style.overflow = '';
         activePostCard = null;
@@ -209,32 +212,91 @@ document.addEventListener('DOMContentLoaded', function () {
         threadImgPreview.src = ''; threadImgInput.value = ''; threadCommentInput.focus();
     }
 
-    btnSendThread.addEventListener('click', sendThreadComment);
-    threadCommentInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendThreadComment(); } });
-    btnThreadImg.addEventListener('click', () => threadImgInput.click());
-    
-    threadImgInput.addEventListener('change', function () {
+    btnSendThread?.addEventListener('click', sendThreadComment);
+    threadCommentInput?.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendThreadComment(); } });
+    btnThreadImg?.addEventListener('click', () => threadImgInput?.click());
+
+    threadImgInput?.addEventListener('change', function () {
         const file = this.files[0]; if (!file) return;
         const reader = new FileReader();
         reader.onload = e => { threadImgBase64 = e.target.result; threadImgPreview.src = threadImgBase64; threadImgPreviewWrap.classList.remove('d-none'); };
         reader.readAsDataURL(file);
     });
-    
-    btnRemoveThreadImg.addEventListener('click', () => {
+
+    btnRemoveThreadImg?.addEventListener('click', () => {
         threadImgBase64 = ''; threadImgPreview.src = ''; threadImgInput.value = ''; threadImgPreviewWrap.classList.add('d-none');
-    });
+});
 
     /* 4. GLOBAL DELEGATION (KLIK DI MANA SAJA UNTUK INTERAKSI) */
     document.addEventListener('click', function (e) {
-        if (e.target.tagName === 'IMG' && e.target.classList.contains('img-fluid') && e.target.closest('.post-card')) {
-            fullSizeImage.src = e.target.src; imageModal.show(); return;
+        /* Follow Button */
+        const followBtn = e.target.closest('.btn-follow');
+        if (followBtn) {
+            const isFollowing = followBtn.classList.toggle('following');
+            followBtn.innerText = isFollowing ? 'Following' : 'Follow'; return;
         }
-        /* Open Thread */
+
+        /* Bookmarks (Simpan Otomatis & Catatan Database) */
+        const bookmarkBtn = e.target.closest('.interaction-btn');
+        if (bookmarkBtn) {
+            const icon = bookmarkBtn.querySelector('i.bi-bookmark, i.bi-bookmark-fill');
+            if (icon) {
+                const postCard = bookmarkBtn.closest('.post-card');
+                if (!postCard) return;
+
+                // Beri ID sementara jika post belum punya ID (karena di homepage di-hardcode)
+                if (!postCard.hasAttribute('data-id')) {
+                    postCard.setAttribute('data-id', 'post_' + Math.random().toString(36).substr(2, 9));
+                }
+                const postId = postCard.getAttribute('data-id');
+
+                if (icon.classList.contains('bi-bookmark')) {
+                    // 1. Ubah icon UI menjadi tersimpan (hijau tosca)
+                    icon.classList.replace('bi-bookmark', 'bi-bookmark-fill');
+                    icon.style.color = 'var(--primary-dark)';
+                    
+                    // [PROTOTYPE FRONT-END] Simpan HTML-nya ke LocalStorage 
+                    let savedBookmarks = JSON.parse(localStorage.getItem('unsaid_bookmarks')) || [];
+                    if (!savedBookmarks.some(b => b.id === postId)) {
+                        savedBookmarks.push({ id: postId, html: postCard.outerHTML });
+                        localStorage.setItem('unsaid_bookmarks', JSON.stringify(savedBookmarks));
+                    }
+                } else {
+                    // 2. Ubah icon UI menjadi tidak tersimpan (dihapus)
+                    icon.classList.replace('bi-bookmark-fill', 'bi-bookmark');
+                    icon.style.color = '';
+                    
+                    // [PROTOTYPE FRONT-END] Hapus dari LocalStorage
+                    let savedBookmarks = JSON.parse(localStorage.getItem('unsaid_bookmarks')) || [];
+                    savedBookmarks = savedBookmarks.filter(b => b.id !== postId);
+                    localStorage.setItem('unsaid_bookmarks', JSON.stringify(savedBookmarks));
+                    
+                    // Jika user sedang di halaman bookmarks.html, langsung hilangkan kartunya dari layar
+                    if (window.location.pathname.includes('bookmarks.html')) {
+                        postCard.remove();
+                        if (savedBookmarks.length === 0) {
+                            document.getElementById('emptyBookmarks')?.classList.remove('d-none');
+                        }
+                    }
+                }
+                return;
+            }
+        }
+
+        /* Zoom (Dilindungi if imageModal) */
+        if (e.target.tagName === 'IMG' && e.target.classList.contains('img-fluid') && e.target.closest('.post-card')) {
+            if (imageModal && fullSizeImage) { fullSizeImage.src = e.target.src; imageModal.show(); }
+             return;
+        }
+        
+        /* Open Thread via Icon (Dilindungi if threadView) */
         const chatBtn = e.target.closest('.interaction-btn.hover-primary');
         if (chatBtn && chatBtn.querySelector('i.bi-chat')) {
             const postCard = chatBtn.closest('.post-card');
-            if (postCard) { openThread(postCard); return; }
+            if (postCard && threadView) { openThread(postCard); }
+                return;
         }
+        
         /* Like */
         const likeBtn = e.target.closest('.hover-heart');
         if (likeBtn && likeBtn.closest('.post-card')) {
@@ -245,6 +307,7 @@ document.addEventListener('DOMContentLoaded', function () {
             else { icon.classList.replace('bi-heart-fill', 'bi-heart'); icon.style.color = ''; count--; }
             span.innerText = count >= 1000 ? (count / 1000).toFixed(1) + 'k' : count; return;
         }
+        
         /* Vote */
         const voteBtn = e.target.closest('.btn-vote');
         if (voteBtn && voteBtn.closest('.post-card')) {
@@ -261,20 +324,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 res.querySelector('.vote-pct-healthy').innerText = hPct + '% Healthy';
                 res.querySelector('.vote-pct-toxic').innerText = (100 - hPct) + '% Toxic';
                 res.querySelector('.vote-total').innerText = total + ' votes';
-                setTimeout(() => { res.querySelector('.vote-bar-healthy').style.width = hPct + '%'; }, 50);
+                    setTimeout(() => { res.querySelector('.vote-bar-healthy').style.width = hPct + '%'; }, 50);
             } return;
         }
+        
         /* Open Thread when clicking on the post card */
         const isInteractive = e.target.closest('.btn-vote, .hover-heart, .hover-primary, button, .interaction-btn, .mood-chip, .category-card, .trending-tag-btn');
         if (!isInteractive) {
             const postCard = e.target.closest('.post-card');
-            if (postCard) { openThread(postCard); return; }
-        }
-        /* Follow Button */
-        const followBtn = e.target.closest('.btn-follow');
-        if (followBtn) {
-            const isFollowing = followBtn.classList.toggle('following');
-            followBtn.innerText = isFollowing ? 'Following' : 'Follow'; return;
+            if (postCard && threadView) { openThread(postCard); return; }
         }
     });
 });

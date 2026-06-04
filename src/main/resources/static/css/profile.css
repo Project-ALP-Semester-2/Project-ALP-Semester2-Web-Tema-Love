@@ -1,0 +1,21 @@
+.profile-banner {
+    border-bottom: 1px solid var(--neutral-pale);
+}
+
+.btn-outline-custom {
+    background-color: transparent;
+    color: var(--neutral);
+    border: 1.5px solid var(--neutral-pale);
+    transition: all 0.18s;
+}
+
+.btn-outline-custom:hover {
+    border-color: var(--primary-mid);
+    background-color: rgba(133, 193, 182, 0.08);
+    color: var(--primary-dark);
+}
+
+.profile-bio-text {
+    font-weight: 400;
+    letter-spacing: -0.05px;
+}

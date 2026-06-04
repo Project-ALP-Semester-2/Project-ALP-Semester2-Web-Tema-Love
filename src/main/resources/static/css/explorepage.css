@@ -204,3 +204,39 @@ mark.search-highlight {
 #trendingFeed .post-card:nth-child(3) { animation-delay: 0.24s; }
 #trendingFeed .post-card:nth-child(4) { animation-delay: 0.32s; }
 #trendingFeed .post-card:nth-child(5) { animation-delay: 0.40s; }
+
+/* Trending Tag Button */
+.trending-tag-btn {
+  padding: 6px 14px;
+  border-radius: 50px;
+  border: 1.5px solid var(--neutral-pale);
+  background-color: var(--white);
+  color: var(--neutral);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.18s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.trending-tag-btn:hover {
+  border-color: var(--primary);
+  background-color: rgba(133, 193, 182, 0.08);
+  color: var(--primary-dark);
+}
+
+.trending-tag-btn.active {
+  background-color: rgba(133, 193, 182, 0.15);
+  border-color: var(--primary);
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+.tag-count { 
+  font-size: 11px; 
+  color: var(--neutral-light); 
+  font-weight: 400; 
+}

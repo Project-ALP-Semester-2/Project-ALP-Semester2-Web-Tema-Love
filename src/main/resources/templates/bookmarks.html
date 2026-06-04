@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UnSaid — Follow</title>
+  <title>UnSaid — Bookmarks</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,7 +14,6 @@
 
   <link rel="stylesheet" href="../css/index.css" />
   <link rel="stylesheet" href="../css/homepage.css" />
-  <link rel="stylesheet" href="../css/follow.css" />
 </head>
 <body>
 
@@ -29,8 +28,8 @@
         <a href="homepage.html" class="nav-link"><i class="bi bi-house-door-fill"></i> <span>Home</span></a>
         <a href="explorepage.html" class="nav-link"><i class="bi bi-compass"></i> <span>Explore</span></a>
         <a href="notifications.html" class="nav-link"><i class="bi bi-bell"></i> <span>Notifications</span></a>
-        <a href="follow.html" class="nav-link active"><i class="bi bi-people-fill"></i> <span>Follow</span></a>
-        <a href="bookmarks.html" class="nav-link"><i class="bi bi-bookmark"></i> <span>Bookmarks</span></a>
+        <a href="follow.html" class="nav-link"><i class="bi bi-people"></i> <span>Follow</span></a>
+        <a href="bookmarks.html" class="nav-link active"><i class="bi bi-bookmark-fill"></i> <span>Bookmarks</span></a>
         <a href="profile.html" class="nav-link"><i class="bi bi-person"></i> <span>Profile</span></a>
         
         <button class="btn btn-primary w-100 py-3 mt-4 fw-bold d-none d-lg-block">Bercerita</button>
@@ -49,34 +48,36 @@
 
     <main class="col-10 col-md-8 col-lg-6 feed-area p-0 border-end">
 
-      <div class="sticky-top bg-blur border-bottom pt-3" style="z-index:50;">
-        <h5 class="font-display fw-bold mb-3 px-3 px-md-4" style="color:var(--primary-dark);font-size:1.4rem;">Koneksi</h5>
-        <div class="feed-tabs d-flex">
-            <div class="tab-item active flex-grow-1 text-center py-3" data-tab="suggested">Disarankan</div>
-            <div class="tab-item flex-grow-1 text-center py-3" data-tab="following">Mengikuti</div>
-            <div class="tab-item flex-grow-1 text-center py-3" data-tab="followers">Pengikut</div>
+      <div class="sticky-top bg-blur border-bottom px-3 px-md-4 pt-3 pb-3" style="z-index:50;">
+        <div class="d-flex align-items-center gap-3 mb-3">
+            <a href="javascript:history.back()" class="text-dark hover-primary transition"><i class="bi bi-arrow-left fs-5"></i></a>
+            <h5 class="font-display fw-bold mb-0" style="color:var(--primary-dark);font-size:1.4rem;">Bookmarks</h5>
+        </div>
+        <div class="search-input-wrap d-flex align-items-center gap-2 rounded-pill px-3 py-2" style="background-color: var(--tertiary); border-color: var(--neutral-pale);">
+            <i class="bi bi-search text-muted"></i>
+            <input type="text" id="searchBookmarks" class="form-control border-0 bg-transparent p-0 shadow-none" placeholder="Search Bookmarks..." style="font-size: 14px;">
         </div>
       </div>
 
-      <div id="followFeed" class="pb-5">
+      <div id="bookmarksFeed" class="pb-5">
+        
+        <div id="emptyBookmarks" class="text-center py-5 mt-5">
+            <h3 class="fw-bold mb-2" style="color: var(--neutral); font-family: var(--font-body); font-size: 1.5rem;">Save posts for later</h3>
+            <p class="text-muted mx-auto" style="font-size: 14.5px; max-width: 320px; line-height: 1.5;">Bookmark posts to easily find them again in the future.</p>
         </div>
+
+        <div id="bookmarksList" class="feed-posts"></div>
+
+      </div>
 
     </main>
 
     <aside class="col-3 d-none d-lg-block sidebar-right py-4 px-3">
-      
-      <div class="search-box mb-4">
-        <div class="search-input-wrap d-flex align-items-center gap-2 rounded-pill px-3 py-2 border shadow-sm bg-white" style="border-color: var(--neutral-pale) !important;">
-            <i class="bi bi-search text-muted"></i>
-            <input type="text" class="form-control border-0 bg-transparent p-0 shadow-none" placeholder="Cari pengguna…" style="font-size: 14px;">
-        </div>
-      </div>
-
       <div class="widget-box rounded-4 p-4 mb-4">
         <h5 class="widget-title mb-3">Mini Edukasi</h5>
         <div class="edu-item mb-3 pb-3 border-bottom" style="border-color:var(--neutral-pale)!important;">
-          <div class="small fw-bold mb-1" style="color:var(--primary-dark);">Safe Space</div>
-          <p class="small text-muted mb-0" style="line-height:1.6;">Mengikuti seseorang berarti bersedia mendengarkan cerita mereka. Mari bangun komunitas yang saling mendukung.</p>
+          <div class="small fw-bold mb-1" style="color:var(--primary-dark);">Membaca Ulang</div>
+          <p class="small text-muted mb-0" style="line-height:1.6;">Menyimpan cerita orang lain kadang menjadi cermin untuk memahami perasaan kita sendiri.</p>
         </div>
       </div>
 
@@ -91,13 +92,13 @@
         </nav>
         <div class="text-muted" style="font-size: 12px; line-height: 1.6;">© 2026 UnSaid. Safe Space for Stories.</div>
     </footer>
-
     </aside>
+
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../js/interactions.js"></script> 
-<script src="../js/follow.js"></script>
+<script src="../js/bookmarks.js"></script>
 </body>
 </html>

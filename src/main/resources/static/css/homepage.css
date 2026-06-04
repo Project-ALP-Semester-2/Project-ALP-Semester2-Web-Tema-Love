@@ -336,3 +336,21 @@
   .nav-link { width: fit-content; padding: 11px; }
   .sidebar-left { border-right: none; }
 }
+
+@media (min-width: 992px) {
+  aside.sidebar-left {
+    align-items: flex-end !important;
+    padding-right: 2rem !important; 
+  }
+
+  aside.sidebar-left .logo-area,
+  aside.sidebar-left .nav-menu,
+  aside.sidebar-left .profile-mini {
+    width: 200px !important;
+    align-items: flex-start !important;
+  }
+
+  aside.sidebar-left .logo-area {
+    padding-left: 12px !important;
+  }
+}

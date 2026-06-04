@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UnSaid — Profile</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;800&display=swap" rel="stylesheet" />
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <link rel="stylesheet" href="../css/index.css" />
+  <link rel="stylesheet" href="../css/homepage.css" />
+  <link rel="stylesheet" href="../css/profile.css" />
+</head>
+<body>
+
+<div class="container-xxl p-0">
+  <div class="row g-0 m-0 w-100 justify-content-center">
+
+    <aside class="col-2 col-lg-3 sidebar-left d-flex flex-column align-items-end py-3 px-2 px-lg-4">
+      <div class="logo-area mb-4 px-2 w-100 d-flex justify-content-center justify-content-lg-start">
+        <img src="../images/Logo_icon.png" alt="UnSaid Logo" style="height:44px;width:44px;object-fit:contain;mix-blend-mode:multiply;background-color:transparent;" class="rounded-3" />
+      </div>
+      <nav class="nav-menu w-100 flex-grow-1 d-flex flex-column align-items-center align-items-lg-start">
+        <a href="homepage.html" class="nav-link"><i class="bi bi-house-door-fill"></i> <span>Home</span></a>
+        <a href="explorepage.html" class="nav-link"><i class="bi bi-compass"></i> <span>Explore</span></a>
+        <a href="notifications.html" class="nav-link"><i class="bi bi-bell"></i> <span>Notifications</span></a>
+        <a href="follow.html" class="nav-link"><i class="bi bi-people"></i> <span>Follow</span></a>
+        <a href="bookmarks.html" class="nav-link"><i class="bi bi-bookmark"></i> <span>Bookmarks</span></a>
+        <a href="profile.html" class="nav-link active"><i class="bi bi-person-fill"></i> <span>Profile</span></a>
+        
+        <button class="btn btn-primary w-100 py-3 mt-4 fw-bold d-none d-lg-block">Bercerita</button>
+        <button class="btn btn-primary rounded-circle p-0 d-lg-none mt-4 flex-center" style="width:50px;height:50px;">
+          <i class="bi bi-pencil-square fs-5"></i>
+        </button>
+      </nav>
+      <div class="profile-mini w-100 mt-auto p-2 d-flex align-items-center justify-content-center justify-content-lg-start gap-2 rounded-pill hover-effect" style="cursor:pointer;">
+        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Elvina" class="rounded-circle bg-white border" style="width:40px;height:40px;" />
+        <div class="d-none d-lg-block">
+          <div class="fw-bold" style="font-size:14px;">A human</div>
+          <div class="text-muted" style="font-size:12px;">@ahuman</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="col-10 col-md-8 col-lg-6 feed-area p-0 border-end">
+
+      <div class="sticky-top bg-blur border-bottom px-3 px-md-4 py-2 d-flex align-items-center gap-3" style="z-index:50;">
+        <a href="javascript:history.back()" class="text-dark hover-primary transition"><i class="bi bi-arrow-left fs-5"></i></a>
+        <div>
+            <h5 class="font-display fw-bold mb-0" style="color:var(--primary-dark);font-size:1.15rem;">A human</h5>
+            <span class="text-muted small" id="storiesCountHead">2 cerita</span>
+        </div>
+      </div>
+
+      <div class="profile-header-container position-relative">
+          <div class="profile-banner" style="background: linear-gradient(135deg, rgba(133,193,182,0.4), rgba(217,163,181,0.3)); height: 160px;"></div>
+          
+          <div class="px-3 px-md-4 pb-3">
+              <div class="d-flex justify-content-between align-items-end position-relative mb-3" style="margin-top: -45px;">
+                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Elvina" class="rounded-circle bg-white border profile-avatar-large shadow-sm" style="width: 90px; height: 90px; padding: 4px;" />
+                  <button class="btn btn-outline-custom rounded-pill px-3 py-1.5 fw-semibold" style="font-size: 13px;">Edit Profile</button>
+              </div>
+
+              <div class="mt-3">
+                  <h4 class="fw-bold mb-0" style="color: var(--neutral); font-size: 1.3rem;">A human</h4>
+                  <div class="text-muted" style="font-size: 14px;">@ahuman</div>
+              </div>
+
+              <p class="mt-3 mb-3 profile-bio-text" style="font-size: 14.5px; line-height: 1.5; color: var(--neutral);">
+                  Hanya seorang manusia yang mencoba mengeluarkan isi kepala yang terlalu berisik. Mari saling mendengarkan tanpa menghakimi. 🌿✨
+              </p>
+
+              <div class="d-flex gap-4 small fw-medium mt-2">
+                  <div><span class="fw-bold text-dark">128</span> <span class="text-muted">Following</span></div>
+                  <div><span class="fw-bold text-dark">3.4k</span> <span class="text-muted">Followers</span></div>
+              </div>
+          </div>
+
+          <div class="feed-tabs d-flex border-top border-bottom mt-2">
+              <div class="tab-item active flex-grow-1 text-center py-3" data-tab="my-stories">Ceritaku</div>
+              <div class="tab-item flex-grow-1 text-center py-3" data-tab="liked-stories">Disukai</div>
+          </div>
+      </div>
+
+      <div id="profileFeed" class="feed-posts pb-5">
+          </div>
+
+    </main>
+
+    <aside class="col-3 d-none d-lg-block sidebar-right py-4 px-3">
+      <div class="widget-box rounded-4 p-4 mb-4">
+        <h5 class="widget-title mb-3">Saran Koneksi</h5>
+        <div class="d-flex flex-column gap-3">
+          <div class="follow-item d-flex align-items-center gap-3">
+            <img src="https://api.dicebear.com/7.x/miniavs/svg?seed=writer1" class="rounded-circle avatar-teal" style="width:42px;height:42px;flex-shrink:0;" />
+            <div class="flex-grow-1"><div class="fw-bold" style="font-size:14px;color:var(--neutral);">Autumn Whisper</div></div>
+            <button class="btn-follow">Follow</button>
+          </div>
+        </div>
+      </div>
+
+      <footer class="px-2 mt-4 pb-4">
+        <nav class="d-flex flex-wrap mb-2" style="column-gap: 12px; row-gap: 4px;">
+            <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">About</a>
+            <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Community Guidelines</a>
+            <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Privacy Policy</a>
+            <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Terms of Service</a>
+            <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Help Center</a>
+            <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Cookies</a>
+        </nav>
+        <div class="text-muted" style="font-size: 12px; line-height: 1.6;">© 2026 UnSaid. Safe Space for Stories.</div>
+    </footer>
+    </aside>
+
+  </div>
+</div>
+
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content bg-transparent border-0">
+      <div class="modal-header border-0 justify-content-end p-2 position-absolute w-100" style="z-index:10;">
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="background-color:rgba(0,0,0,0.5);border-radius:50%;padding:12px;"></button>
+      </div>
+      <div class="modal-body text-center p-0">
+        <img id="fullSizeImage" src="" class="img-fluid rounded-3 shadow" style="max-height:90vh;object-fit:contain;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="threadView" class="d-none" style="position:fixed;inset:0;z-index:200;background:var(--tertiary);overflow-y:auto;">
+  <div class="container-xxl p-0">
+    <div class="row g-0 m-0 w-100 justify-content-center">
+      <div class="col-12 col-md-8 col-lg-6 bg-white" style="min-height:100vh;border-right:1px solid var(--neutral-pale);border-left:1px solid var(--neutral-pale);">
+        <div class="d-flex align-items-center gap-3 px-4 py-3 border-bottom bg-blur sticky-top" style="z-index:10;">
+          <button id="btnBackThread" class="btn p-2 rounded-circle hover-effect border-0" style="background:transparent;width:38px;height:38px;display:flex;align-items:center;justify-content:center;">
+            <i class="bi bi-arrow-left fs-5" style="color:var(--neutral);"></i>
+          </button>
+          <span class="fw-bold" style="font-family:var(--font-display);font-size:18px;color:var(--primary-dark);">Thread</span>
+        </div>
+        <div id="threadPostContent" class="p-4 border-bottom"></div>
+        <div id="threadStats" class="px-4 py-3 border-bottom d-flex gap-4" style="font-size:14px;color:var(--neutral-light);"></div>
+        <div id="threadCommentsList" class="px-4 pt-4" style="padding-bottom:90px;"></div>
+        <div class="border-top bg-white px-4 py-3" style="position:fixed;bottom:0;left:0;right:0;z-index:20;">
+          <div id="threadImgPreviewWrap" class="d-none mb-2 position-relative d-inline-block">
+            <img id="threadImgPreview" src="" class="rounded-3 border" style="max-height:140px;object-fit:cover;">
+            <button id="btnRemoveThreadImg" class="btn btn-dark btn-sm rounded-circle position-absolute top-0 end-0 m-1 p-0 d-flex align-items-center justify-content-center" style="width:22px;height:22px;"><i class="bi bi-x" style="font-size:12px;"></i></button>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Elvina" class="rounded-circle border" style="width:36px;height:36px;flex-shrink:0;">
+            <input type="text" id="threadCommentInput" class="form-control border-0 shadow-none px-3 flex-grow-1" style="background:var(--neutral-pale);border-radius:20px;" placeholder="Balas postingan ini...">
+            <input type="file" id="threadImgInput" accept="image/*" class="d-none">
+            <button id="btnThreadImg" class="btn p-2 border-0 rounded-circle" style="background:transparent;color:var(--primary-mid);" title="Tambah gambar">
+              <i class="bi bi-image fs-5"></i>
+            </button>
+            <button id="btnSendThreadComment" class="btn btn-primary rounded-pill px-4 fw-bold">Kirim</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/interactions.js"></script> 
+<script src="../js/profile.js"></script>
+</body>
+</html>
