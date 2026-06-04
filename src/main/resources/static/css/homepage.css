@@ -354,3 +354,12 @@
     padding-left: 12px !important;
   }
 }
+
+.sidebar-right::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar-right {
+  -ms-overflow-style: none;  
+  scrollbar-width: none; 
+}
