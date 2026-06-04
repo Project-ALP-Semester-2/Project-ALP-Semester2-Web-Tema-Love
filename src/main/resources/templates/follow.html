@@ -22,46 +22,51 @@
   <div class="row g-0 m-0 w-100 justify-content-center">
 
     <aside class="col-2 col-lg-3 sidebar-left d-flex flex-column align-items-end py-3 px-2 px-lg-4">
-      <div class="logo-area mb-4 px-2 w-100 d-flex justify-content-center justify-content-lg-start">
-        <img src="../images/Logo_icon.png" alt="UnSaid Logo" style="height:44px;width:44px;object-fit:contain;mix-blend-mode:multiply;background-color:transparent;" class="rounded-3" />
-      </div>
-<nav class="nav-menu w-100 flex-grow-1 d-flex flex-column align-items-center align-items-lg-start">
-        <a th:href="@{/homepage(userId=${param.userId}, token=${param.token})}" class="nav-link">
-          <i class="bi bi-house-door-fill"></i> <span>Home</span>
-        </a>
-        
-        <a th:href="@{/explore(userId=${param.userId}, token=${param.token})}" class="nav-link">
-          <i class="bi bi-compass"></i> <span>Explore</span>
-        </a>
-        
-        <a th:href="@{/notifications(userId=${param.userId}, token=${param.token})}" class="nav-link">
-          <i class="bi bi-bell"></i> <span>Notifications</span>
-        </a>
-        
-        <a th:href="@{/follow(userId=${param.userId}, token=${param.token})}" class="nav-link active">
-          <i class="bi bi-people-fill"></i> <span>Follow</span>
-        </a>
-        
-        <a th:href="@{/bookmarks(userId=${param.userId}, token=${param.token})}" class="nav-link">
-          <i class="bi bi-bookmark"></i> <span>Bookmarks</span>
-        </a>
-        
-        <a th:href="@{/profile(userId=${param.userId}, token=${param.token})}" class="nav-link">
-          <i class="bi bi-person"></i> <span>Profile</span>
-        </a>
-        
-        <button class="btn btn-primary w-100 py-3 mt-4 fw-bold d-none d-lg-block">Bercerita</button>
-        <button class="btn btn-primary rounded-circle p-0 d-lg-none mt-4 flex-center" style="width:50px;height:50px;">
-          <i class="bi bi-pencil-square fs-5"></i>
-        </button>
-      </nav>
-      <div class="profile-mini w-100 mt-auto p-2 d-flex align-items-center justify-content-center justify-content-lg-start gap-2 rounded-pill hover-effect" style="cursor:pointer;">
-        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Elvina" class="rounded-circle bg-white border" style="width:40px;height:40px;" />
-        <div class="d-none d-lg-block">
-          <div class="fw-bold" style="font-size:14px;">A human</div>
-          <div class="text-muted" style="font-size:12px;">@ahuman</div>
+        <div class="logo-area mb-4 px-2 w-100 d-flex justify-content-center justify-content-lg-start">
+            <img src="../images/Logo_icon2.png" alt="UnSaid Logo" style="height: 60px; width: 60px; object-fit: contain; mix-blend-mode: multiply; background-color: transparent;" class="rounded-3">
         </div>
-      </div>
+        
+        <nav class="nav-menu w-100 flex-grow-1 d-flex flex-column align-items-center align-items-lg-start">
+            <a th:href="@{/homepage(userId=${param.userId}, token=${param.token})}" class="nav-link">
+                <i class="bi bi-house-door-fill"></i> <span>Home</span>
+            </a>
+            <a th:href="@{/explore(userId=${param.userId}, token=${param.token})}" class="nav-link">
+                <i class="bi bi-compass"></i> <span>Explore</span>
+            </a>
+            <a th:href="@{/notifications(userId=${param.userId}, token=${param.token})}" class="nav-link">
+                <i class="bi bi-bell"></i> <span>Notifications</span>
+            </a>
+            <a th:href="@{/follow(userId=${param.userId}, token=${param.token})}" class="nav-link active">
+                <i class="bi bi-people"></i> <span>Follow</span>
+            </a>
+            <a th:href="@{/bookmarks(userId=${param.userId}, token=${param.token})}" class="nav-link">
+                <i class="bi bi-bookmark"></i> <span>Bookmarks</span>
+            </a>
+            <a th:href="@{/profile(userId=${param.userId}, token=${param.token})}" class="nav-link">
+                <i class="bi bi-person"></i> <span>Profile</span>
+            </a>
+
+            <button class="btn btn-primary w-100 py-3 mt-4 fw-bold d-none d-lg-block">
+                Bercerita
+            </button>
+            <button class="btn btn-primary rounded-circle p-0 d-lg-none mt-4 flex-center" style="width:50px; height:50px;">
+                <i class="bi bi-pencil-square fs-5"></i>
+            </button>
+        </nav>
+
+        <div class="profile-mini w-100 mt-auto p-2 d-flex align-items-center justify-content-center justify-content-lg-start gap-2 rounded-pill hover-effect" style="cursor: pointer; height: 56px;">
+            <img th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${userAktif}" 
+                class="rounded-circle bg-white border flex-shrink-0" 
+                style="width:42px; height:42px;" 
+                alt="Avatar">
+                
+            <div class="d-none d-lg-block fw-bold my-auto text-dark overflow-hidden w-100" 
+                style="font-size: 14px; line-height: 1.2;">
+                <span class="d-block text-truncate" th:text="${userAktif}">
+                    Username
+                </span>
+            </div>
+        </div>
     </aside>
 
     <main class="col-10 col-md-8 col-lg-6 feed-area p-0 border-end">
