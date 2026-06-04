@@ -3,17 +3,12 @@ function handleAnonymous() {
     window.location.href = "homepage.html";
 }
 
-/* Fungsi untuk tombol "Lanjutkan dengan Google" */
-function handleGoogle() {
-    /* Nanti di sini kamu bisa menambahkan logika autentikasi Google beneran (seperti Firebase/OAuth)
-     * Untuk sekarang, langsung arahkan ke homepage
-     */
-    window.location.href = "homepage.html";
-}
 
-/* Fungsi untuk tombol "Lanjutkan dengan Apple" */
+function handleGoogle() {
+    alert('Fitur login dengan Google belum tersedia. Silakan coba metode lain.');
+}
 function handleApple() {
-    window.location.href = "homepage.html";
+    alert('Fitur login dengan Apple belum tersedia. Silakan coba metode lain.');
 }
 
 /* Fungsi untuk tombol "Sign in" (jika sudah punya akun) */

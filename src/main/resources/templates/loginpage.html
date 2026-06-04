@@ -12,7 +12,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   
-  <link rel="stylesheet" href="../css/index.css" />
+  <link rel="stylesheet" href="../static/css/index.css" />
 </head>
 <body class="d-flex flex-column min-vh-100 overflow-x-hidden">
 
@@ -20,7 +20,7 @@
     <div class="row g-0 m-0 w-100">
       <div class="col-12 col-lg-6 d-none d-lg-flex align-items-center justify-content-center panel-left position-relative p-5">
         <img
-          src="../images/Ilustrasi_hati.png"
+          src="../static/images/Ilustrasi_hati.png"
           alt="UnSaid — paper-cut heart illustration"
           class="img-fluid"
           style="width: 100%; max-width: 700px; height: auto; mix-blend-mode: multiply; object-fit: contain;"
@@ -28,26 +28,26 @@
         />
       </div>
 
-      <div class="col-12 col-lg-6 d-flex flex-column justify-content-center px-4 px-md-5 py-4 bg-white">
+      <div class="col-12 col-lg-6 d-flex flex-column justify-content-center align-items-center align-items-lg-start px-4 px-md-5 py-4 bg-white">
         
         <div class="d-flex align-items-center gap-2 mb-4">
           <div class="rounded-3 overflow-hidden" style="width: 44px; height: 44px;">
             <img  
-              src="../images/Logo_icon.png"
+              src="../static/images/Logo_icon.png"
               alt="UnSaid icon"
               class="w-100 h-100 object-fit-cover"
             />
           </div>
           <div>
             <img
-              src="../images/Logo_wordmark.png"
+              src="../static/images/Logo_wordmark.png"
               alt="UnSaid"
               style="height: 28px; object-fit: contain;"
             />
           </div>
         </div>
 
-        <h1 class="tagline mb-4">
+        <h1 class="tagline text-center text-lg-start mb-4">
           Apa yang tak<br>
           terucap, kini<br>
           <em class="tagline-em">didengar.</em>
@@ -76,9 +76,9 @@
           <div class="mt-4 text-center">
             <p class="text-muted mb-2" style="font-size: 13px;">Already have an account?</p>
             
-            <button class="btn btn-social rounded-pill py-3 w-100 fw-medium" onclick="handleSignIn()">
+            <a th:href="@{/signin}" class="btn btn-social rounded-pill py-3 w-100 fw-medium text-decoration-none text-center">
               Sign in
-            </button>
+            </a>
           </div>
 
         </div>
@@ -100,6 +100,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
-  <script src="../js/loginpage.js"></script>
+  <script src="../static/js/loginpage.js"></script>
 </body>
 </html>
