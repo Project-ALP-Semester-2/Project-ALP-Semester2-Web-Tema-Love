@@ -41,12 +41,20 @@
         </button>
     </nav>
 
-    <div class="profile-mini w-100 mt-auto p-2 d-flex align-items-center justify-content-center justify-content-lg-start gap-2 rounded-pill hover-effect" style="cursor: pointer;">
-        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Elvina" class="rounded-circle bg-white border" style="width:40px; height:40px;">
-        <div class="d-none d-lg-block">
-            <div class="fw-bold" style="font-size: 14px;">A human</div>
-            <div class="text-muted" style="font-size: 12px;">@ahuman</div>
+    <div class="profile-mini w-100 mt-auto p-2 d-flex align-items-center justify-content-center justify-content-lg-start gap-2 rounded-pill hover-effect" style="cursor: pointer; height: 56px;">
+        
+        <img th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${userAktif}" 
+            src="https://api.dicebear.com/7.x/avataaars/svg?seed=Elvina" 
+            class="rounded-circle bg-white border flex-shrink-0" 
+            style="width:42px; height:42px;" 
+            alt="Avatar">
+            
+        <div class="d-none d-lg-block fw-bold my-auto text-dark" 
+            style="font-size: 15px; line-height: 1; white-space: nowrap;" 
+            th:text="${userAktif}">
+            Ambatukam
         </div>
+        
     </div>
 </aside>
 
