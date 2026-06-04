@@ -1,366 +1,155 @@
-// ── explorepage.js ──
-// Reuses UI patterns from homepage.js
+document.addEventListener('DOMContentLoaded', function () {
 
-// ─── Data ───────────────────────────────────────────────────────────────────
+  const allStories = [
+    { id:'t1', tags:['heartbreak','patah-hati','move-on'], author:'Autumn Whisper', seed:'broken7', avatarClass:'avatar-pink', badge:'💔 Heartbreak', badgeClass:'badge-heartbreak', time:'3 hari lalu', healthy:74, toxic:26, empathy:847, comments:92, text:'Aku masih menyimpan foto kita di folder tersembunyi. Bukan karena aku belum move on — tapi karena aku takut suatu hari aku lupa betapa bahagianya kita dulu. Apakah itu salah?' },
+    { id:'t2', tags:['anxiety','toxic','overthinking'], author:'Midnight Rover', seed:'toxic88', avatarClass:'avatar-teal', badge:'🌀 Anxiety', badgeClass:'badge-anxiety', time:'1 hari lalu', healthy:12, toxic:88, empathy:621, comments:74, text:'Setiap kali dia bilang "terserah kamu", itu bukan pilihan — itu jebakan. Aku selalu salah apapun yang aku putuskan. Dan aku baru sadar itu bukan cinta, itu kontrol.' },
+    { id:'t3', tags:['healing','self-love'], author:'Soft Garden', seed:'heal22', avatarClass:'avatar-teal', badge:'🌿 Healing', badgeClass:'badge-selflove', time:'2 hari lalu', healthy:95, toxic:5, empathy:1200, comments:143, text:'Hari ini aku berhasil makan tiga kali. Aku mandi. Aku keluar rumah meski cuma ke teras. Kecil banget kan? Tapi setahun lalu aku bahkan nggak bisa bangun dari kasur. Ini kemenangan.' },
+    { id:'t4', tags:['family','keluarga'], author:'Quiet Forest', seed:'fam99', avatarClass:'avatar-pink', badge:'🏠 Family', badgeClass:'badge-family', time:'4 hari lalu', healthy:60, toxic:40, empathy:532, comments:61, text:'Orang tua ku tidak pernah bertanya bagaimana perasaanku. Mereka hanya bertanya nilai, ranking, masa depan. Aku jadi orang asing di rumah sendiri. Tapi aku nggak menyalahkan mereka — mereka tidak tahu cara lain mencintai.' },
+    { id:'t5', tags:['firstlove','cinta-pertama','nostalgia'], author:'Paper Crane', seed:'fl33', avatarClass:'avatar-teal', badge:'🌸 First Love', badgeClass:'badge-heartbreak', time:'5 hari lalu', healthy:55, toxic:45, empathy:489, comments:57, text:'Cinta pertama bukan tentang siapa orangnya. Tapi tentang versi dirimu yang belum pernah terluka. Aku bukan merindukan dia — aku merindukan diriku yang dulu percaya bahwa semuanya akan baik-baik saja.' },
+    { id:'s6', tags:['self-love','healing'], author:'Lunar Drift', seed:'sl44', avatarClass:'avatar-pink', badge:'🪞 Self-Love', badgeClass:'badge-selflove', time:'6 hari lalu', healthy:88, toxic:12, empathy:376, comments:48, text:'Aku belajar bahwa mencintai diri sendiri bukan berarti narsis. Itu hanya berarti kamu tidak akan membiarkan siapapun — termasuk dirimu sendiri — memperlakukanmu dengan buruk.' },
+    { id:'s7', tags:['toxic','move-on'], author:'Red Flag Museum', seed:'rf55', avatarClass:'avatar-teal', badge:'🚩 Toxic Relationship', badgeClass:'badge-heartbreak', time:'2 hari lalu', healthy:5, toxic:95, empathy:910, comments:105, text:'Tanda pertama: dia selalu punya alasan untuk setiap sikap buruknya. Tanda kedua: maaf selalu datang diikuti pengulangan. Tanda ketiga: kamu mulai merasa kamu yang selalu salah.' },
+    { id:'s8', tags:['platonic','friendship'], author:'Still Waters', seed:'pl66', avatarClass:'avatar-pink', badge:'🤝 Platonic Love', badgeClass:'badge-selflove', time:'3 hari lalu', healthy:92, toxic:8, empathy:298, comments:35, text:'Ada teman yang hafal cara kamu nangis. Hafal kode kalau kamu lagi nggak baik-baik aja. Itu cinta juga — cuma beda bentuk.' },
+    { id:'s9', tags:['friendship'], author:'Echo Valley', seed:'fr77', avatarClass:'avatar-teal', badge:'🫂 Friendship', badgeClass:'badge-family', time:'7 hari lalu', healthy:70, toxic:30, empathy:441, comments:52, text:'Kehilangan sahabat bisa lebih menyakitkan dari putus cinta. Tapi nggak ada yang mau ngakuin itu. Kita nggak pernah diajari cara berduka untuk persahabatan yang pergi.' },
+    { id:'s10',tags:['nostalgia','cinta-pertama'], author:'Glass Archive', seed:'ns88', avatarClass:'avatar-pink', badge:'🕰️ Nostalgia', badgeClass:'badge-heartbreak', time:'5 hari lalu', healthy:65, toxic:35, empathy:312, comments:40, text:'Aku ketemu foto lama di hp rusak yang akhirnya berhasil aku recover. Ada kita. Tertawa. Aku lupa kita pernah sebahagia itu.' }
+  ];
 
-const allStories = [
-  {
-    id: 1, cat: "heartbreak", tags: ["patah-hati", "move-on"],
-    author: "Autumn Whisper", seed: "broken7", avatarClass: "avatar-pink",
-    badge: "💔 Heartbreak", badgeClass: "badge-heartbreak",
-    time: "3 hari lalu",
-    text: "Aku masih menyimpan foto kita di folder tersembunyi. Bukan karena aku belum move on — tapi karena aku takut suatu hari aku lupa betapa bahagianya kita dulu. Apakah itu salah?",
-    empathy: 847, comments: 92, reposts: 34, heat: 412
-  },
-  {
-    id: 2, cat: "anxiety", tags: ["anxiety", "toxic", "overthinking"],
-    author: "Midnight Rover", seed: "toxic88", avatarClass: "avatar-teal",
-    badge: "🌀 Anxiety", badgeClass: "badge-anxiety",
-    time: "1 hari lalu",
-    text: "Setiap kali dia bilang 'terserah kamu', itu bukan pilihan — itu jebakan. Aku selalu salah apapun yang aku putuskan. Dan aku baru sadar itu bukan cinta, itu kontrol.",
-    empathy: 621, comments: 74, reposts: 0, heat: 288,
-    hasVote: true, voteHealthy: 12, voteToxic: 88
-  },
-  {
-    id: 3, cat: "healing", tags: ["healing", "self-love"],
-    author: "Soft Garden", seed: "heal22", avatarClass: "avatar-teal",
-    badge: "🌿 Healing", badgeClass: "badge-selflove",
-    time: "2 hari lalu",
-    text: "Hari ini aku berhasil makan tiga kali. Aku mandi. Aku keluar rumah meski cuma ke teras. Kecil banget kan? Tapi setahun lalu aku bahkan nggak bisa bangun dari kasur. Ini kemenangan.",
-    empathy: 1200, comments: 143, reposts: 89, heat: 533
-  },
-  {
-    id: 4, cat: "family", tags: ["keluarga"],
-    author: "Quiet Forest", seed: "fam99", avatarClass: "avatar-pink",
-    badge: "🏠 Family", badgeClass: "badge-family",
-    time: "4 hari lalu",
-    text: "Orang tua ku tidak pernah bertanya bagaimana perasaanku. Mereka hanya bertanya nilai, ranking, masa depan. Aku jadi orang asing di rumah sendiri. Tapi aku nggak menyalahkan mereka — mereka tidak tahu cara lain mencintai.",
-    empathy: 532, comments: 61, reposts: 0, heat: 201
-  },
-  {
-    id: 5, cat: "firstlove", tags: ["cinta-pertama", "nostalgia"],
-    author: "Paper Crane", seed: "fl33", avatarClass: "avatar-teal",
-    badge: "🌸 First Love", badgeClass: "badge-heartbreak",
-    time: "5 hari lalu",
-    text: "Cinta pertama bukan tentang siapa orangnya. Tapi tentang versi dirimu yang belum pernah terluka. Aku bukan merindukan dia — aku merindukan diriku yang dulu percaya bahwa semuanya akan baik-baik saja.",
-    empathy: 489, comments: 57, reposts: 44, heat: 178
-  },
-  {
-    id: 6, cat: "selflove", tags: ["self-love", "healing"],
-    author: "Lunar Drift", seed: "sl44", avatarClass: "avatar-pink",
-    badge: "🪞 Self-Love", badgeClass: "badge-selflove",
-    time: "6 hari lalu",
-    text: "Aku belajar bahwa mencintai diri sendiri bukan berarti narsis. Itu hanya berarti kamu tidak akan membiarkan siapapun — termasuk dirimu sendiri — memperlakukanmu dengan buruk.",
-    empathy: 376, comments: 48, reposts: 22, heat: 144
-  },
-  {
-    id: 7, cat: "toxic", tags: ["toxic", "move-on"],
-    author: "Red Flag Museum", seed: "rf55", avatarClass: "avatar-teal",
-    badge: "🚩 Toxic", badgeClass: "badge-heartbreak",
-    time: "2 hari lalu",
-    text: "Tanda pertama: dia selalu punya alasan untuk setiap sikap buruknya. Tanda kedua: maaf selalu datang diikuti pengulangan. Tanda ketiga: kamu mulai merasa kamu yang selalu salah.",
-    empathy: 910, comments: 105, reposts: 67, heat: 392,
-    hasVote: true, voteHealthy: 5, voteToxic: 95
-  },
-  {
-    id: 8, cat: "platonic", tags: ["platonic", "friendship"],
-    author: "Still Waters", seed: "pl66", avatarClass: "avatar-pink",
-    badge: "🤝 Platonic", badgeClass: "badge-selflove",
-    time: "3 hari lalu",
-    text: "Ada teman yang hafal cara kamu nangis. Hafal kode kalau kamu lagi nggak baik-baik aja. Itu cinta juga — cuma beda bentuk.",
-    empathy: 298, comments: 35, reposts: 18, heat: 112
-  },
-  {
-    id: 9, cat: "friendship", tags: ["friendship"],
-    author: "Echo Valley", seed: "fr77", avatarClass: "avatar-teal",
-    badge: "🫂 Friendship", badgeClass: "badge-family",
-    time: "7 hari lalu",
-    text: "Kehilangan sahabat bisa lebih menyakitkan dari putus cinta. Tapi nggak ada yang mau ngakuin itu. Kita nggak pernah diajari cara berduka untuk persahabatan yang pergi.",
-    empathy: 441, comments: 52, reposts: 30, heat: 167
-  },
-  {
-    id: 10, cat: "nostalgia", tags: ["nostalgia", "cinta-pertama"],
-    author: "Glass Archive", seed: "ns88", avatarClass: "avatar-pink",
-    badge: "🕰️ Nostalgia", badgeClass: "badge-heartbreak",
-    time: "5 hari lalu",
-    text: "Aku ketemu foto lama di hp rusak yang akhirnya berhasil aku recover. Ada kita. Tertawa. Aku lupa kita pernah sebahagia itu.",
-    empathy: 312, comments: 40, reposts: 15, heat: 120
-  }
-];
+  function fmtNum(n) { return n >= 1000 ? (n / 1000).toFixed(1).replace('.0', '') + 'k' : n; }
 
-// ─── Render Utils ────────────────────────────────────────────────────────────
-
-function fmtNum(n) {
-  return n >= 1000 ? (n / 1000).toFixed(1).replace('.0', '') + 'k' : n;
-}
-
-function buildPostCard(story, highlight = '') {
-  let textHtml = story.text;
-  if (highlight) {
-    const re = new RegExp(`(${highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-    textHtml = story.text.replace(re, '<mark class="search-highlight">$1</mark>');
-  }
-
-  let voteHtml = '';
-  if (story.hasVote) {
-    voteHtml = `
-      <div class="voting-box rounded-3 p-3 my-2">
-        <p class="mb-2 small fw-semibold" style="color:var(--neutral);">Menurutmu hubungan ini...</p>
-        <div class="d-flex gap-2">
-          <button class="btn-vote btn-vote-healthy">🌿 Sehat</button>
-          <button class="btn-vote btn-vote-toxic active">🚩 Toxic</button>
-        </div>
-        <div class="mt-2">
-          <div class="vote-bar-wrap">
-            <div class="vote-bar-healthy" style="width:${story.voteHealthy}%;"></div>
+  function buildPostCardHTML(s, highlight, rank = null) {
+    let textHtml = s.text;
+    if (highlight) {
+      const re = new RegExp(`(${highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+      textHtml = s.text.replace(re, '<mark class="search-highlight">$1</mark>');
+    }
+    const rankHtml = rank ? `<span class="trending-rank-badge rank-${rank}">${rank}</span>` : '';
+    
+    return `
+      <article class="post-card hover-effect p-3 p-md-4 animate-fade-in" data-id="${s.id}" data-comment-count="${s.comments}" data-comments="[]">
+        <div class="d-flex gap-3">
+          <div class="position-relative flex-shrink-0">
+            <img src="https://api.dicebear.com/7.x/miniavs/svg?seed=${s.seed}" class="rounded-circle ${s.avatarClass}" style="width:46px;height:46px;" />
+            ${rankHtml}
           </div>
-          <div class="d-flex justify-content-between mt-1" style="font-size:11px;color:var(--neutral-light);">
-            <span>${story.voteHealthy}% Sehat</span><span>${story.voteToxic}% Toxic</span>
+          <div class="flex-grow-1 min-w-0">
+            <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+              <span class="fw-bold" style="font-size:14px;">${s.author}</span>
+              <span class="text-muted" style="font-size:12px;">· ${s.time}</span>
+              <span class="badge-category ${s.badgeClass} ms-auto">${s.badge}</span>
+            </div>
+            <p class="post-text mb-3">${textHtml}</p>
+            <div class="voting-box rounded-4 p-3 mb-3 border" data-healthy="${s.healthy}" data-toxic="${s.toxic}">
+              <div class="vote-question small fw-bold text-muted mb-2">Menurutmu, apakah hubungan ini?</div>
+              <div class="d-flex gap-2 mb-2">
+                <button class="btn btn-vote btn-vote-healthy flex-grow-1 py-2 rounded-pill">💚 Healthy</button>
+                <button class="btn btn-vote btn-vote-toxic flex-grow-1 py-2 rounded-pill">🚩 Toxic</button>
+              </div>
+              <div class="vote-result d-none">
+                <div class="vote-bar-wrap rounded-pill overflow-hidden mb-1" style="height:6px;background:var(--neutral-pale);">
+                  <div class="vote-bar-healthy rounded-pill" style="height:100%;width:0%;background:var(--primary-dark);transition:width 0.5s;"></div>
+                </div>
+                <div class="d-flex justify-content-between" style="font-size:12px;">
+                  <span class="vote-pct-healthy fw-bold" style="color:var(--primary-dark);">0% Healthy</span>
+                  <span class="vote-total text-muted"></span>
+                  <span class="vote-pct-toxic fw-bold" style="color:var(--secondary-dark);">0% Toxic</span>
+                </div>
+              </div>
+            </div>
+            <div class="interaction-row d-flex gap-1 text-muted" style="max-width:360px;">
+              <div class="interaction-btn hover-heart"><i class="bi bi-heart"></i> <span>${fmtNum(s.empathy)}</span></div>
+              <div class="interaction-btn hover-primary"><i class="bi bi-chat"></i> <span>${s.comments}</span></div>
+              <div class="interaction-btn hover-primary ms-auto"><i class="bi bi-bookmark"></i></div>
+              <div class="interaction-btn hover-primary"><i class="bi bi-share"></i></div>
+            </div>
           </div>
         </div>
-      </div>`;
+      </article>`;
   }
 
-  const repostHtml = story.reposts
-    ? `<span class="interaction-btn text-muted hover-primary"><i class="bi bi-arrow-repeat"></i> ${story.reposts}</span>`
-    : '';
+  /* Render Trending Initial */
+  const trendingDiv = document.getElementById('trendingFeed');
+  if(trendingDiv) trendingDiv.innerHTML = allStories.slice(0, 5).map((s, i) => buildPostCardHTML(s, '', i+1)).join('');
 
-  return `
-    <article class="post-card hover-effect p-3 p-md-4 animate-fade-in">
-      <div class="d-flex gap-3">
-        <div class="position-relative flex-shrink-0">
-          <img src="https://api.dicebear.com/7.x/miniavs/svg?seed=${story.seed}" class="rounded-circle ${story.avatarClass}" style="width:46px;height:46px;" />
-        </div>
-        <div class="flex-grow-1 min-w-0">
-          <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
-            <span class="fw-bold" style="font-size:14px;">${story.author}</span>
-            <span class="text-muted" style="font-size:12px;">· ${story.time}</span>
-            <span class="badge-category ${story.badgeClass} ms-auto">${story.badge}</span>
-          </div>
-          <p class="post-text mb-2">${textHtml}</p>
-          ${voteHtml}
-          <div class="d-flex align-items-center gap-3 mt-2 flex-wrap">
-            <span class="interaction-btn text-muted hover-heart"><i class="bi bi-heart-fill" style="color:#c2185b;"></i> ${fmtNum(story.empathy)} empati</span>
-            <span class="interaction-btn text-muted hover-primary"><i class="bi bi-chat"></i> ${story.comments}</span>
-            ${repostHtml}
-          </div>
-        </div>
-      </div>
-    </article>`;
-}
+  /* Search Logic */
+  const searchInput    = document.getElementById('searchInput');
+  const btnClearSearch = document.getElementById('btnClearSearch');
+  const searchInfo     = document.getElementById('searchResultsInfo');
+  const searchPanel    = document.getElementById('searchResultsPanel');
+  const searchList     = document.getElementById('searchResultsList');
+  const searchEmpty    = document.getElementById('searchEmpty');
+  const exploreMain    = document.getElementById('exploreMain');
 
-// ─── Search ──────────────────────────────────────────────────────────────────
+  let searchDebounce;
+  searchInput.addEventListener('input', () => { clearTimeout(searchDebounce); searchDebounce = setTimeout(runSearch, 260); });
+  btnClearSearch.addEventListener('click', clearSearch);
 
-const searchInput    = document.getElementById('searchInput');
-const btnClearSearch = document.getElementById('btnClearSearch');
-const searchInfo     = document.getElementById('searchResultsInfo');
-const searchPanel    = document.getElementById('searchResultsPanel');
-const searchList     = document.getElementById('searchResultsList');
-const searchEmpty    = document.getElementById('searchEmpty');
-const exploreMain    = document.getElementById('exploreMain');
-const catPanel       = document.getElementById('categoryResultsPanel');
+  function runSearch() {
+    const q = searchInput.value.trim();
+    if (!q) { clearSearch(); return; }
+    btnClearSearch.classList.remove('d-none'); exploreMain.classList.add('d-none'); searchPanel.classList.remove('d-none');
 
-let searchDebounce;
+    const lowerQ = q.toLowerCase();
+    const tagQ = lowerQ.startsWith('#') ? lowerQ.slice(1) : lowerQ;
 
-searchInput.addEventListener('input', () => {
-  clearTimeout(searchDebounce);
-  searchDebounce = setTimeout(runSearch, 260);
-});
+    const results = allStories.filter(s => s.text.toLowerCase().includes(lowerQ) || s.author.toLowerCase().includes(lowerQ) || s.tags.some(t => t.toLowerCase().includes(tagQ)) || s.badge.toLowerCase().includes(lowerQ));
 
-btnClearSearch.addEventListener('click', clearSearch);
+    searchInfo.classList.remove('d-none'); searchInfo.textContent = results.length ? `${results.length} cerita ditemukan untuk "${q}"` : '';
 
-function runSearch() {
-  const q = searchInput.value.trim();
-  if (!q) { clearSearch(); return; }
-
-  btnClearSearch.classList.remove('d-none');
-  exploreMain.classList.add('d-none');
-  catPanel.classList.add('d-none');
-  searchPanel.classList.remove('d-none');
-
-  const results = allStories.filter(s =>
-    s.text.toLowerCase().includes(q.toLowerCase()) ||
-    s.author.toLowerCase().includes(q.toLowerCase()) ||
-    s.tags.some(t => t.includes(q.toLowerCase())) ||
-    s.badge.toLowerCase().includes(q.toLowerCase())
-  );
-
-  searchInfo.classList.remove('d-none');
-  searchInfo.textContent = results.length
-    ? `${results.length} cerita ditemukan untuk "${q}"`
-    : '';
-
-  if (!results.length) {
-    searchList.innerHTML = '';
-    searchEmpty.classList.remove('d-none');
-  } else {
-    searchEmpty.classList.add('d-none');
-    searchList.innerHTML = results.map(s => buildPostCard(s, q)).join('');
-    attachVoteListeners(searchList);
-  }
-}
-
-function clearSearch() {
-  searchInput.value = '';
-  btnClearSearch.classList.add('d-none');
-  searchInfo.classList.add('d-none');
-  searchPanel.classList.add('d-none');
-  searchEmpty.classList.add('d-none');
-  exploreMain.classList.remove('d-none');
-}
-
-// ─── Category Cards ──────────────────────────────────────────────────────────
-
-const catLabels = {
-  heartbreak: '💔 Heartbreak',
-  firstlove:  '🌸 First Love',
-  toxic:      '🚩 Toxic Relationship',
-  healing:    '🌿 Healing',
-  platonic:   '🤝 Platonic Love',
-  selflove:   '🪞 Self-Love',
-  family:     '🏠 Family',
-  anxiety:    '🌀 Anxiety',
-  friendship: '🫂 Friendship',
-  nostalgia:  '🕰️ Nostalgia'
-};
-
-document.getElementById('categoriesGrid').addEventListener('click', e => {
-  const card = e.target.closest('.category-card');
-  if (!card) return;
-
-  const cat = card.dataset.cat;
-  showCategoryResults(cat);
-});
-
-document.getElementById('btnBackCat').addEventListener('click', () => {
-  catPanel.classList.add('d-none');
-  exploreMain.classList.remove('d-none');
-});
-
-function showCategoryResults(cat) {
-  exploreMain.classList.add('d-none');
-  searchPanel.classList.add('d-none');
-  catPanel.classList.remove('d-none');
-
-  document.getElementById('catResultTitle').textContent = catLabels[cat] || cat;
-
-  const posts = allStories.filter(s => s.cat === cat);
-  const list  = document.getElementById('categoryPostsList');
-
-  if (!posts.length) {
-    list.innerHTML = `<div class="text-center py-5 text-muted">
-      <div style="font-size:2.5rem;">✨</div>
-      <p class="mt-2">Belum ada cerita di kategori ini.</p>
-    </div>`;
-    return;
+    if (!results.length) { searchList.innerHTML = ''; searchEmpty.classList.remove('d-none'); } 
+    else { searchEmpty.classList.add('d-none'); searchList.innerHTML = results.map(s => buildPostCardHTML(s, q)).join(''); }
   }
 
-  list.innerHTML = posts.map(s => buildPostCard(s)).join('');
-  attachVoteListeners(list);
-  catPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-// ─── Tag Buttons ─────────────────────────────────────────────────────────────
-
-document.getElementById('trendingTags').addEventListener('click', e => {
-  const btn = e.target.closest('.trending-tag-btn');
-  if (!btn) return;
-
-  document.querySelectorAll('.trending-tag-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-
-  const tag = btn.dataset.tag;
-  searchInput.value = '#' + tag;
-  btnClearSearch.classList.remove('d-none');
-
-  const results = allStories.filter(s => s.tags.includes(tag));
-  exploreMain.classList.add('d-none');
-  catPanel.classList.add('d-none');
-  searchPanel.classList.remove('d-none');
-  searchInfo.classList.remove('d-none');
-  searchInfo.textContent = `${results.length} cerita dengan tag #${tag}`;
-
-  if (!results.length) {
-    searchList.innerHTML = '';
-    searchEmpty.classList.remove('d-none');
-  } else {
-    searchEmpty.classList.add('d-none');
-    searchList.innerHTML = results.map(s => buildPostCard(s, tag)).join('');
-    attachVoteListeners(searchList);
-  }
-});
-
-// ─── Mood Chips ──────────────────────────────────────────────────────────────
-
-const moodToCat = {
-  'patah-hati': ['heartbreak', 'firstlove'],
-  'gelisah':    ['anxiety'],
-  'rindu':      ['nostalgia', 'firstlove'],
-  'bersyukur':  ['healing', 'selflove'],
-  'marah':      ['toxic', 'anxiety'],
-  'semua':      null
-};
-
-document.getElementById('moodChips').addEventListener('click', e => {
-  const chip = e.target.closest('.mood-chip');
-  if (!chip) return;
-
-  document.querySelectorAll('.mood-chip').forEach(c => c.classList.remove('active'));
-  chip.classList.add('active');
-
-  const mood = chip.dataset.mood;
-  const cats = moodToCat[mood];
-
-  const feed = document.getElementById('trendingFeed');
-  const articles = feed.querySelectorAll('.post-card');
-
-  if (!cats) {
-    articles.forEach(a => { a.style.display = ''; });
-    return;
+  function clearSearch() {
+    searchInput.value = ''; btnClearSearch.classList.add('d-none'); searchInfo.classList.add('d-none'); searchPanel.classList.add('d-none'); searchEmpty.classList.add('d-none'); exploreMain.classList.remove('d-none');
   }
 
-  articles.forEach(a => {
-    const id = parseInt(a.dataset.id);
-    const story = allStories.find(s => s.id === id);
-    a.style.display = story && cats.includes(story.cat) ? '' : 'none';
+  /* Mood & Categories Logic */
+  const moodToCat = { 'patah-hati': ['heartbreak', 'firstlove'], 'gelisah': ['anxiety'], 'rindu': ['nostalgia', 'firstlove'], 'bersyukur': ['healing', 'selflove'], 'marah': ['toxic', 'anxiety'], 'semua': null };
+
+  document.getElementById('moodChips').addEventListener('click', e => {
+    const chip = e.target.closest('.mood-chip');
+    if (!chip) return;
+    document.querySelectorAll('.mood-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+
+    const mood = chip.dataset.mood; const cats = moodToCat[mood]; const feed = document.getElementById('trendingFeed');
+    if (!cats) { feed.innerHTML = allStories.slice(0, 5).map((s, i) => buildPostCardHTML(s, '', i+1)).join(''); } 
+    else { const filtered = allStories.filter(s => cats.some(c => s.tags.includes(c))); feed.innerHTML = filtered.length ? filtered.map(s => buildPostCardHTML(s)).join('') : `<p class="text-muted p-3">Tidak ada trending untuk mood ini.</p>`; }
   });
-});
 
-// ─── Voting ──────────────────────────────────────────────────────────────────
+  const catPanel = document.getElementById('categoryResultsPanel');
+  const catLabels = { heartbreak: '💔 Heartbreak', firstlove: '🌸 First Love', toxic: '🚩 Toxic Relationship', healing: '🌿 Healing', platonic: '🤝 Platonic Love', selflove: '🪞 Self-Love', family: '🏠 Family', anxiety: '🌀 Anxiety', friendship: '🫂 Friendship', nostalgia: '🕰️ Nostalgia' };
 
-function attachVoteListeners(container) {
-  container.querySelectorAll('.voting-box').forEach(box => {
-    const healthy = box.querySelector('.btn-vote-healthy');
-    const toxic   = box.querySelector('.btn-vote-toxic');
-    const bar     = box.querySelector('.vote-bar-healthy');
-    const labels  = box.querySelectorAll('.d-flex.justify-content-between span');
+  document.getElementById('categoriesGrid').addEventListener('click', e => {
+    const card = e.target.closest('.category-card');
+    if (!card) return;
+    const cat = card.dataset.cat;
+    exploreMain.classList.add('d-none'); searchPanel.classList.add('d-none'); catPanel.classList.remove('d-none');
+    document.getElementById('catResultTitle').textContent = catLabels[cat] || cat;
 
-    [healthy, toxic].forEach(btn => {
-      btn.addEventListener('click', () => {
-        healthy.classList.remove('active');
-        toxic.classList.remove('active');
-        btn.classList.add('active');
+    const posts = allStories.filter(s => s.tags.includes(cat));
+    const list  = document.getElementById('categoryPostsList');
+    if (!posts.length) { list.innerHTML = `<div class="text-center py-5 text-muted"><div style="font-size:2.5rem;">✨</div><p class="mt-2">Belum ada cerita dengan kategori #${cat} ini.</p></div>`; return; }
+    list.innerHTML = posts.map(s => buildPostCardHTML(s)).join('');
+    catPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 
-        const isHealthy = btn === healthy;
-        const hPct = isHealthy ? Math.min(parseInt(bar.style.width) + 5, 95) : Math.max(parseInt(bar.style.width) - 5, 5);
-        bar.style.width = hPct + '%';
-        if (labels.length === 2) {
-          labels[0].textContent = hPct + '% Sehat';
-          labels[1].textContent = (100 - hPct) + '% Toxic';
-        }
-      });
+  document.getElementById('btnBackCat').addEventListener('click', () => { catPanel.classList.add('d-none'); exploreMain.classList.remove('d-none'); });
+
+  /* Trending Tags Logic */
+  const trendingTags = document.getElementById('trendingTags');
+  if (trendingTags) {
+    trendingTags.addEventListener('click', e => {
+      const btn = e.target.closest('.trending-tag-btn');
+      if (!btn) return;
+
+      document.querySelectorAll('.trending-tag-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const tag = btn.dataset.tag;
+      const searchInput = document.getElementById('searchInput');
+      searchInput.value = '#' + tag;
+
+      searchInput.dispatchEvent(new Event('input'));
     });
-  });
-}
-
-// Attach vote listeners for pre-rendered trending feed
-attachVoteListeners(document.getElementById('trendingFeed'));
-
-// ─── Follow Buttons ───────────────────────────────────────────────────────────
-
-document.addEventListener('click', e => {
-  const btn = e.target.closest('.btn-follow');
-  if (!btn) return;
-  const isFollowing = btn.classList.toggle('following');
-  btn.textContent = isFollowing ? 'Following' : 'Follow';
+  }
 });

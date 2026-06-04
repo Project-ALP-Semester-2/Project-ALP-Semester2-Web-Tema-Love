@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UnSaid — Follow</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;800&display=swap" rel="stylesheet" />
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <link rel="stylesheet" href="../css/index.css" />
+  <link rel="stylesheet" href="../css/homepage.css" />
+  <link rel="stylesheet" href="../css/follow.css" />
+</head>
+<body>
+
+<div class="container-xxl p-0">
+  <div class="row g-0 m-0 w-100 justify-content-center">
+
+    <aside class="col-2 col-lg-3 sidebar-left d-flex flex-column align-items-end align-items-lg-start py-3 px-2 px-lg-4">
+      <div class="logo-area mb-4 px-2 w-100 d-flex justify-content-center justify-content-lg-start">
+        <img src="../images/Logo_icon.png" alt="UnSaid Logo" style="height:44px;width:44px;object-fit:contain;mix-blend-mode:multiply;background-color:transparent;" class="rounded-3" />
+      </div>
+      <nav class="nav-menu w-100 flex-grow-1 d-flex flex-column align-items-center align-items-lg-start">
+        <a href="homepage.html" class="nav-link"><i class="bi bi-house-door-fill"></i> <span>Home</span></a>
+        <a href="explorepage.html" class="nav-link"><i class="bi bi-compass"></i> <span>Explore</span></a>
+        <a href="notifications.html" class="nav-link"><i class="bi bi-bell"></i> <span>Notifications</span></a>
+        <a href="follow.html" class="nav-link active"><i class="bi bi-people-fill"></i> <span>Follow</span></a>
+        <a href="#" class="nav-link"><i class="bi bi-bookmark"></i> <span>Bookmarks</span></a>
+        <a href="#" class="nav-link"><i class="bi bi-person"></i> <span>Profile</span></a>
+        
+        <button class="btn btn-primary w-100 py-3 mt-4 fw-bold d-none d-lg-block">Bercerita</button>
+        <button class="btn btn-primary rounded-circle p-0 d-lg-none mt-4 flex-center" style="width:50px;height:50px;">
+          <i class="bi bi-pencil-square fs-5"></i>
+        </button>
+      </nav>
+      <div class="profile-mini w-100 mt-auto p-2 d-flex align-items-center justify-content-center justify-content-lg-start gap-2 rounded-pill hover-effect" style="cursor:pointer;">
+        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Elvina" class="rounded-circle bg-white border" style="width:40px;height:40px;" />
+        <div class="d-none d-lg-block">
+          <div class="fw-bold" style="font-size:14px;">A human</div>
+          <div class="text-muted" style="font-size:12px;">@ahuman</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="col-10 col-md-8 col-lg-6 feed-area p-0 border-end">
+
+      <div class="sticky-top bg-blur border-bottom pt-3" style="z-index:50;">
+        <h5 class="font-display fw-bold mb-3 px-3 px-md-4" style="color:var(--primary-dark);font-size:1.4rem;">Koneksi</h5>
+        <div class="feed-tabs d-flex">
+            <div class="tab-item active flex-grow-1 text-center py-3" data-tab="suggested">Disarankan</div>
+            <div class="tab-item flex-grow-1 text-center py-3" data-tab="following">Mengikuti</div>
+            <div class="tab-item flex-grow-1 text-center py-3" data-tab="followers">Pengikut</div>
+        </div>
+      </div>
+
+      <div id="followFeed" class="pb-5">
+        </div>
+
+    </main>
+
+    <aside class="col-3 d-none d-lg-block sidebar-right py-4 px-3">
+      
+      <div class="search-box mb-4">
+        <div class="search-input-wrap d-flex align-items-center gap-2 rounded-pill px-3 py-2 border shadow-sm bg-white" style="border-color: var(--neutral-pale) !important;">
+            <i class="bi bi-search text-muted"></i>
+            <input type="text" class="form-control border-0 bg-transparent p-0 shadow-none" placeholder="Cari pengguna…" style="font-size: 14px;">
+        </div>
+      </div>
+
+      <div class="widget-box rounded-4 p-4 mb-4">
+        <h5 class="widget-title mb-3">Mini Edukasi</h5>
+        <div class="edu-item mb-3 pb-3 border-bottom" style="border-color:var(--neutral-pale)!important;">
+          <div class="small fw-bold mb-1" style="color:var(--primary-dark);">Safe Space</div>
+          <p class="small text-muted mb-0" style="line-height:1.6;">Mengikuti seseorang berarti bersedia mendengarkan cerita mereka. Mari bangun komunitas yang saling mendukung.</p>
+        </div>
+      </div>
+
+      <footer class="px-2 mt-4 pb-4">
+        <nav class="d-flex flex-wrap gap-x-3 gap-y-1 mb-2" style="column-gap:12px;row-gap:4px;">
+          <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size:12px;">About</a>
+          <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size:12px;">Privacy Policy</a>
+          <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size:12px;">Terms of Service</a>
+        </nav>
+        <div class="text-muted" style="font-size:12px;line-height:1.6;">© 2026 UnSaid. Safe Space for Stories.</div>
+      </footer>
+
+    </aside>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/interactions.js"></script> 
+<script src="../js/follow.js"></script>
+</body>
+</html>

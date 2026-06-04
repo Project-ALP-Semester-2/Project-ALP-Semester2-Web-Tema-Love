@@ -1,0 +1,13 @@
+.user-card {
+    transition: background-color 0.2s;
+    cursor: default;
+}
+
+.user-card .btn-follow {
+    padding: 6px 20px;
+    font-size: 14px;
+}
+
+.bg-secondary-soft {
+    background-color: rgba(176, 112, 128, 0.12);
+}

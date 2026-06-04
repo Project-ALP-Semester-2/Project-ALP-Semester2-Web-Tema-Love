@@ -1,0 +1,70 @@
+/* NOTIFICATIONS CSS */
+
+.notification-card {
+    display: flex;
+    gap: 16px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--neutral-pale);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-decoration: none;
+    color: inherit;
+}
+
+@media (min-width: 768px) {
+    .notification-card { padding: 20px 24px; }
+}
+
+.notification-card:hover {
+    background-color: var(--tertiary);
+}
+
+/* Background state "Belum dibaca" */
+.notification-card.unread {
+    background-color: rgba(133, 193, 182, 0.06); 
+}
+
+.notif-icon-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.icon-system { 
+    background-color: var(--neutral-pale); 
+    color: var(--neutral); 
+}
+.icon-heart { 
+    background-color: rgba(194, 24, 91, 0.1); 
+    color: #c2185b; 
+}
+.icon-comment { 
+    background-color: rgba(133, 193, 182, 0.2); 
+    color: var(--primary-dark); 
+}
+
+/* Konten Teks Notifikasi */
+.notif-content {
+    flex-grow: 1;
+    min-width: 0; 
+}
+
+.notif-time {
+    font-size: 12px;
+    color: var(--neutral-light);
+    white-space: nowrap;
+}
+
+.unread-dot {
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary-dark);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+}

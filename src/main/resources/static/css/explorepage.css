@@ -1,9 +1,4 @@
-/* ── EXPLORE PAGE CSS ──
-   Extends homepage.css & index.css
-   No duplicate rules — only explore-specific styles
-*/
-
-/* ─── Search Bar ─── */
+/* Search Bar */
 .explore-search-wrap {
   background-color: var(--tertiary);
   border: 1.5px solid var(--neutral-pale);
@@ -21,7 +16,7 @@
   color: var(--neutral-light);
 }
 
-/* ─── Section Title ─── */
+/* Section Title */
 .explore-section-title {
   font-family: var(--font-display);
   font-size: 16px;
@@ -30,7 +25,7 @@
   letter-spacing: -0.1px;
 }
 
-/* ─── Mood Chips ─── */
+/* Mood Chips */
 .mood-chip {
   padding: 6px 16px;
   border-radius: 50px;
@@ -56,7 +51,7 @@
   font-weight: 600;
 }
 
-/* ─── Category Grid ─── */
+/* Category Grid */
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -120,12 +115,6 @@
   line-height: 1.2;
 }
 
-.cat-count {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--neutral-light);
-}
-
 /* Per-category tints */
 .cat-heartbreak { background: linear-gradient(135deg, #fff 60%, rgba(217, 163, 181, 0.2)); }
 .cat-heartbreak.active-cat, .cat-heartbreak:hover { background: linear-gradient(135deg, rgba(217, 163, 181, 0.15), rgba(176, 112, 128, 0.12)); border-color: rgba(176, 112, 128, 0.3); }
@@ -160,30 +149,31 @@
 .cat-nostalgia { background: linear-gradient(135deg, #fff 60%, rgba(200, 180, 140, 0.15)); }
 .cat-nostalgia:hover, .cat-nostalgia.active-cat { background: linear-gradient(135deg, rgba(200, 180, 140, 0.12), rgba(150, 120, 80, 0.1)); border-color: rgba(150, 120, 80, 0.25); }
 
-/* ─── Trending Rank Badge ─── */
+/* Trending Rank Badge */
 .trending-rank-badge {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 18px;
-  height: 18px;
+  top: -4px;     
+  left: -4px;    
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background-color: #c2185b;
   color: var(--white);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid var(--white);
+  border: 2px solid var(--white);
   font-family: var(--font-body);
+  z-index: 2;
 }
 .trending-rank-badge.rank-2 { background-color: var(--primary-dark); }
 .trending-rank-badge.rank-3 { background-color: #8a7060; }
 .trending-rank-badge.rank-4 { background-color: var(--neutral-light); }
 .trending-rank-badge.rank-5 { background-color: var(--neutral-light); }
 
-/* ─── Trending Spark ─── */
+/* Trending Spark */
 .trending-spark {
   font-size: 12px;
   color: #c2185b;
@@ -191,66 +181,9 @@
   background-color: rgba(194, 24, 91, 0.06);
   padding: 2px 8px;
   border-radius: 20px;
-  margin-left: auto;
 }
 
-/* ─── Vote Bar ─── */
-.vote-bar-wrap {
-  height: 6px;
-  background-color: rgba(176, 112, 128, 0.2);
-  border-radius: 10px;
-  overflow: hidden;
-}
-.vote-bar-healthy {
-  height: 100%;
-  background-color: var(--primary-dark);
-  border-radius: 10px;
-  transition: width 0.5s ease;
-}
-
-/* ─── Trending Tags ─── */
-.trending-tag-btn {
-  padding: 6px 14px;
-  border-radius: 50px;
-  border: 1.5px solid var(--neutral-pale);
-  background-color: var(--white);
-  color: var(--neutral);
-  font-size: 13px;
-  font-weight: 500;
-  font-family: var(--font-body);
-  cursor: pointer;
-  transition: all 0.18s;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.trending-tag-btn:hover {
-  border-color: var(--primary);
-  background-color: rgba(133, 193, 182, 0.08);
-  color: var(--primary-dark);
-}
-.trending-tag-btn.active {
-  background-color: rgba(133, 193, 182, 0.15);
-  border-color: var(--primary);
-  color: var(--primary-dark);
-  font-weight: 600;
-}
-.tag-count {
-  font-size: 11px;
-  color: var(--neutral-light);
-  font-weight: 400;
-}
-
-/* ─── Category Results Back Button ─── */
-#btnBackCat {
-  width: 34px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ─── Search Highlight ─── */
+/* Search Highlight */
 mark.search-highlight {
   background-color: rgba(133, 193, 182, 0.35);
   color: var(--primary-dark);
@@ -258,26 +191,16 @@ mark.search-highlight {
   padding: 0 1px;
 }
 
-/* ─── Entrance Animations ─── */
-.category-card {
-  animation: fadeInDown 0.3s ease both;
+/* Back to category button */
+#btnBackCat {
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
 }
-.categories-grid .category-card:nth-child(1) { animation-delay: 0.02s; }
-.categories-grid .category-card:nth-child(2) { animation-delay: 0.04s; }
-.categories-grid .category-card:nth-child(3) { animation-delay: 0.06s; }
-.categories-grid .category-card:nth-child(4) { animation-delay: 0.08s; }
-.categories-grid .category-card:nth-child(5) { animation-delay: 0.10s; }
-.categories-grid .category-card:nth-child(6) { animation-delay: 0.12s; }
-.categories-grid .category-card:nth-child(7) { animation-delay: 0.14s; }
-.categories-grid .category-card:nth-child(8) { animation-delay: 0.16s; }
-.categories-grid .category-card:nth-child(9) { animation-delay: 0.18s; }
-.categories-grid .category-card:nth-child(10) { animation-delay: 0.20s; }
 
-#trendingFeed .post-card {
-  animation: fadeInDown 0.35s ease both;
-}
-#trendingFeed .post-card:nth-child(1) { animation-delay: 0.1s; }
-#trendingFeed .post-card:nth-child(2) { animation-delay: 0.18s; }
-#trendingFeed .post-card:nth-child(3) { animation-delay: 0.26s; }
-#trendingFeed .post-card:nth-child(4) { animation-delay: 0.34s; }
-#trendingFeed .post-card:nth-child(5) { animation-delay: 0.42s; }
+/* Trending feed entrance */
+#trendingFeed .post-card { animation: fadeInDown 0.35s ease both; }
+#trendingFeed .post-card:nth-child(1) { animation-delay: 0.08s; }
+#trendingFeed .post-card:nth-child(2) { animation-delay: 0.16s; }
+#trendingFeed .post-card:nth-child(3) { animation-delay: 0.24s; }
+#trendingFeed .post-card:nth-child(4) { animation-delay: 0.32s; }
+#trendingFeed .post-card:nth-child(5) { animation-delay: 0.40s; }
