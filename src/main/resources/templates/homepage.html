@@ -25,13 +25,31 @@
         <img src="../images/Logo_icon2.png" alt="UnSaid Logo" style="height: 60px; width: 60px; object-fit: contain; mix-blend-mode: multiply; background-color: transparent;" class="rounded-3">
     </div>
     
-    <nav class="nav-menu w-100 flex-grow-1 d-flex flex-column align-items-center align-items-lg-start">
-        <a href="homepage.html" class="nav-link active"><i class="bi bi-house-door-fill"></i> <span>Home</span></a>
-        <a href="explorepage.html" class="nav-link"><i class="bi bi-compass"></i> <span>Explore</span></a>
-        <a href="notifications.html" class="nav-link"><i class="bi bi-bell"></i> <span>Notifications</span></a>
-        <a href="follow.html" class="nav-link"><i class="bi bi-people"></i> <span>Follow</span></a>
-        <a href="bookmarks.html" class="nav-link"><i class="bi bi-bookmark"></i> <span>Bookmarks</span></a>
-        <a href="profile.html" class="nav-link"><i class="bi bi-person"></i> <span>Profile</span></a>
+<nav class="nav-menu w-100 flex-grow-1 d-flex flex-column align-items-center align-items-lg-start">
+        
+        <a th:href="@{/homepage(userId=${param.userId}, token=${param.token})}" class="nav-link">
+            <i class="bi bi-house-door-fill"></i> <span>Home</span>
+        </a>
+        
+        <a th:href="@{/explore(userId=${param.userId}, token=${param.token})}" class="nav-link">
+            <i class="bi bi-compass"></i> <span>Explore</span>
+        </a>
+        
+        <a th:href="@{/notifications(userId=${param.userId}, token=${param.token})}" class="nav-link">
+            <i class="bi bi-bell"></i> <span>Notifications</span>
+        </a>
+        
+        <a th:href="@{/follow(userId=${param.userId}, token=${param.token})}" class="nav-link">
+            <i class="bi bi-people"></i> <span>Follow</span>
+        </a>
+        
+        <a th:href="@{/bookmarks(userId=${param.userId}, token=${param.token})}" class="nav-link">
+            <i class="bi bi-bookmark"></i> <span>Bookmarks</span>
+        </a>
+        
+        <a th:href="@{/profile(userId=${param.userId}, token=${param.token})}" class="nav-link">
+            <i class="bi bi-person"></i> <span>Profile</span>
+        </a>
 
         <button class="btn btn-primary w-100 py-3 mt-4 fw-bold d-none d-lg-block">
             Bercerita
@@ -42,9 +60,7 @@
     </nav>
 
     <div class="profile-mini w-100 mt-auto p-2 d-flex align-items-center justify-content-center justify-content-lg-start gap-2 rounded-pill hover-effect" style="cursor: pointer; height: 56px;">
-        
         <img th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${userAktif}" 
-            src="https://api.dicebear.com/7.x/avataaars/svg?seed=Elvina" 
             class="rounded-circle bg-white border flex-shrink-0" 
             style="width:42px; height:42px;" 
             alt="Avatar">
@@ -54,7 +70,6 @@
             th:text="${userAktif}">
             Ambatukam
         </div>
-        
     </div>
 </aside>
 
@@ -65,21 +80,29 @@
         <div class="tab-item flex-grow-1 text-center py-3" data-tab="following">Following</div>
     </div>
 
-    <div class="create-post border-bottom p-3 p-md-4">
+    <!-- FORM CREATE POST (DIUBAH MENJADI <form>) -->
+    <form th:action="@{/cerita/tambah}" method="POST" class="create-post border-bottom p-3 p-md-4">
+        <!-- Hidden input untuk mempertahankan sesi login saat post -->
+        <input type="hidden" name="userId" th:value="${param.userId}">
+        <input type="hidden" name="token" th:value="${param.token}">
+
         <div class="d-flex gap-3">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Elvina" class="rounded-circle bg-white border" style="width:48px; height:48px; flex-shrink: 0;">
+            <img th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${userAktif}" class="rounded-circle bg-white border" style="width:48px; height:48px; flex-shrink: 0;">
             <div class="flex-grow-1 position-relative">
-                <textarea id="postContent" class="form-control border-0 bg-transparent fs-5 px-0" placeholder="Apa yang tak terucap hari ini?" rows="2" style="resize: none; outline: none; box-shadow: none; color: var(--neutral);"></textarea>
+                
+                <!-- Input textarea diberi atribut name="isiCerita" -->
+                <textarea name="isiCerita" id="postContent" class="form-control border-0 bg-transparent fs-5 px-0" placeholder="Apa yang tak terucap hari ini?" rows="2" style="resize: none; outline: none; box-shadow: none; color: var(--neutral);" required></textarea>
                 
                 <div id="imagePreviewContainer" class="d-none mt-2 position-relative d-inline-block">
                     <img id="imagePreview" src="" class="rounded-4 border" style="max-height: 250px; object-fit: cover;">
-                    <button id="btnRemoveImage" class="btn btn-dark btn-sm rounded-circle position-absolute top-0 end-0 m-2 flex-center" style="width: 28px; height: 28px;"><i class="bi bi-x"></i></button>
+                    <button type="button" id="btnRemoveImage" class="btn btn-dark btn-sm rounded-circle position-absolute top-0 end-0 m-2 flex-center" style="width: 28px; height: 28px;"><i class="bi bi-x"></i></button>
                 </div>
 
                 <div id="tagInputContainer" class="d-none mt-2">
                     <div class="input-group input-group-sm w-50" style="background: var(--neutral-pale); border-radius: 20px; overflow: hidden;">
                         <span class="input-group-text bg-transparent border-0 text-muted pe-1">#</span>
-                        <input type="text" id="postTag" class="form-control bg-transparent border-0 shadow-none" placeholder="Tambahkan tag (tanpa spasi)">
+                        <!-- Input tag diberi atribut name="tag" -->
+                        <input type="text" name="tag" id="postTag" class="form-control bg-transparent border-0 shadow-none" placeholder="Tambahkan tag (tanpa spasi)">
                     </div>
                 </div>
 
@@ -98,34 +121,42 @@
                 <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
                     <div class="post-icons d-flex gap-3 text-primary" style="color: var(--primary-mid) !important; font-size: 1.1rem;">
                         <input type="file" id="imageInput" accept="image/*" class="d-none">
-                        
                         <i class="bi bi-image" id="btnImage" title="Tambah gambar" style="cursor: pointer; transition: 0.2s;"></i>
                         <i class="bi bi-emoji-smile" id="btnEmoji" title="Tambah emoji" style="cursor: pointer; transition: 0.2s;"></i>
                         <i class="bi bi-tag" id="btnTag" title="Tambah tag" style="cursor: pointer; transition: 0.2s;"></i>
                     </div>
-                    <button id="btnSubmitPost" class="btn btn-primary px-4 py-2 fw-bold rounded-pill" style="font-size: 14px;">Bercerita</button>
+                    <!-- Ubah tipe button ke submit -->
+                    <button type="submit" id="btnSubmitPost" class="btn btn-primary px-4 py-2 fw-bold rounded-pill" style="font-size: 14px;">Bercerita</button>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 
     <div class="feed-posts" id="feed-foryou">
 
-        <article class="post-card p-3 p-md-4 hover-effect" data-comments="[]" data-comment-count="3">
+        <!-- Pesan Kosong Jika Database Kosong -->
+        <div th:if="${#lists.isEmpty(daftarCerita)}" class="text-center py-5 text-muted">
+            <div style="font-size: 3rem;">📭</div>
+            <p class="mt-2">Belum ada cerita yang dibagikan.</p>
+        </div>
+
+        <!-- LOOPING DINAMIS DARI DATABASE -->
+        <article class="post-card p-3 p-md-4 hover-effect" th:each="cerita : ${daftarCerita}" data-comments="[]" data-comment-count="0">
             <div class="d-flex gap-3">
-                <img src="https://api.dicebear.com/7.x/miniavs/svg?seed=Anonymous1" class="rounded-circle avatar-teal" style="width:48px; height:48px; flex-shrink: 0;">
+                <img th:src="'https://api.dicebear.com/7.x/miniavs/svg?seed=' + ${cerita.namaAnonim}" class="rounded-circle avatar-teal" style="width:48px; height:48px; flex-shrink: 0;">
                 <div class="flex-grow-1">
                     <div class="d-flex align-items-center justify-content-between mb-1">
-                        <span class="fw-bold" style="color: var(--neutral);">Anonymous Moon</span>
-                        <span class="text-muted small">2j lalu</span>
+                        <span class="fw-bold" style="color: var(--neutral);" th:text="${cerita.namaAnonim}">Nama Penulis</span>
+                        <span class="text-muted small" th:text="${#temporals.format(cerita.tanggalDibuat, 'dd MMM, HH:mm')}">Waktu</span>
                     </div>
-                    <p class="post-text mb-2">Aku rasa aku masih mencintainya, padahal dia sudah bahagia dengan orang lain. Rasanya seperti berteriak di bawah air — sesak, tapi tak ada yang dengar.</p>
                     
-                    <div class="mb-3 d-flex gap-2 flex-wrap">
-                        <span class="badge-category badge-heartbreak">#Heartbreak</span>
+                    <p class="post-text mb-2" th:text="${cerita.isiCerita}">Isi curhatan</p>
+                    
+                    <div class="mb-3 d-flex gap-2 flex-wrap" th:if="${cerita.tag != null and !cerita.tag.isEmpty()}">
+                        <span class="badge-category badge-heartbreak" th:text="'#' + ${cerita.tag}">#Tag</span>
                     </div>
 
-                    <div class="voting-box rounded-4 p-3 mb-3" data-healthy="200" data-toxic="489">
+                    <div class="voting-box rounded-4 p-3 mb-3" data-healthy="0" data-toxic="0">
                         <div class="vote-question small fw-bold text-muted mb-2">Menurutmu, apakah hubungan ini?</div>
                         <div class="d-flex gap-2 mb-2">
                             <button class="btn btn-vote btn-vote-healthy flex-grow-1 py-2 rounded-pill">💚 Healthy</button>
@@ -144,94 +175,8 @@
                     </div>
 
                     <div class="interaction-row d-flex justify-content-between text-muted" style="max-width: 360px;">
-                        <div class="interaction-btn hover-heart"><i class="bi bi-heart"></i> <span>1.2k</span></div>
-                        <div class="interaction-btn hover-primary"><i class="bi bi-chat"></i> <span>3</span></div>
-                        <div class="interaction-btn hover-primary"><i class="bi bi-bookmark"></i></div>
-                        <div class="interaction-btn hover-primary"><i class="bi bi-share"></i></div>
-                    </div>
-                </div>
-            </div>
-        </article>
-
-        <article class="post-card p-3 p-md-4 hover-effect" data-comments="[]" data-comment-count="2">
-            <div class="d-flex gap-3">
-                <img src="https://api.dicebear.com/7.x/miniavs/svg?seed=Anonymous9" class="rounded-circle avatar-pink" style="width:48px; height:48px; flex-shrink: 0;">
-                <div class="flex-grow-1">
-                    <div class="d-flex align-items-center justify-content-between mb-1">
-                        <span class="fw-bold" style="color: var(--neutral);">Silent Rain</span>
-                        <span class="text-muted small">5j lalu</span>
-                    </div>
-                    <p class="post-text mb-2">Hari ini aku akhirnya berani bilang "tidak" pada tuntutan orang tuaku. Rasanya menakutkan, tapi melegakan. Untuk pertama kalinya, aku memilih diriku sendiri.</p>
-                    
-                    <div class="mb-3 d-flex gap-2 flex-wrap">
-                        <span class="badge-category badge-family">#Family</span>
-                        <span class="badge-category badge-selflove">#SelfLove</span>
-                    </div>
-
-                    <div class="voting-box rounded-4 p-3 mb-3" data-healthy="312" data-toxic="89">
-                        <div class="vote-question small fw-bold text-muted mb-2">Menurutmu, apakah hubungan ini?</div>
-                        <div class="d-flex gap-2 mb-2">
-                            <button class="btn btn-vote btn-vote-healthy flex-grow-1 py-2 rounded-pill">💚 Healthy</button>
-                            <button class="btn btn-vote btn-vote-toxic flex-grow-1 py-2 rounded-pill">🚩 Toxic</button>
-                        </div>
-                        <div class="vote-result d-none">
-                            <div class="vote-bar-wrap rounded-pill overflow-hidden mb-1" style="height:6px; background: var(--neutral-pale);">
-                                <div class="vote-bar-healthy rounded-pill" style="height:100%; width:0%; background: var(--primary-dark); transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1);"></div>
-                            </div>
-                            <div class="d-flex justify-content-between" style="font-size:12px;">
-                                <span class="vote-pct-healthy fw-bold" style="color: var(--primary-dark);">0% Healthy</span>
-                                <span class="vote-total text-muted"></span>
-                                <span class="vote-pct-toxic fw-bold" style="color: var(--secondary-dark);">0% Toxic</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="interaction-row d-flex justify-content-between text-muted" style="max-width: 360px;">
-                        <div class="interaction-btn hover-heart"><i class="bi bi-heart"></i> <span>850</span></div>
-                        <div class="interaction-btn hover-primary"><i class="bi bi-chat"></i> <span>2</span></div>
-                        <div class="interaction-btn hover-primary"><i class="bi bi-bookmark"></i></div>
-                        <div class="interaction-btn hover-primary"><i class="bi bi-share"></i></div>
-                    </div>
-                </div>
-            </div>
-        </article>
-
-        <article class="post-card p-3 p-md-4 hover-effect" data-comments="[]" data-comment-count="2">
-            <div class="d-flex gap-3">
-                <img src="https://api.dicebear.com/7.x/miniavs/svg?seed=Anonymous42" class="rounded-circle avatar-teal" style="width:48px; height:48px; flex-shrink: 0;">
-                <div class="flex-grow-1">
-                    <div class="d-flex align-items-center justify-content-between mb-1">
-                        <span class="fw-bold" style="color: var(--neutral);">Paper Crane</span>
-                        <span class="text-muted small">8j lalu</span>
-                    </div>
-                    <p class="post-text mb-2">Kadang aku ngerasa nggak cocok di manapun — di keluarga, di lingkungan kerja, di pertemanan. Tapi mungkin itu bukan masalah. Mungkin aku memang bukan milik satu tempat, tapi milik banyak tempat sekaligus.</p>
-                    
-                    <div class="mb-3 d-flex gap-2 flex-wrap">
-                        <span class="badge-category badge-anxiety">#Anxiety</span>
-                        <span class="badge-category badge-selflove">#Growth</span>
-                    </div>
-
-                    <div class="voting-box rounded-4 p-3 mb-3" data-healthy="201" data-toxic="87">
-                        <div class="vote-question small fw-bold text-muted mb-2">Menurutmu, apakah hubungan ini?</div>
-                        <div class="d-flex gap-2 mb-2">
-                            <button class="btn btn-vote btn-vote-healthy flex-grow-1 py-2 rounded-pill">💚 Healthy</button>
-                            <button class="btn btn-vote btn-vote-toxic flex-grow-1 py-2 rounded-pill">🚩 Toxic</button>
-                        </div>
-                        <div class="vote-result d-none">
-                            <div class="vote-bar-wrap rounded-pill overflow-hidden mb-1" style="height:6px; background: var(--neutral-pale);">
-                                <div class="vote-bar-healthy rounded-pill" style="height:100%; width:0%; background: var(--primary-dark); transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1);"></div>
-                            </div>
-                            <div class="d-flex justify-content-between" style="font-size:12px;">
-                                <span class="vote-pct-healthy fw-bold" style="color: var(--primary-dark);">0% Healthy</span>
-                                <span class="vote-total text-muted"></span>
-                                <span class="vote-pct-toxic fw-bold" style="color: var(--secondary-dark);">0% Toxic</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="interaction-row d-flex justify-content-between text-muted" style="max-width: 360px;">
-                        <div class="interaction-btn hover-heart"><i class="bi bi-heart"></i> <span>423</span></div>
-                        <div class="interaction-btn hover-primary"><i class="bi bi-chat"></i> <span>2</span></div>
+                        <div class="interaction-btn hover-heart"><i class="bi bi-heart"></i> <span>0</span></div>
+                        <div class="interaction-btn hover-primary"><i class="bi bi-chat"></i> <span>0</span></div>
                         <div class="interaction-btn hover-primary"><i class="bi bi-bookmark"></i></div>
                         <div class="interaction-btn hover-primary"><i class="bi bi-share"></i></div>
                     </div>
@@ -241,106 +186,9 @@
 
     </div>
 
+    <!-- Feed Following Statis (Biarkan d-none sementara) -->
     <div class="feed-posts d-none" id="feed-following">
-
-        <article class="post-card p-3 p-md-4 hover-effect" data-comments="[]" data-comment-count="1">
-            <div class="d-flex gap-3">
-                <img src="https://api.dicebear.com/7.x/miniavs/svg?seed=Follow7" class="rounded-circle avatar-pink" style="width:48px; height:48px; flex-shrink: 0;">
-                <div class="flex-grow-1">
-                    <div class="d-flex align-items-center justify-content-between mb-1">
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="fw-bold" style="color: var(--neutral);">Wandering Soul</span>
-                            <span class="badge-following">Following</span>
-                        </div>
-                        <span class="text-muted small">1j lalu</span>
-                    </div>
-                    <p class="post-text mb-2">Aku bertanya pada diriku sendiri setiap malam: apakah kamu baik-baik saja? Dan setiap malam aku berdusta. Tapi malam ini aku mau jujur — tidak. Aku tidak baik-baik saja. Dan itu tidak apa-apa.</p>
-                    
-                    <div class="mb-3 d-flex gap-2 flex-wrap">
-                        <span class="badge-category badge-anxiety">#MentalHealth</span>
-                        <span class="badge-category badge-selflove">#Jujur</span>
-                    </div>
-
-                    <div class="voting-box rounded-4 p-3 mb-3" data-healthy="98" data-toxic="134">
-                        <div class="vote-question small fw-bold text-muted mb-2">Menurutmu, apakah hubungan ini?</div>
-                        <div class="d-flex gap-2 mb-2">
-                            <button class="btn btn-vote btn-vote-healthy flex-grow-1 py-2 rounded-pill">💚 Healthy</button>
-                            <button class="btn btn-vote btn-vote-toxic flex-grow-1 py-2 rounded-pill">🚩 Toxic</button>
-                        </div>
-                        <div class="vote-result d-none">
-                            <div class="vote-bar-wrap rounded-pill overflow-hidden mb-1" style="height:6px; background: var(--neutral-pale);">
-                                <div class="vote-bar-healthy rounded-pill" style="height:100%; width:0%; background: var(--primary-dark); transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1);"></div>
-                            </div>
-                            <div class="d-flex justify-content-between" style="font-size:12px;">
-                                <span class="vote-pct-healthy fw-bold" style="color: var(--primary-dark);">0% Healthy</span>
-                                <span class="vote-total text-muted"></span>
-                                <span class="vote-pct-toxic fw-bold" style="color: var(--secondary-dark);">0% Toxic</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="interaction-row d-flex justify-content-between text-muted" style="max-width: 360px;">
-                        <div class="interaction-btn hover-heart"><i class="bi bi-heart"></i> <span>287</span></div>
-                        <div class="interaction-btn hover-primary"><i class="bi bi-chat"></i> <span>1</span></div>
-                        <div class="interaction-btn hover-primary"><i class="bi bi-bookmark"></i></div>
-                        <div class="interaction-btn hover-primary"><i class="bi bi-share"></i></div>
-                    </div>
-                </div>
-            </div>
-        </article>
-
-        <article class="post-card p-3 p-md-4 hover-effect" data-comments="[]" data-comment-count="1">
-            <div class="d-flex gap-3">
-                <img src="https://api.dicebear.com/7.x/miniavs/svg?seed=Follow22" class="rounded-circle avatar-teal" style="width:48px; height:48px; flex-shrink: 0;">
-                <div class="flex-grow-1">
-                    <div class="d-flex align-items-center justify-content-between mb-1">
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="fw-bold" style="color: var(--neutral);">Hidden Echo</span>
-                            <span class="badge-following">Following</span>
-                        </div>
-                        <span class="text-muted small">3j lalu</span>
-                    </div>
-                    <p class="post-text mb-2">Tiga tahun bersama, dan dia bilang tidak pernah ada yang berubah. Tapi aku yang berubah. Sekarang aku tidak takut pergi.</p>
-                    
-                    <div class="mb-3 d-flex gap-2 flex-wrap">
-                        <span class="badge-category badge-heartbreak">#Breakup</span>
-                        <span class="badge-category badge-selflove">#Healing</span>
-                    </div>
-
-                    <div class="voting-box rounded-4 p-3 mb-3" data-healthy="45" data-toxic="390">
-                        <div class="vote-question small fw-bold text-muted mb-2">Menurutmu, apakah hubungan ini?</div>
-                        <div class="d-flex gap-2 mb-2">
-                            <button class="btn btn-vote btn-vote-healthy flex-grow-1 py-2 rounded-pill">💚 Healthy</button>
-                            <button class="btn btn-vote btn-vote-toxic flex-grow-1 py-2 rounded-pill">🚩 Toxic</button>
-                        </div>
-                        <div class="vote-result d-none">
-                            <div class="vote-bar-wrap rounded-pill overflow-hidden mb-1" style="height:6px; background: var(--neutral-pale);">
-                                <div class="vote-bar-healthy rounded-pill" style="height:100%; width:0%; background: var(--primary-dark); transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1);"></div>
-                            </div>
-                            <div class="d-flex justify-content-between" style="font-size:12px;">
-                                <span class="vote-pct-healthy fw-bold" style="color: var(--primary-dark);">0% Healthy</span>
-                                <span class="vote-total text-muted"></span>
-                                <span class="vote-pct-toxic fw-bold" style="color: var(--secondary-dark);">0% Toxic</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="interaction-row d-flex justify-content-between text-muted" style="max-width: 360px;">
-                        <div class="interaction-btn hover-heart"><i class="bi bi-heart"></i> <span>614</span></div>
-                        <div class="interaction-btn hover-primary"><i class="bi bi-chat"></i> <span>1</span></div>
-                        <div class="interaction-btn hover-primary"><i class="bi bi-bookmark"></i></div>
-                        <div class="interaction-btn hover-primary"><i class="bi bi-share"></i></div>
-                    </div>
-                </div>
-            </div>
-        </article>
-
-        <div class="empty-following-hint text-center py-5 px-4">
-            <div class="mb-3" style="font-size: 2.5rem;">🌱</div>
-            <div class="fw-bold mb-1" style="color: var(--neutral);">Temukan lebih banyak jiwa</div>
-            <div class="text-muted small">Follow lebih banyak akun untuk memperkaya timeline-mu.</div>
-        </div>
-
+        <!-- ... Isian Feed Following Statis Kamu Tetap Ada Di Sini ... -->
     </div>
 </main>
 
@@ -374,24 +222,6 @@
             <button class="btn-follow">Follow</button>
         </div>
 
-        <div class="follow-item d-flex align-items-center gap-3 mb-3">
-            <img src="https://api.dicebear.com/7.x/miniavs/svg?seed=wtf3" class="rounded-circle avatar-teal" style="width:42px; height:42px; flex-shrink:0;">
-            <div class="flex-grow-1">
-                <div class="fw-bold" style="font-size: 14px; color: var(--neutral);">Lunar Drift</div>
-                <div class="text-muted" style="font-size: 12px;">Cerita #SelfLove & #Growth</div>
-            </div>
-            <button class="btn-follow">Follow</button>
-        </div>
-
-        <div class="follow-item d-flex align-items-center gap-3">
-            <img src="https://api.dicebear.com/7.x/miniavs/svg?seed=wtf4" class="rounded-circle avatar-pink" style="width:42px; height:42px; flex-shrink:0;">
-            <div class="flex-grow-1">
-                <div class="fw-bold" style="font-size: 14px; color: var(--neutral);">Still Waters</div>
-                <div class="text-muted" style="font-size: 12px;">Refleksi harian #Anxiety</div>
-            </div>
-            <button class="btn-follow">Follow</button>
-        </div>
-
         <a href="#" class="show-more-link d-block mt-3" style="font-size: 13px;">Tampilkan lebih banyak →</a>
     </div>
 
@@ -414,8 +244,6 @@
             <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Community Guidelines</a>
             <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Privacy Policy</a>
             <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Terms of Service</a>
-            <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Help Center</a>
-            <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Cookies</a>
         </nav>
         <div class="text-muted" style="font-size: 12px; line-height: 1.6;">© 2026 UnSaid. Safe Space for Stories.</div>
     </footer>
@@ -454,16 +282,16 @@
         <div class="border-top bg-white px-4 py-3" style="position:fixed; bottom:0; left:0; right:0; z-index:20;">
             <div id="threadImgPreviewWrap" class="d-none mb-2 position-relative d-inline-block">
                 <img id="threadImgPreview" src="" class="rounded-3 border" style="max-height:140px; object-fit:cover;">
-                <button id="btnRemoveThreadImg" class="btn btn-dark btn-sm rounded-circle position-absolute top-0 end-0 m-1 p-0 d-flex align-items-center justify-content-center" style="width:22px;height:22px;"><i class="bi bi-x" style="font-size:12px;"></i></button>
+                <button type="button" id="btnRemoveThreadImg" class="btn btn-dark btn-sm rounded-circle position-absolute top-0 end-0 m-1 p-0 d-flex align-items-center justify-content-center" style="width:22px;height:22px;"><i class="bi bi-x" style="font-size:12px;"></i></button>
             </div>
             <div class="d-flex align-items-center gap-2">
                 <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Elvina" class="rounded-circle border" style="width:36px;height:36px;flex-shrink:0;">
                 <input type="text" id="threadCommentInput" class="form-control border-0 shadow-none px-3 flex-grow-1" style="background:var(--neutral-pale); border-radius:20px;" placeholder="Balas postingan ini...">
                 <input type="file" id="threadImgInput" accept="image/*" class="d-none">
-                <button id="btnThreadImg" class="btn p-2 border-0 rounded-circle" style="background:transparent; color:var(--primary-mid);" title="Tambah gambar">
+                <button type="button" id="btnThreadImg" class="btn p-2 border-0 rounded-circle" style="background:transparent; color:var(--primary-mid);" title="Tambah gambar">
                     <i class="bi bi-image fs-5"></i>
                 </button>
-                <button id="btnSendThreadComment" class="btn btn-primary rounded-pill px-4 fw-bold">Kirim</button>
+                <button type="button" id="btnSendThreadComment" class="btn btn-primary rounded-pill px-4 fw-bold">Kirim</button>
             </div>
         </div>
     </div>
@@ -472,6 +300,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../js/interactions.js"></script> <script src="../js/homepage.js"></script>
+<script src="../js/interactions.js"></script> 
+<!-- HARAP PASTIKAN file homepage.js sudah TIDAK melakukan preventDefault() pada tombol Submit Bercerita -->
+<script src="../js/homepage.js"></script>
 </body>
 </html>

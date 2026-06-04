@@ -2,121 +2,114 @@ package com.example.demo.Controller;
 
 import com.example.demo.Model.User;
 import com.example.demo.Repository.UserRepository;
-import com.example.demo.Service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Controller
-@RequestMapping("/auth")
 public class LoginController {
-    @Autowired
-    private UserService userService;
+
     @Autowired
     private UserRepository userRepository;
 
-    public static int tokenServer = 0;
-    @GetMapping
-    public String halamanLoginUtama() {
-        return "loginpage";
+    // Token sederhana untuk validasi keamanan di HomeController
+    public static final Integer tokenServer = 123456;
+
+    // ==========================================
+    // 1. BAGIAN MENAMPILKAN HALAMAN HTML
+    // ==========================================
+
+    @GetMapping("/auth")
+    public String authMenu() {
+        return "redirect:/auth/signin"; 
     }
 
-    @GetMapping("/signin")
-    public String halamanSignInManual() {
+    @GetMapping("/auth/signin")
+    public String showSignIn() {
         return "signin";
     }
 
-    @PostMapping("/proses-signin")
-    public String prosesSignIn(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password,
-            Model model) {
-
-        // VALIDASI DATABASE
-        boolean isUserValid = userService.validasiLogin(username, password);
-        
-        if (isUserValid) {
-            tokenServer = (int)(Math.random() * 90000) + 10000;
-            return "redirect:/homepage?userId=" + username + "&token=" + tokenServer;
-        } else {
-            model.addAttribute("pesanError", "Username atau Password salah!");
-            return "signin"; 
-        }
-    }
-    
-    @GetMapping("/signup")
-    public String halamanSignUp() {
+    @GetMapping("/auth/signup")
+    public String showSignUp() {
         return "signup";
     }
 
-    @PostMapping("/proses-signup")
-    public String prosesSignUp(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password,
-            Model model) {
-
-
-        if (username.trim().isEmpty() || password.trim().isEmpty()) {
-            model.addAttribute("pesanError", "Username dan Password tidak boleh kosong!");
-            return "signup";
-        }
-
-        java.util.Optional<User> userExist = userRepository.findByUsername(username);
-        if (userExist.isPresent()) {
-            model.addAttribute("pesanError", "Username '" + username + "' sudah digunakan. Pilih username lain!");
-            return "signup"; 
-        }
-
-        User userBaru = new User();
-        userBaru.setUsername(username);
-        userBaru.setPassword(password); 
-
-        tokenServer = (int)(Math.random() * 90000) + 10000;
-
-        userRepository.save(userBaru);
-
-        return "redirect:/homepage?userId=" + userBaru.getUsername() + "&token=" + tokenServer;
-    }
-
-    @GetMapping("/signup-anonim")
-    public String halamanSignUpAnonim() {
+    @GetMapping("/auth/signup-anonim")
+    public String showSignUpAnonim() {
         return "signup-anonim";
     }
 
-    @PostMapping("/proses-signup-anonim")
-    public String prosesSignUpAnonim(
-            @RequestParam("username") String username,
-            Model model) {
+    // ==========================================
+    // 2. BAGIAN MEMPROSES DATA KE DATABASE
+    // ==========================================
 
-        if (username.trim().isEmpty()) {
-            model.addAttribute("pesanError", "Nama samaran tidak boleh kosong!");
-            return "signup-anonim";
-        }
-
-        String usernameFinal = "Anon-" + username.trim().replaceAll("\\s+", "");
-
-        java.util.Optional<User> userExist = userRepository.findByUsername(usernameFinal);
-        if (userExist.isPresent()) {
-            model.addAttribute("pesanError", "Nama samaran '" + username + "' sudah diambil. Cari nama lain!");
-            return "signup-anonim";
-        }
-
-        User userAnonimBaru = new User();
-        userAnonimBaru.setUsername(usernameFinal);
+    // Proses Sign In
+    @PostMapping("/auth/proses-signin")
+    public String prosesSignIn(@RequestParam("username") String username, 
+                               @RequestParam("password") String password, 
+                               Model model) {
         
-        String passwordOtomatis = "passAnon-" + (int)(Math.random() * 90000);
-        userAnonimBaru.setPassword(passwordOtomatis);
+        // Cari user langsung (Tanpa Optional)
+        User user = userRepository.findByUsername(username);
 
-        userRepository.save(userAnonimBaru);
+        // Jika user ketemu dan password cocok
+        if (user != null && user.getPassword().equals(password)) {
+            return "redirect:/homepage?userId=" + username + "&token=" + tokenServer;
+        } else {
+            model.addAttribute("pesanError", "Username atau password salah!");
+            return "signin";
+        }
+    }
 
+    // Proses Sign Up Biasa
+    @PostMapping("/auth/proses-signup")
+    public String prosesSignUp(@RequestParam("username") String username, 
+                               @RequestParam("password") String password, 
+                               Model model) {
+        
+        // Cek apakah username sudah ada (Tanpa Optional)
+        User userExist = userRepository.findByUsername(username);
 
-        this.tokenServer = (int)(Math.random() * 90000) + 10000;
+        if (userExist != null) {
+            model.addAttribute("pesanError", "Username sudah terpakai, silakan pilih yang lain.");
+            return "signup";
+        }
 
-        // Langsung lempar masuk ke homepage membawa userId dan token rahasia
-        return "redirect:/homepage?userId=" + usernameFinal + "&token=" + this.tokenServer;
+        // Buat user baru
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+        newUser.setRole("USER");
+        userRepository.save(newUser);
+
+        return "redirect:/homepage?userId=" + username + "&token=" + tokenServer;
+    }
+
+    // Proses Sign Up Anonim
+    @PostMapping("/auth/proses-signup-anonim")
+    public String prosesSignUpAnonim(@RequestParam("username") String username, 
+                                     Model model) {
+        
+        String usernameFinal = "Anon-" + username.trim();
+        
+        // Cek apakah username anonim sudah ada (Tanpa Optional)
+        User userExist = userRepository.findByUsername(usernameFinal);
+
+        if (userExist != null) {
+            model.addAttribute("pesanError", "Nama samaran sudah dipakai orang lain.");
+            return "signup-anonim";
+        }
+
+        // Buat user anonim baru
+        User newAnonUser = new User();
+        newAnonUser.setUsername(usernameFinal);
+        newAnonUser.setPassword("rahasia123"); // Password otomatis, user anonim tidak butuh pass
+        newAnonUser.setRole("ANONIM");
+        userRepository.save(newAnonUser);
+
+        return "redirect:/homepage?userId=" + usernameFinal + "&token=" + tokenServer;
     }
 }

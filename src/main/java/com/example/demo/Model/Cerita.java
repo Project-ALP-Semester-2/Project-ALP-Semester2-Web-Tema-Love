@@ -1,8 +1,18 @@
 package com.example.demo.Model;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "cerita")
@@ -17,6 +27,8 @@ public class Cerita {
 
     private String namaAnonim;
     private LocalDateTime tanggalDibuat;
+    @Column(name = "kategori_tag")
+    private String tag; 
 
     // HUBUNGAN: Banyak cerita dimiliki oleh satu User
     @ManyToOne
@@ -53,4 +65,7 @@ public class Cerita {
 
     public List<Komentar> getDaftarKomentar() { return daftarKomentar; }
     public void setDaftarKomentar(List<Komentar> daftarKomentar) { this.daftarKomentar = daftarKomentar; }
+
+    public String getTag() { return tag; }
+    public void setTag(String tag) { this.tag = tag; }
 }

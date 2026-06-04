@@ -57,13 +57,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!tagInputContainer.classList.contains('d-none')) postTag.focus();
     });
 
-    btnSubmitPost.addEventListener('click', function () {
-        const content = postContent.value.trim();
-        let tag = postTag.value.trim().replace(/\s+/g, '');
-        if (content === '' && currentImageBase64 === '') {
-            alert('Tulis sesuatu atau tambahkan gambar terlebih dahulu.');
-            return;
-        }
+    // btnSubmitPost.addEventListener('click', function () {
+    //     const content = postContent.value.trim();
+    //     let tag = postTag.value.trim().replace(/\s+/g, '');
+    //     if (content === '' && currentImageBase64 === '') {
+    //         alert('Tulis sesuatu atau tambahkan gambar terlebih dahulu.');
+    //         return;
+        // }
         
         const myName = 'A human';
         const myAvatar = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Elvina';
@@ -112,4 +112,3 @@ document.addEventListener('DOMContentLoaded', function () {
         postContent.value = ''; postTag.value = ''; currentImageBase64 = ''; imageInput.value = '';
         imagePreviewContainer.classList.add('d-none'); tagInputContainer.classList.add('d-none'); emojiPicker.classList.add('d-none');
     });
-});

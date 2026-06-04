@@ -5,8 +5,6 @@ import com.example.demo.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class UserService {
 
@@ -14,10 +12,11 @@ public class UserService {
     private UserRepository userRepository;
 
     public boolean validasiLogin(String username, String password) {
-        Optional<User> userOptional = userRepository.findByUsername(username);
+        // Langsung panggil User tanpa Optional
+        User user = userRepository.findByUsername(username);
 
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
+        // Cek apakah user ketemu di database dan passwordnya cocok
+        if (user != null) {
             return user.getPassword().equals(password);
         }
         

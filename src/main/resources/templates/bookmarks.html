@@ -24,13 +24,30 @@
       <div class="logo-area mb-4 px-2 w-100 d-flex justify-content-center justify-content-lg-start">
         <img src="../images/Logo_icon.png" alt="UnSaid Logo" style="height:44px;width:44px;object-fit:contain;mix-blend-mode:multiply;background-color:transparent;" class="rounded-3" />
       </div>
-      <nav class="nav-menu w-100 flex-grow-1 d-flex flex-column align-items-center align-items-lg-start">
-        <a href="homepage.html" class="nav-link"><i class="bi bi-house-door-fill"></i> <span>Home</span></a>
-        <a href="explorepage.html" class="nav-link"><i class="bi bi-compass"></i> <span>Explore</span></a>
-        <a href="notifications.html" class="nav-link"><i class="bi bi-bell"></i> <span>Notifications</span></a>
-        <a href="follow.html" class="nav-link"><i class="bi bi-people"></i> <span>Follow</span></a>
-        <a href="bookmarks.html" class="nav-link active"><i class="bi bi-bookmark-fill"></i> <span>Bookmarks</span></a>
-        <a href="profile.html" class="nav-link"><i class="bi bi-person"></i> <span>Profile</span></a>
+<nav class="nav-menu w-100 flex-grow-1 d-flex flex-column align-items-center align-items-lg-start">
+        <a th:href="@{/homepage(userId=${param.userId}, token=${param.token})}" class="nav-link">
+          <i class="bi bi-house-door-fill"></i> <span>Home</span>
+        </a>
+        
+        <a th:href="@{/explore(userId=${param.userId}, token=${param.token})}" class="nav-link">
+          <i class="bi bi-compass"></i> <span>Explore</span>
+        </a>
+        
+        <a th:href="@{/notifications(userId=${param.userId}, token=${param.token})}" class="nav-link">
+          <i class="bi bi-bell"></i> <span>Notifications</span>
+        </a>
+        
+        <a th:href="@{/follow(userId=${param.userId}, token=${param.token})}" class="nav-link">
+          <i class="bi bi-people"></i> <span>Follow</span>
+        </a>
+        
+        <a th:href="@{/bookmarks(userId=${param.userId}, token=${param.token})}" class="nav-link active">
+          <i class="bi bi-bookmark-fill"></i> <span>Bookmarks</span>
+        </a>
+        
+        <a th:href="@{/profile(userId=${param.userId}, token=${param.token})}" class="nav-link">
+          <i class="bi bi-person"></i> <span>Profile</span>
+        </a>
         
         <button class="btn btn-primary w-100 py-3 mt-4 fw-bold d-none d-lg-block">Bercerita</button>
         <button class="btn btn-primary rounded-circle p-0 d-lg-none mt-4 flex-center" style="width:50px;height:50px;">
