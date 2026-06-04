@@ -14,36 +14,29 @@ public class Komentar {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String isiKomentar;
 
-    private String namaAnonimKomentar;
-    private LocalDateTime tanggalDibuat;
+    private LocalDateTime tanggalKomentar;
 
-    // HUBUNGAN: Banyak komentar ditulis oleh satu User
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    // HUBUNGAN: Banyak komentar menempel pada satu Cerita
     @ManyToOne
-    @JoinColumn(name = "cerita_id", nullable = false)
+    @JoinColumn(name = "cerita_id")
     private Cerita cerita;
 
-
-    // GETTER DAN SETTER
-    public Long getId() { return id_komentar; }
-    public void setId(Long id_komentar) { this.id_komentar = id_komentar; }
+    // Getter & Setter
+    public Long getId_komentar() { return id_komentar; }
+    public void setId_komentar(Long id_komentar) { this.id_komentar = id_komentar; }
 
     public String getIsiKomentar() { return isiKomentar; }
     public void setIsiKomentar(String isiKomentar) { this.isiKomentar = isiKomentar; }
-  
-    public String getNamaAnonimKomentar() { return namaAnonimKomentar; }
-    public void setNamaAnonimKomentar(String namaAnonimKomentar) { this.namaAnonimKomentar = namaAnonimKomentar; }
-  
-    public LocalDateTime getTanggalDibuat() { return tanggalDibuat; }
-    public void setTanggalDibuat(LocalDateTime tanggalDibuat) { this.tanggalDibuat = tanggalDibuat; }
-  
+
+    public LocalDateTime getTanggalKomentar() { return tanggalKomentar; }
+    public void setTanggalKomentar(LocalDateTime tanggalKomentar) { this.tanggalKomentar = tanggalKomentar; }
+
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
-  
+
     public Cerita getCerita() { return cerita; }
     public void setCerita(Cerita cerita) { this.cerita = cerita; }
 }

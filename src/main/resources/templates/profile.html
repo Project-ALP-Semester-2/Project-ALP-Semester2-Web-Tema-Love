@@ -15,6 +15,12 @@
   <link rel="stylesheet" href="../css/index.css" />
   <link rel="stylesheet" href="../css/homepage.css" />
   <link rel="stylesheet" href="../css/profile.css" />
+
+  <style>
+      .tab-content { display: none; }
+      .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  </style>
 </head>
 <body>
 
@@ -25,9 +31,8 @@
         <div class="logo-area mb-4 px-2 w-100 d-flex justify-content-center justify-content-lg-start">
             <img src="../images/Logo_icon2.png" alt="UnSaid Logo" style="height: 60px; width: 60px; object-fit: contain; mix-blend-mode: multiply; background-color: transparent;" class="rounded-3">
         </div>
-        
         <nav class="nav-menu w-100 flex-grow-1 d-flex flex-column align-items-center align-items-lg-start">
-            <a th:href="@{/explore(userId=${param.userId}, token=${param.token})}" class="nav-link">
+            <a th:href="@{/homepage(userId=${param.userId}, token=${param.token})}" class="nav-link">
                 <i class="bi bi-house-door-fill"></i> <span>Home</span>
             </a>
             <a th:href="@{/explore(userId=${param.userId}, token=${param.token})}" class="nav-link">
@@ -45,115 +50,152 @@
             <a th:href="@{/profile(userId=${param.userId}, token=${param.token})}" class="nav-link active">
                 <i class="bi bi-person"></i> <span>Profile</span>
             </a>
-
-            <button class="btn btn-primary w-100 py-3 mt-4 fw-bold d-none d-lg-block">
-                Bercerita
-            </button>
-            <button class="btn btn-primary rounded-circle p-0 d-lg-none mt-4 flex-center" style="width:50px; height:50px;">
-                <i class="bi bi-pencil-square fs-5"></i>
-            </button>
+            <button class="btn btn-primary w-100 py-3 mt-4 fw-bold d-none d-lg-block">Bercerita</button>
         </nav>
-
-        <div class="profile-mini w-100 mt-auto p-2 d-flex align-items-center justify-content-center justify-content-lg-start gap-2 rounded-pill hover-effect" style="cursor: pointer; height: 56px;">
-            <img th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${userAktif}" 
-                class="rounded-circle bg-white border flex-shrink-0" 
-                style="width:42px; height:42px;" 
-                alt="Avatar">
-                
-            <div class="d-none d-lg-block fw-bold my-auto text-dark overflow-hidden w-100" 
-                style="font-size: 14px; line-height: 1.2;">
-                <span class="d-block text-truncate" th:text="${userAktif}">
-                    Username
-                </span>
+        <div class="profile-mini w-100 mt-auto p-2 d-flex align-items-center justify-content-center justify-content-lg-start gap-2 rounded-pill hover-effect">
+            <img th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${userAktif}" class="rounded-circle bg-white border flex-shrink-0" style="width:42px; height:42px;">
+            <div class="d-none d-lg-block fw-bold my-auto text-dark overflow-hidden w-100" style="font-size: 14px; line-height: 1.2;">
+                <span class="d-block text-truncate" th:text="${userAktif}">Username</span>
             </div>
         </div>
     </aside>
 
     <main class="col-10 col-md-8 col-lg-6 feed-area p-0">
-
       <div class="sticky-top bg-blur border-bottom px-3 px-md-4 py-2 d-flex align-items-center gap-3" style="z-index:50;">
         <a href="javascript:history.back()" class="text-dark hover-primary transition"><i class="bi bi-arrow-left fs-5"></i></a>
         <div>
             <h5 class="font-display fw-bold mb-0" style="color:var(--primary-dark);font-size:1.15rem;" th:text="${userAktif}">Username</h5>
-            <span class="text-muted small" id="storiesCountHead" th:text="${jumlahPostingan} + ' cerita'">0 cerita</span>
+            <span class="text-muted small" th:text="${jumlahPostingan} + ' cerita'">0 cerita</span>
         </div>
       </div>
 
       <div class="profile-header-container position-relative">
           <div class="profile-banner" style="background: linear-gradient(135deg, rgba(133,193,182,0.4), rgba(217,163,181,0.3)); height: 160px;"></div>
-          
           <div class="px-3 px-md-4 pb-3">
               <div class="d-flex justify-content-between align-items-end position-relative mb-3" style="margin-top: -45px;">
                   <img th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${userAktif}" class="rounded-circle bg-white border profile-avatar-large shadow-sm" style="width: 90px; height: 90px; padding: 4px;" />
                   <button class="btn btn-outline-custom rounded-pill px-3 py-1.5 fw-semibold" style="font-size: 13px;">Edit Profile</button>
               </div>
-
               <div class="mt-3">
                   <h4 class="fw-bold mb-0" style="color: var(--neutral); font-size: 1.3rem;" th:text="${userAktif}">Username</h4>
                   <div class="text-muted" style="font-size: 14px;">@<span th:text="${usernameAsli}">username</span></div>
               </div>
-
               <p class="mt-3 mb-3 profile-bio-text" style="font-size: 14.5px; line-height: 1.5; color: var(--neutral);">
                   Hanya seorang manusia yang mencoba mengeluarkan isi kepala yang terlalu berisik. Mari saling mendengarkan tanpa menghakimi. 🌿✨
               </p>
-
               <div class="d-flex gap-4 small fw-medium mt-2">
-                  <div><span class="fw-bold text-dark">128</span> <span class="text-muted">Following</span></div>
-                  <div><span class="fw-bold text-dark">3.4k</span> <span class="text-muted">Followers</span></div>
+                  <div><span class="fw-bold text-dark" th:text="${jumlahMengikuti}">0</span> <span class="text-muted">Following</span></div>
+                  <div><span class="fw-bold text-dark" th:text="${jumlahPengikut}">0</span> <span class="text-muted">Followers</span></div>
               </div>
           </div>
 
           <div class="feed-tabs d-flex border-top border-bottom mt-2">
-              <div class="tab-item active flex-grow-1 text-center py-3" data-tab="my-stories">Ceritaku</div>
-              <div class="tab-item flex-grow-1 text-center py-3" data-tab="liked-stories">Disukai</div>
+              <div class="tab-item active flex-grow-1 text-center py-3" data-target="my-stories-tab" style="cursor:pointer;">Ceritaku</div>
+              <div class="tab-item flex-grow-1 text-center py-3" data-target="liked-stories-tab" style="cursor:pointer;">Disukai</div>
           </div>
       </div>
 
-      <div id="profileFeed" class="feed-posts pb-5">
-          <div th:if="${#lists.isEmpty(daftarCeritaKu)}" class="text-center py-5 mt-4 text-muted">
-              <div style="font-size: 3rem;">📭</div>
-              <h5 class="fw-bold mt-3 mb-2" style="color: var(--neutral);">Belum Ada Cerita</h5>
-              <p style="font-size: 14.5px;">Kamu belum membagikan ceritamu. Mulai bercerita hari ini.</p>
-          </div>
+      <div class="feed-posts pb-5">
+          
+          <div id="my-stories-tab" class="tab-content active">
+              <div th:if="${#lists.isEmpty(daftarCeritaKu)}" class="text-center py-5 mt-4 text-muted">
+                  <div style="font-size: 3rem;">📭</div>
+                  <h5 class="fw-bold mt-3 mb-2" style="color: var(--neutral);">Belum Ada Cerita</h5>
+                  <p style="font-size: 14.5px;">Kamu belum membagikan ceritamu. Mulai bercerita hari ini.</p>
+              </div>
 
-          <article class="post-card p-3 p-md-4 hover-effect" th:each="cerita : ${daftarCeritaKu}">
-              <div class="d-flex gap-3">
-                  <img th:src="'https://api.dicebear.com/7.x/miniavs/svg?seed=' + ${cerita.namaAnonim}" class="rounded-circle avatar-teal" style="width:48px; height:48px; flex-shrink: 0;">
-                  <div class="flex-grow-1">
-                      <div class="d-flex align-items-center justify-content-between mb-1">
-                          <span class="fw-bold" style="color: var(--neutral);" th:text="${cerita.namaAnonim}">Nama Penulis</span>
-                          <span class="text-muted small" th:text="${#temporals.format(cerita.tanggalDibuat, 'dd MMM, HH:mm')}">Waktu</span>
-                      </div>
-                      
-                      <p class="post-text mb-2" th:text="${cerita.isiCerita}">Isi curhatan</p>
-                      
-                      <div class="mt-2 d-flex gap-1 flex-wrap">
-                          <span th:each="singleTag : ${#strings.arraySplit(cerita.tag, ',')}" class="badge bg-light text-secondary border rounded-pill px-2 py-1 small">
-                              #<span th:text="${singleTag}"></span>
-                          </span>
-                      </div>
+              <article class="post-card p-3 p-md-4 hover-effect" th:each="cerita : ${daftarCeritaKu}">
+                  <div class="d-flex gap-3">
+                      <img th:src="'https://api.dicebear.com/7.x/miniavs/svg?seed=' + ${cerita.namaAnonim}" class="rounded-circle avatar-teal" style="width:48px; height:48px; flex-shrink: 0;">
+                      <div class="flex-grow-1">
+                          <div class="d-flex align-items-center justify-content-between mb-1">
+                              <span class="fw-bold" style="color: var(--neutral);" th:text="${cerita.namaAnonim}">Nama Penulis</span>
+                              <span class="text-muted small" th:text="${#temporals.format(cerita.tanggalDibuat, 'dd MMM, HH:mm')}">Waktu</span>
+                          </div>
+                          <p class="post-text mb-2" th:text="${cerita.isiCerita}">Isi curhatan</p>
+                          <div class="mt-2 d-flex gap-1 flex-wrap">
+                              <span th:each="singleTag : ${#strings.arraySplit(cerita.tag, ',')}" class="badge bg-light text-secondary border rounded-pill px-2 py-1 small">
+                                  #<span th:text="${singleTag}"></span>
+                              </span>
+                          </div>
 
-                      <div class="interaction-row d-flex justify-content-between text-muted mt-3" style="max-width: 360px;">
-                          <div class="interaction-btn hover-heart"><i class="bi bi-heart"></i> <span>0</span></div>
-                          <div class="interaction-btn hover-primary"><i class="bi bi-chat"></i> <span>0</span></div>
-                          <div class="interaction-btn hover-primary"><i class="bi bi-share"></i></div>
-                          
-                          <!-- TOMBOL DELETE BARU -->
-                          <form th:action="@{/profile/cerita/hapus}" method="POST" class="m-0 p-0 d-inline" onsubmit="return confirm('Yakin ingin menghapus cerita ini?');">
-                              <input type="hidden" name="ceritaId" th:value="${cerita.id}">
-                              <input type="hidden" name="userId" th:value="${param.userId[0]}">
-                              <input type="hidden" name="token" th:value="${param.token}">
-                              <button type="submit" class="btn p-0 border-0 bg-transparent interaction-btn text-danger">
-                                  <i class="bi bi-trash"></i>
-                              </button>
-                          </form>
+                          <div class="interaction-row d-flex justify-content-between text-muted mt-3" style="max-width: 360px;">
+                              
+                              <form th:action="@{/like/toggle}" method="POST" class="m-0 p-0 d-inline">
+                                  <input type="hidden" name="ceritaId" th:value="${cerita.id}">
+                                  <input type="hidden" name="userId" th:value="${param.userId[0]}">
+                                  <input type="hidden" name="token" th:value="${param.token}">
+                                  
+                                  <button th:if="${likedCeritaIds != null and #lists.contains(likedCeritaIds, cerita.id)}" 
+                                          type="submit" class="btn p-0 border-0 bg-transparent interaction-btn text-danger">
+                                      <i class="bi bi-heart-fill"></i> <span th:text="${#lists.size(cerita.daftarLike)}">0</span>
+                                  </button>
+                                  
+                                  <button th:unless="${likedCeritaIds != null and #lists.contains(likedCeritaIds, cerita.id)}" 
+                                          type="submit" class="btn p-0 border-0 bg-transparent interaction-btn hover-heart text-muted">
+                                      <i class="bi bi-heart"></i> <span th:text="${#lists.size(cerita.daftarLike)}">0</span>
+                                  </button>
+                              </form>
 
+                              <div class="interaction-btn hover-primary"><i class="bi bi-chat"></i></div>
+                              <div class="interaction-btn hover-primary"><i class="bi bi-share"></i></div>
+                              
+                              <form th:action="@{/profile/cerita/hapus}" method="POST" class="m-0 p-0 d-inline" onsubmit="return confirm('Yakin ingin menghapus cerita ini?');">
+                                  <input type="hidden" name="ceritaId" th:value="${cerita.id}">
+                                  <input type="hidden" name="userId" th:value="${param.userId[0]}">
+                                  <input type="hidden" name="token" th:value="${param.token}">
+                                  <button type="submit" class="btn p-0 border-0 bg-transparent interaction-btn text-danger">
+                                      <i class="bi bi-trash"></i>
+                                  </button>
+                              </form>
+                          </div>
                       </div>
                   </div>
-              </div>
-          </article>
-      </div>
+              </article>
+          </div>
 
+          <div id="liked-stories-tab" class="tab-content">
+              <div th:if="${#lists.isEmpty(daftarCeritaDisukai)}" class="text-center py-5 mt-4 text-muted">
+                  <div style="font-size: 3rem;">🤍</div>
+                  <h5 class="fw-bold mt-3 mb-2" style="color: var(--neutral);">Belum Ada Cerita yang Disukai</h5>
+                  <p style="font-size: 14.5px;">Cerita yang kamu beri hati akan muncul di sini.</p>
+              </div>
+
+              <article class="post-card p-3 p-md-4 hover-effect" th:each="cerita : ${daftarCeritaDisukai}">
+                  <div class="d-flex gap-3">
+                      <img th:src="'https://api.dicebear.com/7.x/miniavs/svg?seed=' + ${cerita.namaAnonim}" class="rounded-circle avatar-pink" style="width:48px; height:48px; flex-shrink: 0;">
+                      <div class="flex-grow-1">
+                          <div class="d-flex align-items-center justify-content-between mb-1">
+                              <span class="fw-bold" style="color: var(--neutral);" th:text="${cerita.namaAnonim}">Nama Penulis</span>
+                              <span class="text-muted small" th:text="${#temporals.format(cerita.tanggalDibuat, 'dd MMM, HH:mm')}">Waktu</span>
+                          </div>
+                          <p class="post-text mb-2" th:text="${cerita.isiCerita}">Isi curhatan</p>
+                          <div class="mt-2 d-flex gap-1 flex-wrap">
+                              <span th:each="singleTag : ${#strings.arraySplit(cerita.tag, ',')}" class="badge bg-light text-secondary border rounded-pill px-2 py-1 small">
+                                  #<span th:text="${singleTag}"></span>
+                              </span>
+                          </div>
+
+                          <div class="interaction-row d-flex justify-content-between text-muted mt-3" style="max-width: 360px;">
+                              
+                              <form th:action="@{/like/toggle}" method="POST" class="m-0 p-0 d-inline">
+                                  <input type="hidden" name="ceritaId" th:value="${cerita.id}">
+                                  <input type="hidden" name="userId" th:value="${param.userId[0]}">
+                                  <input type="hidden" name="token" th:value="${param.token}">
+                                  <button type="submit" class="btn p-0 border-0 bg-transparent interaction-btn text-danger">
+                                      <i class="bi bi-heart-fill"></i> <span th:text="${#lists.size(cerita.daftarLike)}">0</span>
+                                  </button>
+                              </form>
+
+                              <div class="interaction-btn hover-primary"><i class="bi bi-chat"></i></div>
+                              <div class="interaction-btn hover-primary"><i class="bi bi-share"></i></div>
+                          </div>
+                      </div>
+                  </div>
+              </article>
+          </div>
+
+      </div>
     </main>
 
     <aside class="col-lg-3 d-none d-lg-block sidebar-right py-3 px-4">
@@ -167,33 +209,29 @@
           </div>
         </div>
       </div>
-
-      <footer class="px-2 mt-4 pb-4">
-        <nav class="d-flex flex-wrap mb-2" style="column-gap: 12px; row-gap: 4px;">
-            <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">About</a>
-            <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Community Guidelines</a>
-            <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Privacy Policy</a>
-            <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Terms of Service</a>
-            <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Help Center</a>
-            <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Cookies</a>
-        </nav>
-        <div class="text-muted" style="font-size: 12px; line-height: 1.6;">© 2026 UnSaid. Safe Space for Stories.</div>
-    </footer>
     </aside>
 
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../js/interactions.js"></script> 
+
 <script>
-    // Script pengganti untuk Tab (Ceritaku & Disukai)
+    // Logika Tab Switch (Ceritaku vs Disukai)
     document.addEventListener('DOMContentLoaded', () => {
         const tabs = document.querySelectorAll('.feed-tabs .tab-item');
+        const contents = document.querySelectorAll('.tab-content');
+
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
+                tabs.forEach(t => t.classList.remove('active', 'fw-bold'));
+                contents.forEach(c => c.classList.remove('active'));
+
+                tab.classList.add('active', 'fw-bold');
+                const targetId = tab.getAttribute('data-target');
+                if(targetId) {
+                    document.getElementById(targetId).classList.add('active');
+                }
             });
         });
     });

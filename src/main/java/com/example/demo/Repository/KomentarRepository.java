@@ -1,7 +1,9 @@
 package com.example.demo.Repository;
+
 import com.example.demo.Model.Komentar;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface KomentarRepository extends CrudRepository<Komentar, Long> {
-
+@Repository
+public interface KomentarRepository extends JpaRepository<Komentar, Long> {
 }

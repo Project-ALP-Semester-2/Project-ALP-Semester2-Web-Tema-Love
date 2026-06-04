@@ -45,6 +45,10 @@ public class Cerita {
     @OneToMany(mappedBy = "cerita", cascade = CascadeType.ALL)
     private List<Rating> daftarRating;
 
+    // HUBUNGAN: Satu cerita bisa punya banyak Like (Tambahan Baru)
+    @OneToMany(mappedBy = "cerita", cascade = CascadeType.ALL)
+    private List<LikeCerita> daftarLike;
+
     // FIELD TRANSIENT (UNTUK KALKULASI VOTING)
     @Transient
     private int pctHealthy;
@@ -94,4 +98,8 @@ public class Cerita {
 
     public String getPilihanUserAktif() { return pilihanUserAktif; }
     public void setPilihanUserAktif(String pilihanUserAktif) { this.pilihanUserAktif = pilihanUserAktif; }
+
+    // Getter & Setter Tambahan Baru
+    public List<LikeCerita> getDaftarLike() { return daftarLike; }
+    public void setDaftarLike(List<LikeCerita> daftarLike) { this.daftarLike = daftarLike; }
 }
