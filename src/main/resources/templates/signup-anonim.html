@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UnSaid — Login</title>
+  <title>UnSaid — Gabung Anonim</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,15 +12,17 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   
-  <link rel="stylesheet" href="../css/index.css" />
+  <link rel="stylesheet" href="/css/index.css" th:href="@{/css/index.css}" />
 </head>
 <body class="d-flex flex-column min-vh-100 overflow-x-hidden">
 
   <main class="container-fluid flex-grow-1 d-flex p-0">
     <div class="row g-0 m-0 w-100">
+      
       <div class="col-12 col-lg-6 d-none d-lg-flex align-items-center justify-content-center panel-left position-relative p-5">
         <img
-          src="../images/Ilustrasi_hati.png"
+          src="/images/Ilustrasi_hati.png"
+          th:src="@{/images/Ilustrasi_hati.png}"
           alt="UnSaid — paper-cut heart illustration"
           class="img-fluid"
           style="width: 100%; max-width: 700px; height: auto; mix-blend-mode: multiply; object-fit: contain;"
@@ -33,51 +35,62 @@
         <div class="d-flex align-items-center gap-2 mb-4">
           <div class="rounded-3 overflow-hidden" style="width: 44px; height: 44px;">
             <img  
-              src="../images/Logo_icon.png"
+              src="/images/Logo_icon.png"
+              th:src="@{/images/Logo_icon.png}"
               alt="UnSaid icon"
               class="w-100 h-100 object-fit-cover"
             />
           </div>
           <div>
             <img
-              src="../images/Logo_wordmark.png"
+              src="/images/Logo_wordmark.png"
+              th:src="@{/images/Logo_wordmark.png}"
               alt="UnSaid"
               style="height: 28px; object-fit: contain;"
             />
           </div>
         </div>
 
-        <h1 class="tagline text-center text-lg-start mb-4">
-          Apa yang tak<br>
-          terucap, kini<br>
-          <em class="tagline-em">didengar.</em>
+        <h1 class="tagline text-center text-lg-start mb-2">
+          Masuk <em class="tagline-em">Anonim.</em>
         </h1>
+        <p class="text-muted mb-4 text-center text-lg-start" style="font-size: 15px;">
+          Tulis cerita Anda tanpa ada satu pun orang yang tahu identitas asli Anda.
+        </p>
 
-        <div class="d-flex flex-column gap-3 w-100" style="max-width: 440px;">
+        <div class="w-100" style="max-width: 440px;">
           
-          <a th:href="@{/auth/signup-anonim}" class="btn btn-primary rounded-pill py-3 fw-medium">
-            Bergabung Secara Anonim
-          </a>
+          <div th:if="${pesanError}" class="alert alert-danger rounded-4 p-3 mb-3" role="alert" style="font-size: 14px;">
+            <i class="bi bi-exclamation-circle-fill me-2"></i> <span th:text="${pesanError}">Pesan error pendaftaran.</span>
+          </div>
 
-          <div class="d-flex align-items-center my-2">
+          <form th:action="@{/auth/proses-signup-anonim}" method="POST" class="d-flex flex-column gap-3">
+            
+            <div>
+              <label for="username" class="form-label fw-medium text-secondary mb-2" style="font-size: 14px;">Nama Samaran (Username Anonim)</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3 text-muted"><i class="bi bi-incognito"></i></span>
+                <input type="text" id="username" name="username" class="form-control bg-light border-start-0 rounded-end-pill py-3" placeholder="Contoh: penikmat_senja, x_secret" required autocomplete="off" />
+              </div>
+              <div class="form-text ps-2 mt-2 text-muted" style="font-size: 11px;">
+                *Password akan dibuat otomatis secara rahasia oleh sistem keamanan UnSaid.
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary rounded-pill py-3 fw-medium mt-2 w-100">
+              Masuk ke Ruang Cerita
+            </button>
+          </form>
+
+          <div class="d-flex align-items-center my-4">
             <hr class="flex-grow-1 text-muted">
-            <span class="mx-3 text-muted text-uppercase" style="font-size: 12px; font-weight: 500;">atau</span>
+            <span class="mx-3 text-muted" style="font-size: 12px; font-weight: 500;">ATAU</span>
             <hr class="flex-grow-1 text-muted">
           </div>
 
-          <button class="btn btn-social rounded-pill py-3 fw-medium d-flex align-items-center justify-content-center gap-2" onclick="handleGoogle()">
-            <i class="bi bi-google fs-5 text-dark"></i> Lanjutkan dengan Google
-          </button>
-
-          <button class="btn btn-social rounded-pill py-3 fw-medium d-flex align-items-center justify-content-center gap-2" onclick="handleApple()">
-            <i class="bi bi-apple fs-4 text-dark"></i> Lanjutkan dengan Apple
-          </button>
-
-          <div class="mt-4 text-center">
-            <p class="text-muted mb-2" style="font-size: 13px;">Already have an account?</p>
-            
-            <a th:href="@{/auth/signin}" class="btn btn-social rounded-pill py-3 w-100 fw-medium text-decoration-none text-center">
-              Sign in
+          <div class="text-center">
+            <a th:href="@{/auth}" class="text-decoration-none fw-medium d-inline-block" style="font-size: 13px; color: #727272;">
+              <i class="bi bi-arrow-left me-1"></i> Kembali ke menu utama login
             </a>
           </div>
 
@@ -99,7 +112,5 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  
-  <script src="../js/loginpage.js"></script>
 </body>
 </html>

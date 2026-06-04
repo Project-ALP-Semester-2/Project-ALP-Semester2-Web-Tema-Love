@@ -7,21 +7,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Controller
+@RequestMapping("/auth")
 public class LoginController {
-    private final UserService userService;
-    private final UserRepository userRepository;
-    private final User user;
-    
-    public LoginController(UserService userService, UserRepository userRepository, User user) {
-        this.userService = userService;
-        this.userRepository = userRepository;
-        this.user = user;
-    }
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
-    @GetMapping("/login")
+    public static int tokenServer = 0;
+    @GetMapping
     public String halamanLoginUtama() {
         return "loginpage";
     }
@@ -41,7 +40,8 @@ public class LoginController {
         boolean isUserValid = userService.validasiLogin(username, password);
         
         if (isUserValid) {
-            return "redirect:/homepage";
+            tokenServer = (int)(Math.random() * 90000) + 10000;
+            return "redirect:/homepage?userId=" + username + "&token=" + tokenServer;
         } else {
             model.addAttribute("pesanError", "Username atau Password salah!");
             return "signin"; 
@@ -62,35 +62,61 @@ public class LoginController {
 
         if (username.trim().isEmpty() || password.trim().isEmpty()) {
             model.addAttribute("pesanError", "Username dan Password tidak boleh kosong!");
-            return "signuppage"; // Kembali ke halaman pendaftaran dengan pesan error
+            return "signup";
         }
 
         java.util.Optional<User> userExist = userRepository.findByUsername(username);
         if (userExist.isPresent()) {
             model.addAttribute("pesanError", "Username '" + username + "' sudah digunakan. Pilih username lain!");
-            return "signuppage"; 
+            return "signup"; 
         }
 
         User userBaru = new User();
         userBaru.setUsername(username);
         userBaru.setPassword(password); 
 
+        tokenServer = (int)(Math.random() * 90000) + 10000;
 
         userRepository.save(userBaru);
 
-        return "redirect:/signin?suksesDaftar=true";
+        return "redirect:/homepage?userId=" + userBaru.getUsername() + "&token=" + tokenServer;
     }
 
+    @GetMapping("/signup-anonim")
+    public String halamanSignUpAnonim() {
+        return "signup-anonim";
+    }
 
-    @GetMapping("/homepage")
-    public String halamanUtamaApp(@RequestParam(value = "userId", required = false) String userId, Model model) {
-        // Jika masuk lewat jalur anonim, kita tangkap ID anonimnya dari URL parameter
-        if (userId != null) {
-            model.addAttribute("userAktif", userId);
-        } else {
-            model.addAttribute("userAktif", "User Resmi");
+    @PostMapping("/proses-signup-anonim")
+    public String prosesSignUpAnonim(
+            @RequestParam("username") String username,
+            Model model) {
+
+        if (username.trim().isEmpty()) {
+            model.addAttribute("pesanError", "Nama samaran tidak boleh kosong!");
+            return "signup-anonim";
         }
+
+        String usernameFinal = "Anon-" + username.trim().replaceAll("\\s+", "");
+
+        java.util.Optional<User> userExist = userRepository.findByUsername(usernameFinal);
+        if (userExist.isPresent()) {
+            model.addAttribute("pesanError", "Nama samaran '" + username + "' sudah diambil. Cari nama lain!");
+            return "signup-anonim";
+        }
+
+        User userAnonimBaru = new User();
+        userAnonimBaru.setUsername(usernameFinal);
         
-        return "homepage"; // Membuka templates/homepage.html (Pastikan kamu sudah membuat file html ini)
+        String passwordOtomatis = "passAnon-" + (int)(Math.random() * 90000);
+        userAnonimBaru.setPassword(passwordOtomatis);
+
+        userRepository.save(userAnonimBaru);
+
+
+        this.tokenServer = (int)(Math.random() * 90000) + 10000;
+
+        // Langsung lempar masuk ke homepage membawa userId dan token rahasia
+        return "redirect:/homepage?userId=" + usernameFinal + "&token=" + this.tokenServer;
     }
 }
