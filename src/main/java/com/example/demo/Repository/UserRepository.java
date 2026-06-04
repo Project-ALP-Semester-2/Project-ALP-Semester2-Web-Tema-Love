@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     
-    // Gunakan 'User' langsung, jangan 'Optional<User>'
-    User findByUsername(String username);
+    java.util.Optional<User> findByUsername(String username);
 
 }

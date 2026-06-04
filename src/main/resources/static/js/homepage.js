@@ -1,5 +1,94 @@
 document.addEventListener('DOMContentLoaded', function () {
     /* TAB SWITCHING */
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('userId');
+    const token = urlParams.get('token');
+
+    // 2. Ambil semua tombol vote
+    const semuaTombolVote = document.querySelectorAll(".btn-vote");
+
+    semuaTombolVote.forEach(button => {
+        button.addEventListener("click", function (e) {
+            e.preventDefault(); // Mencegah reload paksa
+
+            const votingBox = this.closest(".voting-box");
+            
+            // PERBAIKAN UTAMA: Ambil data-id yang sudah dirender Thymeleaf, bukan th:data-id!
+            const ceritaId = votingBox.getAttribute("data-id"); 
+            const pilihanVote = this.getAttribute("data-vote"); // "HEALTHY" atau "TOXIC"
+
+            if (!ceritaId) {
+                console.error("ID Cerita tidak ditemukan pada elemen .voting-box!");
+                return;
+            }
+
+            // 3. Bungkus data untuk dikirim ke RatingRestController
+            const formData = new FormData();
+            formData.append("ceritaId", ceritaId);
+            formData.append("username", userId);
+            formData.append("pilihan", pilihanVote);
+            formData.append("token", token);
+
+            // 4. Tembak API Backend
+            fetch("/api/rating/vote", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "success") {
+                    // Sembunyikan container tombol vote
+                    const tombolContainer = votingBox.querySelector(".d-flex.gap-2.mb-2");
+                    if (tombolContainer) tombolContainer.classList.add("d-none");
+
+                    // Munculkan container hasil (buka d-none)
+                    const voteResult = votingBox.querySelector(".vote-result");
+                    voteResult.classList.remove("d-none");
+
+                    // Update Teks Persentase & Total Suara langsung dari respon DB Backend
+                    votingBox.querySelector(".vote-pct-healthy").textContent = `${data.pctHealthy}% Healthy`;
+                    votingBox.querySelector(".vote-pct-toxic").textContent = `${data.pctToxic}% Toxic`;
+                    votingBox.querySelector(".vote-total").textContent = `${data.totalVote} suara`;
+
+                    // Jalankan animasi progress bar hijau
+                    const barWrap = votingBox.querySelector(".vote-bar-wrap");
+                    if (barWrap) {
+                        // Suntikkan style linear-gradient langsung lewat JS
+                        barWrap.style.background = `linear-gradient(to right, var(--primary-dark) ${data.pctHealthy}%, var(--secondary-dark) ${data.pctHealthy}%)`;
+                    }
+                } else {
+                    alert("Gagal menyimpan vote: " + data.message);
+                }
+            })
+            .catch(err => console.error("Error Fetch Voting:", err));
+        });
+    });
+
+    const checkboxes = document.querySelectorAll(".tag-checkbox");
+    const finalTagsInput = document.getElementById("finalTagsInput");
+    const labelDropdown = document.getElementById("selectedTagsLabel");
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", function () {
+            // Ambil semua value dari checkbox yang sedang di-centang
+            const checkedValues = Array.from(checkboxes)
+                                       .filter(i => i.checked)
+                                       .map(i => i.value);
+
+            if (checkedValues.length > 0) {
+                // 1. Gabungkan dengan koma untuk dikirim ke database backend
+                finalTagsInput.value = checkedValues.join(","); 
+                
+                // 2. Ubah tulisan tombol dropdown agar user tahu apa saja yang mereka pilih
+                labelDropdown.textContent = `Terpilih (${checkedValues.length}): ` + checkedValues.join(", ");
+            } else {
+                finalTagsInput.value = "";
+                labelDropdown.textContent = "Pilih Kategori Cerita (Bisa > 1)...";
+            }
+        });
+    });
+
+
     const tabItems = document.querySelectorAll('.tab-item');
     const feedForYou = document.getElementById('feed-foryou');
     const feedFollowing = document.getElementById('feed-following');
@@ -23,7 +112,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const imageInput = document.getElementById('imageInput');
     const imagePreviewContainer = document.getElementById('imagePreviewContainer');
     const imagePreview = document.getElementById('imagePreview');
-    const emojiPicker = document.getElementById('emojiPicker');
     const tagInputContainer = document.getElementById('tagInputContainer');
     let currentImageBase64 = '';
 
@@ -45,12 +133,6 @@ document.addEventListener('DOMContentLoaded', function () {
         currentImageBase64 = ''; imageInput.value = ''; imagePreviewContainer.classList.add('d-none');
     });
     
-    document.getElementById('btnEmoji').addEventListener('click', () => emojiPicker.classList.toggle('d-none'));
-    document.querySelectorAll('.emoji-item').forEach(item => {
-        item.addEventListener('click', function () {
-            postContent.value += this.innerText; emojiPicker.classList.add('d-none'); postContent.focus();
-        });
-    });
     
     document.getElementById('btnTag').addEventListener('click', () => {
         tagInputContainer.classList.toggle('d-none');

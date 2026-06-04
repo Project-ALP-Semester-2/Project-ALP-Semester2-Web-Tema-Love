@@ -12,11 +12,10 @@ public class UserService {
     private UserRepository userRepository;
 
     public boolean validasiLogin(String username, String password) {
-        // Langsung panggil User tanpa Optional
-        User user = userRepository.findByUsername(username);
+        java.util.Optional<User> userOpt = userRepository.findByUsername(username);
 
-        // Cek apakah user ketemu di database dan passwordnya cocok
-        if (user != null) {
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
             return user.getPassword().equals(password);
         }
         

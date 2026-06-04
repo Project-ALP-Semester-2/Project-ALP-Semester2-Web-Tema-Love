@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient; 
 
 @Entity
 @Table(name = "cerita")
@@ -27,6 +28,7 @@ public class Cerita {
 
     private String namaAnonim;
     private LocalDateTime tanggalDibuat;
+    
     @Column(name = "kategori_tag")
     private String tag; 
 
@@ -43,8 +45,20 @@ public class Cerita {
     @OneToMany(mappedBy = "cerita", cascade = CascadeType.ALL)
     private List<Rating> daftarRating;
 
+    // FIELD TRANSIENT (UNTUK KALKULASI VOTING)
+    @Transient
+    private int pctHealthy;
+
+    @Transient
+    private int pctToxic;
+
+    @Transient
+    private long totalVote;
+
+    @Transient
+    private String pilihanUserAktif;
+
     
-    // GETTER DAN SETTER
     public Long getId() { return id_cerita; }
     public void setId(Long id_cerita) { this.id_cerita = id_cerita; }
 
@@ -68,4 +82,16 @@ public class Cerita {
 
     public String getTag() { return tag; }
     public void setTag(String tag) { this.tag = tag; }
+
+    public int getPctHealthy() { return pctHealthy; }
+    public void setPctHealthy(int pctHealthy) { this.pctHealthy = pctHealthy; }
+
+    public int getPctToxic() { return pctToxic; }
+    public void setPctToxic(int pctToxic) { this.pctToxic = pctToxic; }
+
+    public long getTotalVote() { return totalVote; }
+    public void setTotalVote(long totalVote) { this.totalVote = totalVote; }
+
+    public String getPilihanUserAktif() { return pilihanUserAktif; }
+    public void setPilihanUserAktif(String pilihanUserAktif) { this.pilihanUserAktif = pilihanUserAktif; }
 }
