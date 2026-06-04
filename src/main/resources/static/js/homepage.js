@@ -1,22 +1,31 @@
 function toggleKomentar(ceritaId) {
     var areaKomentar = document.getElementById('area-komentar-' + ceritaId);
     if (areaKomentar) {
-        if (areaKomentar.classList.contains('d-none')) {
-            areaKomentar.classList.remove('d-none');
-        } else {
-            areaKomentar.classList.add('d-none');
-        }
+        areaKomentar.classList.toggle('d-none');
     }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    /* TAB SWITCHING */
+    /* AMBIL PARAMETER URL */
     const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('userId');
+    const userId = urlParams.get('userId'); 
     const token = urlParams.get('token');
 
+    /* ELEMENT INITIALIZATION */
     const semuaTombolVote = document.querySelectorAll(".btn-vote");
+    const checkboxes = document.querySelectorAll(".tag-checkbox");
+    const finalTagsInput = document.getElementById("finalTagsInput");
+    const labelDropdown = document.getElementById("selectedTagsLabel");
+    const tabItems = document.querySelectorAll('.tab-item');
+    const feedForYou = document.getElementById('feed-foryou');
+    const feedFollowing = document.getElementById('feed-following');
+    const imageInput = document.getElementById('imageInput');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+    const imagePreview = document.getElementById('imagePreview');
+    const tagInputContainer = document.getElementById('tagInputContainer');
+    let currentImageBase64 = '';
 
+    /* LOGIKA AJAX VOTING / RATING */
     semuaTombolVote.forEach(button => {
         button.addEventListener("click", function (e) {
             e.preventDefault(); 
@@ -26,13 +35,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const pilihanVote = this.getAttribute("data-vote"); 
 
             if (!ceritaId) {
-                console.error("ID Cerita tidak ditemukan pada elemen .voting-box!");
+                console.error("ID Cerita tidak ditemukan!");
                 return;
             }
 
             const formData = new FormData();
             formData.append("ceritaId", ceritaId);
-            formData.append("username", userId);
+            // Kunci Perbaikan: Kirim sesuai kebutuhan Spring Controller (menggunakan data userId/username aktif)
+            formData.append("username", userId); 
             formData.append("pilihan", pilihanVote);
             formData.append("token", token);
 
@@ -65,10 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    const checkboxes = document.querySelectorAll(".tag-checkbox");
-    const finalTagsInput = document.getElementById("finalTagsInput");
-    const labelDropdown = document.getElementById("selectedTagsLabel");
-
+    /* LOGIKA CHECKBOX KATEGORI / TAG */
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener("change", function () {
             const checkedValues = Array.from(checkboxes)
@@ -85,10 +92,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    const tabItems = document.querySelectorAll('.tab-item');
-    const feedForYou = document.getElementById('feed-foryou');
-    const feedFollowing = document.getElementById('feed-following');
+    /* LOGIKA DISPLAY FORM INPUT TAG */
+    if (document.getElementById('btnTag')) {
+        document.getElementById('btnTag').addEventListener('click', () => {
+            if (tagInputContainer) {
+                tagInputContainer.classList.toggle('d-none');
+            }
+        });
+    }
 
+    /* LOGIKA TAB SWITCHING (DUPLIKASI SUDAH DIHAPUS) */
     tabItems.forEach(tab => {
         tab.addEventListener('click', function () {
             tabItems.forEach(t => t.classList.remove('active'));
@@ -96,21 +109,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (feedFollowing) {
                 if (this.getAttribute('data-tab') === 'foryou') {
-                    feedForYou.classList.remove('d-none'); feedFollowing.classList.add('d-none');
+                    feedForYou.classList.remove('d-none'); 
+                    feedFollowing.classList.add('d-none');
                 } else {
-                    feedForYou.classList.add('d-none'); feedFollowing.classList.remove('d-none');
+                    feedForYou.classList.add('d-none'); 
+                    feedFollowing.classList.remove('d-none');
                 }
             }
         });
     });
 
-    const postTag = document.getElementById('postTag');
-    const imageInput = document.getElementById('imageInput');
-    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-    const imagePreview = document.getElementById('imagePreview');
-    const tagInputContainer = document.getElementById('tagInputContainer');
-    let currentImageBase64 = '';
-
+    /* LOGIKA IMAGE PREVIEW */
     if (document.getElementById('btnImage')) {
         document.getElementById('btnImage').addEventListener('click', () => imageInput.click());
     }
@@ -137,29 +146,4 @@ document.addEventListener('DOMContentLoaded', function () {
             imagePreviewContainer.classList.add('d-none');
         });
     }
-    
-    if (document.getElementById('btnTag')) {
-        document.getElementById('btnTag').addEventListener('click', () => {
-            tagInputContainer.classList.toggle('d-none');
-            if (!tagInputContainer.classList.contains('d-none') && postTag) postTag.focus();
-        });
-    }
-    const tabItems = document.querySelectorAll('.tab-item');
-    const feedForYou = document.getElementById('feed-foryou');
-    const feedFollowing = document.getElementById('feed-following');
-
-        tabItems.forEach(tab => {
-        tab.addEventListener('click', function () {
-            tabItems.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-
-            if (this.getAttribute('data-tab') === 'foryou') {
-                feedForYou.classList.remove('d-none');
-                feedFollowing.classList.add('d-none');
-            } else {
-                feedForYou.classList.add('d-none');
-                feedFollowing.classList.remove('d-none');
-            }
-        });
-    });
 });

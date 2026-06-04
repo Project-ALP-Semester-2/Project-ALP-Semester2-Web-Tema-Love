@@ -90,11 +90,11 @@
                     <button type="button" id="btnRemoveImage" class="btn btn-dark btn-sm rounded-circle position-absolute top-0 end-0 m-2 flex-center" style="width: 28px; height: 28px;"><i class="bi bi-x"></i></button>
                 </div>
 
-                <div id="tagInputContainer" class="d-none mt-2">
-                    <div class="dropdown w-50">
+                <div id="tagInputContainer" class="d-none mt-2 mb-3">
+                    <div class="dropdown">
                         <button class="btn btn-sm btn-outline-secondary dropdown-toggle w-100 rounded-pill text-start d-flex justify-content-between align-items-center px-3" 
                                 type="button" id="dropdownTagsMenu" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" 
-                                style="background: var(--neutral-pale); border: 1px solid rgba(0,0,0,0.05); color: var(--neutral);">
+                                style="background: var(--neutral-pale); border: 1px solid rgba(0,0,0,0.05); color: var(--neutral); max-width: 350px;">
                             <span id="selectedTagsLabel">Pilih Kategori Cerita (Bisa > 1)...</span>
                         </button>
                         
@@ -102,6 +102,21 @@
                             <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="heartbreak" id="tag_heartbreak"> <label class="form-check-label ms-2 w-100" for="tag_heartbreak">Heartbreak</label></div></li>
                             <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="toxic" id="tag_toxic"> <label class="form-check-label ms-2 w-100" for="tag_toxic">Toxic</label></div></li>
                             <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="healing" id="tag_healing"> <label class="form-check-label ms-2 w-100" for="tag_healing">Healing</label></div></li>
+                            <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="anxiety" id="tag_anxiety"> <label class="form-check-label ms-2 w-100" for="tag_anxiety">Anxiety</label></div></li>
+                            <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="firstlove" id="tag_firstlove"> <label class="form-check-label ms-2 w-100" for="tag_firstlove">First Love</label></div></li>
+                            <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="selflove" id="tag_selflove"> <label class="form-check-label ms-2 w-100" for="tag_selflove">Self-Love</label></div></li>
+                            <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="family" id="tag_family"> <label class="form-check-label ms-2 w-100" for="tag_family">Family</label></div></li>
+                            <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="friendship" id="tag_friendship"> <label class="form-check-label ms-2 w-100" for="tag_friendship">Friendship</label></div></li>
+                            <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="nostalgia" id="tag_nostalgia"> <label class="form-check-label ms-2 w-100" for="tag_nostalgia">Nostalgia</label></div></li>
+                            <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="platonic" id="tag_platonic"> <label class="form-check-label ms-2 w-100" for="tag_platonic">Platonic Love</label></div></li>
+                            <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="crush" id="tag_crush"> <label class="form-check-label ms-2 w-100" for="tag_crush">Crush</label></div></li>
+                            <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="movingon" id="tag_movingon"> <label class="form-check-label ms-2 w-100" for="tag_movingon">Moving On</label></div></li>
+                            <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="betrayal" id="tag_betrayal"> <label class="form-check-label ms-2 w-100" for="tag_betrayal">Betrayal</label></div></li>
+                            <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="longdistance" id="tag_longdistance"> <label class="form-check-label ms-2 w-100" for="tag_longdistance">Long Distance (LDR)</label></div></li>
+                            <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="regret" id="tag_regret"> <label class="form-check-label ms-2 w-100" for="tag_regret">Regret</label></div></li>
+                            <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="situationship" id="tag_situationship"> <label class="form-check-label ms-2 w-100" for="tag_situationship">Situationship</label></div></li>
+                            <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="redflag" id="tag_redflag"> <label class="form-check-label ms-2 w-100" for="tag_redflag">Red Flag</label></div></li>
+                            <li><div class="dropdown-item rounded"><input class="form-check-input tag-checkbox" type="checkbox" value="greenflag" id="tag_greenflag"> <label class="form-check-label ms-2 w-100" for="tag_greenflag">Green Flag</label></div></li>
                         </ul>
                     </div>
                     <input type="hidden" name="tag" id="finalTagsInput">
@@ -143,10 +158,10 @@
                         </span>
                     </div>
 
-                    <div class="voting-box rounded-4 p-3 mb-3" th:data-id="${cerita.id}">
+                    <div class="voting-box rounded-4 p-3 mb-3 text-center" th:data-id="${cerita.id}">
                         <div class="vote-question small fw-bold text-muted mb-2">Menurutmu, apakah hubungan ini?</div>
                         
-                        <div class="d-flex gap-2 mb-2" th:classappend="${cerita.pilihanUserAktif != null} ? 'd-none' : ''">
+                        <div class="d-flex justify-content-center gap-2 mb-2" th:classappend="${cerita.pilihanUserAktif != null} ? 'd-none' : ''">
                             <button class="btn btn-vote btn-vote-healthy" data-vote="HEALTHY">💚 Healthy</button>
                             <button class="btn btn-vote btn-vote-toxic" data-vote="TOXIC">🚩 Toxic</button>
                         </div>
@@ -156,7 +171,7 @@
                                 th:style="'height: 6px; width: 100%; transition: background 0.5s ease; background: linear-gradient(to right, var(--primary-dark) ' + ${cerita.pctHealthy} + '%, var(--secondary-dark) ' + ${cerita.pctHealthy} + '%);'">
                             </div>
                             
-                            <div class="d-flex justify-content-between" style="font-size:12px;">
+                            <div class="d-flex justify-content-center gap-4" style="font-size:12px;">
                                 <span class="vote-pct-healthy fw-bold" style="color: var(--primary-dark);" th:text="${cerita.pctHealthy} + '% Healthy'">0% Healthy</span>
                                 <span class="vote-total text-muted" th:text="${cerita.totalVote} + ' suara'">0 suara</span>
                                 <span class="vote-pct-toxic fw-bold" style="color: var(--secondary-dark);" th:text="${cerita.pctToxic} + '% Toxic'">0% Toxic</span>
@@ -239,9 +254,38 @@
 
 </main>
 
-<aside class="col-lg-3 d-none d-lg-block sidebar-right py-3 px-4">
-    </aside>
+    <aside class="col-lg-3 d-none d-lg-block sidebar-right py-3 px-4">
 
+        <div class="search-box mb-4">
+            <div class="search-input-wrap d-flex align-items-center gap-2 rounded-pill px-3 py-2">
+                <i class="bi bi-search text-muted"></i>
+                <input type="text" class="form-control border-0 bg-transparent p-0 shadow-none" placeholder="Cari di UnSaid…" style="font-size: 14px;">
+            </div>
+        </div>
+
+        <div class="widget-box rounded-4 p-4 mb-4">
+            <h5 class="widget-title mb-3">Mini Edukasi</h5>
+            <div class="edu-item mb-3 pb-3 border-bottom" style="border-color: var(--neutral-pale) !important;">
+                <div class="small fw-bold mb-1" style="color: var(--primary-dark);">Self-Healing</div>
+                <p class="small text-muted mb-0" style="line-height: 1.6;">Menulis adalah cara terbaik mengeluarkan racun emosi dalam diri. Mulai dari satu kalimat hari ini.</p>
+            </div>
+            <div class="edu-item">
+                <div class="small fw-bold mb-1" style="color: var(--secondary-dark);">Toxic Relationship</div>
+                <p class="small text-muted mb-0" style="line-height: 1.6;">Kenali tanda-tandanya sebelum terlambat. Kamu berharga dan layak diperlakukan baik.</p>
+            </div>
+            <a href="#" class="show-more-link d-block mt-3" style="font-size: 13px;">Baca selengkapnya →</a>
+        </div>
+
+        <footer class="px-2 mt-4 pb-4">
+            <nav class="d-flex flex-wrap mb-2" style="column-gap: 12px; row-gap: 4px;">
+                <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">About</a>
+                <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Community Guidelines</a>
+                <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Privacy Policy</a>
+                <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Terms of Service</a>
+            </nav>
+            <div class="text-muted" style="font-size: 12px; line-height: 1.6;">© 2026 UnSaid. Safe Space for Stories.</div>
+        </footer>
+    </aside>
 </div>
 </div>
 
