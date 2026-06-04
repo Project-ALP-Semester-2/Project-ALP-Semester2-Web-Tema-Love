@@ -65,11 +65,9 @@ document.addEventListener('DOMContentLoaded', function () {
       </article>`;
   }
 
-  /* Render Trending Initial */
   const trendingDiv = document.getElementById('trendingFeed');
   if(trendingDiv) trendingDiv.innerHTML = allStories.slice(0, 5).map((s, i) => buildPostCardHTML(s, '', i+1)).join('');
 
-  /* Search Logic */
   const searchInput    = document.getElementById('searchInput');
   const btnClearSearch = document.getElementById('btnClearSearch');
   const searchInfo     = document.getElementById('searchResultsInfo');
@@ -102,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function () {
     searchInput.value = ''; btnClearSearch.classList.add('d-none'); searchInfo.classList.add('d-none'); searchPanel.classList.add('d-none'); searchEmpty.classList.add('d-none'); exploreMain.classList.remove('d-none');
   }
 
-  /* Mood & Categories Logic */
   const moodToCat = { 'patah-hati': ['heartbreak', 'firstlove'], 'gelisah': ['anxiety'], 'rindu': ['nostalgia', 'firstlove'], 'bersyukur': ['healing', 'selflove'], 'marah': ['toxic', 'anxiety'], 'semua': null };
 
   document.getElementById('moodChips').addEventListener('click', e => {
@@ -135,7 +132,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.getElementById('btnBackCat').addEventListener('click', () => { catPanel.classList.add('d-none'); exploreMain.classList.remove('d-none'); });
 
-  /* Trending Tags Logic */
   const trendingTags = document.getElementById('trendingTags');
   if (trendingTags) {
     trendingTags.addEventListener('click', e => {

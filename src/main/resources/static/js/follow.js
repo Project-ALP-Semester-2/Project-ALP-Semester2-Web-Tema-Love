@@ -1,5 +1,3 @@
-// ── js/follow.js ──
-
 document.addEventListener('DOMContentLoaded', () => {
 
     const usersData = {

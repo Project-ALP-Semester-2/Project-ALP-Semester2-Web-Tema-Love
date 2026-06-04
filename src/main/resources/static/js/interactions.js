@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    /* 1. SINKRONISASI ANGKA KOMENTAR AWAL */
     document.querySelectorAll('.post-card').forEach(card => {
         const count = card.dataset.commentCount;
         if (count === undefined) return;
@@ -10,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    /* 2. MODAL & THREAD VARIABLES */
     const imageModalEl = document.getElementById('imageModal');
 
     const imageModal = imageModalEl ? new bootstrap.Modal(imageModalEl) : null;
@@ -32,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let activePostCard = null;
     let threadImgBase64 = '';
 
-    /* Gabungan data komentar dummy (Home + Explore) */
     const globalComments = {
         0: [ { name: 'Gentle Breeze', avatar: 'https://api.dicebear.com/7.x/miniavs/svg?seed=Reply1', time: '1j lalu', text: 'Aku pernah merasakan hal yang sama. Rasanya seperti kamu satu-satunya yang tertinggal, sementara dunia terus berputar. Semangat ya, pelan-pelan pasti bisa. 🫂' }, { name: 'Night Owl', avatar: 'https://api.dicebear.com/7.x/miniavs/svg?seed=Reply2', time: '45m lalu', text: 'Kadang mencintai seseorang dari jauh itu lebih menyakitkan dari perpisahan itu sendiri. Kamu nggak sendirian di sini.' }, { name: 'Ember Sky', avatar: 'https://api.dicebear.com/7.x/miniavs/svg?seed=Reply9', time: '20m lalu', text: 'Yang kamu rasakan itu valid banget. Butuh waktu, dan itu nggak apa-apa. ❤️‍🩹' } ],
         1: [ { name: 'Soft Rain', avatar: 'https://api.dicebear.com/7.x/miniavs/svg?seed=Reply3', time: '3j lalu', text: 'Bilang "tidak" itu salah satu hal paling susah yang pernah aku lakukan juga. Bangga sama kamu! 🌱' }, { name: 'Still Waters', avatar: 'https://api.dicebear.com/7.x/miniavs/svg?seed=Reply4', time: '2j lalu', text: 'Memilih diri sendiri bukan egois — itu perlu. Terus jaga dirimu ya.' } ],
@@ -51,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return Array.from(allCards).indexOf(postCard);
     }
 
-    /* 3. FUNGSI THREAD */
     function openThread(postCard) {
         if (!threadView) return;
 
@@ -72,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function () {
         threadPostContent.innerHTML = '';
         threadPostContent.appendChild(clone);
 
-        /* Sync Vote */
         const cloneVotingBox = clone.querySelector('.voting-box');
         const origVotingBox  = postCard.querySelector('.voting-box');
         if (cloneVotingBox && origVotingBox) {
@@ -227,16 +222,13 @@ document.addEventListener('DOMContentLoaded', function () {
         threadImgBase64 = ''; threadImgPreview.src = ''; threadImgInput.value = ''; threadImgPreviewWrap.classList.add('d-none');
 });
 
-    /* 4. GLOBAL DELEGATION (KLIK DI MANA SAJA UNTUK INTERAKSI) */
     document.addEventListener('click', function (e) {
-        /* Follow Button */
         const followBtn = e.target.closest('.btn-follow');
         if (followBtn) {
             const isFollowing = followBtn.classList.toggle('following');
             followBtn.innerText = isFollowing ? 'Following' : 'Follow'; return;
         }
 
-        /* Bookmarks (Simpan Otomatis & Catatan Database) */
         const bookmarkBtn = e.target.closest('.interaction-btn');
         if (bookmarkBtn) {
             const icon = bookmarkBtn.querySelector('i.bi-bookmark, i.bi-bookmark-fill');
@@ -244,34 +236,31 @@ document.addEventListener('DOMContentLoaded', function () {
                 const postCard = bookmarkBtn.closest('.post-card');
                 if (!postCard) return;
 
-                // Beri ID sementara jika post belum punya ID (karena di homepage di-hardcode)
+
                 if (!postCard.hasAttribute('data-id')) {
                     postCard.setAttribute('data-id', 'post_' + Math.random().toString(36).substr(2, 9));
                 }
                 const postId = postCard.getAttribute('data-id');
 
                 if (icon.classList.contains('bi-bookmark')) {
-                    // 1. Ubah icon UI menjadi tersimpan (hijau tosca)
+
                     icon.classList.replace('bi-bookmark', 'bi-bookmark-fill');
                     icon.style.color = 'var(--primary-dark)';
                     
-                    // [PROTOTYPE FRONT-END] Simpan HTML-nya ke LocalStorage 
                     let savedBookmarks = JSON.parse(localStorage.getItem('unsaid_bookmarks')) || [];
                     if (!savedBookmarks.some(b => b.id === postId)) {
                         savedBookmarks.push({ id: postId, html: postCard.outerHTML });
                         localStorage.setItem('unsaid_bookmarks', JSON.stringify(savedBookmarks));
                     }
                 } else {
-                    // 2. Ubah icon UI menjadi tidak tersimpan (dihapus)
+
                     icon.classList.replace('bi-bookmark-fill', 'bi-bookmark');
                     icon.style.color = '';
-                    
-                    // [PROTOTYPE FRONT-END] Hapus dari LocalStorage
+
                     let savedBookmarks = JSON.parse(localStorage.getItem('unsaid_bookmarks')) || [];
                     savedBookmarks = savedBookmarks.filter(b => b.id !== postId);
                     localStorage.setItem('unsaid_bookmarks', JSON.stringify(savedBookmarks));
                     
-                    // Jika user sedang di halaman bookmarks.html, langsung hilangkan kartunya dari layar
                     if (window.location.pathname.includes('bookmarks.html')) {
                         postCard.remove();
                         if (savedBookmarks.length === 0) {
@@ -283,13 +272,11 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        /* Zoom (Dilindungi if imageModal) */
         if (e.target.tagName === 'IMG' && e.target.classList.contains('img-fluid') && e.target.closest('.post-card')) {
             if (imageModal && fullSizeImage) { fullSizeImage.src = e.target.src; imageModal.show(); }
              return;
         }
         
-        /* Open Thread via Icon (Dilindungi if threadView) */
         const chatBtn = e.target.closest('.interaction-btn.hover-primary');
         if (chatBtn && chatBtn.querySelector('i.bi-chat')) {
             const postCard = chatBtn.closest('.post-card');
@@ -297,7 +284,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
         }
         
-        /* Like */
         const likeBtn = e.target.closest('.hover-heart');
         if (likeBtn && likeBtn.closest('.post-card')) {
             const icon = likeBtn.querySelector('i'); const span = likeBtn.querySelector('span');
@@ -308,7 +294,6 @@ document.addEventListener('DOMContentLoaded', function () {
             span.innerText = count >= 1000 ? (count / 1000).toFixed(1) + 'k' : count; return;
         }
         
-        /* Vote */
         const voteBtn = e.target.closest('.btn-vote');
         if (voteBtn && voteBtn.closest('.post-card')) {
             const votingBox = voteBtn.closest('.voting-box');
@@ -328,7 +313,6 @@ document.addEventListener('DOMContentLoaded', function () {
             } return;
         }
         
-        /* Open Thread when clicking on the post card */
         const isInteractive = e.target.closest('.btn-vote, .hover-heart, .hover-primary, button, .interaction-btn, .mood-chip, .category-card, .trending-tag-btn');
         if (!isInteractive) {
             const postCard = e.target.closest('.post-card');

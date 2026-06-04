@@ -12,8 +12,7 @@ import java.util.List;
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
     List<Bookmark> findByUser(User user);
-    
-    // Cek apakah sudah di-bookmark
+
     boolean existsByUserAndCerita(User user, Cerita cerita);
     
     @Transactional

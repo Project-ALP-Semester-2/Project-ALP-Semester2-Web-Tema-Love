@@ -3,9 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const emptyBookmarks = document.getElementById('emptyBookmarks');
     const searchInput = document.getElementById('searchBookmarks');
 
-    /* Fungsi Render Bookmark */
     function renderBookmarks(query = '') {
-        /* [DATABASE] Nanti di sini ganti dengan: fetch('/api/bookmarks').then(...) */
+
         const savedBookmarks = JSON.parse(localStorage.getItem('unsaid_bookmarks')) || [];
 
         if (savedBookmarks.length === 0) {
@@ -18,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const filtered = savedBookmarks.filter(b => {
             if (!query) return true;
-            // Mencari kata kunci di dalam HTML (nama, tag, atau teks post)
+
             return b.html.toLowerCase().includes(query.toLowerCase());
         });
 

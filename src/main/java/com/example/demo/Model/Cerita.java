@@ -32,24 +32,19 @@ public class Cerita {
     @Column(name = "kategori_tag")
     private String tag; 
 
-    // HUBUNGAN: Banyak cerita dimiliki oleh satu User
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // HUBUNGAN: Satu cerita bisa punya banyak komentar
     @OneToMany(mappedBy = "cerita", cascade = CascadeType.ALL)
     private List<Komentar> daftarKomentar;
 
-    // HUBUNGAN: Satu cerita bisa punya banyak rating
     @OneToMany(mappedBy = "cerita", cascade = CascadeType.ALL)
     private List<Rating> daftarRating;
 
-    // HUBUNGAN: Satu cerita bisa punya banyak Like (Tambahan Baru)
     @OneToMany(mappedBy = "cerita", cascade = CascadeType.ALL)
     private List<LikeCerita> daftarLike;
 
-    // FIELD TRANSIENT (UNTUK KALKULASI VOTING)
     @Transient
     private int pctHealthy;
 

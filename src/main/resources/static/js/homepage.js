@@ -1,6 +1,3 @@
-// =================================================================
-// 1. FUNGSI GLOBAL (Bisa dipanggil langsung dari HTML onclick)
-// =================================================================
 function toggleKomentar(ceritaId) {
     var areaKomentar = document.getElementById('area-komentar-' + ceritaId);
     if (areaKomentar) {
@@ -12,16 +9,12 @@ function toggleKomentar(ceritaId) {
     }
 }
 
-// =================================================================
-// 2. LOGIKA KETIKA HALAMAN SELESAI DIMUAT
-// =================================================================
 document.addEventListener('DOMContentLoaded', function () {
     /* TAB SWITCHING */
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('userId');
     const token = urlParams.get('token');
 
-    // --- LOGIKA VOTING ---
     const semuaTombolVote = document.querySelectorAll(".btn-vote");
 
     semuaTombolVote.forEach(button => {
@@ -72,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // --- LOGIKA DROPDOWN TAGS ---
     const checkboxes = document.querySelectorAll(".tag-checkbox");
     const finalTagsInput = document.getElementById("finalTagsInput");
     const labelDropdown = document.getElementById("selectedTagsLabel");
@@ -93,7 +85,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // --- LOGIKA TAB FOR YOU / FOLLOWING ---
     const tabItems = document.querySelectorAll('.tab-item');
     const feedForYou = document.getElementById('feed-foryou');
     const feedFollowing = document.getElementById('feed-following');
@@ -102,8 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
         tab.addEventListener('click', function () {
             tabItems.forEach(t => t.classList.remove('active'));
             this.classList.add('active');
-            
-            // Cek apakah feedFollowing ada (untuk mencegah error di halaman yang tidak punya tab ini)
+
             if (feedFollowing) {
                 if (this.getAttribute('data-tab') === 'foryou') {
                     feedForYou.classList.remove('d-none'); feedFollowing.classList.add('d-none');
@@ -114,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // --- LOGIKA PREVIEW GAMBAR & TOMBOL TAG ---
     const postTag = document.getElementById('postTag');
     const imageInput = document.getElementById('imageInput');
     const imagePreviewContainer = document.getElementById('imagePreviewContainer');
@@ -155,9 +144,22 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!tagInputContainer.classList.contains('d-none') && postTag) postTag.focus();
         });
     }
+    const tabItems = document.querySelectorAll('.tab-item');
+    const feedForYou = document.getElementById('feed-foryou');
+    const feedFollowing = document.getElementById('feed-following');
 
-    /* KODE RENDER HTML MANUAL DIHAPUS 
-       Karena postingan baru sekarang dikelola oleh Controller Spring Boot (th:action) 
-       dan di-render secara otomatis lewat Thymeleaf th:each.
-    */
+        tabItems.forEach(tab => {
+        tab.addEventListener('click', function () {
+            tabItems.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+
+            if (this.getAttribute('data-tab') === 'foryou') {
+                feedForYou.classList.remove('d-none');
+                feedFollowing.classList.add('d-none');
+            } else {
+                feedForYou.classList.add('d-none');
+                feedFollowing.classList.remove('d-none');
+            }
+        });
+    });
 });

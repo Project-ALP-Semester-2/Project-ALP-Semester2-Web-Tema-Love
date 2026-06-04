@@ -19,7 +19,6 @@ public class BadwordsService {
     private final Map<Character, Character> substitutions = new HashMap<>();
 
     public BadwordsService() {
-        // Init Map Substitusi Karakter (Leetspeak / Alay)
         substitutions.put('4', 'a'); substitutions.put('@', 'a');
         substitutions.put('8', 'b');
         substitutions.put('(', 'c');
@@ -38,10 +37,8 @@ public class BadwordsService {
         try (InputStream is = resource.getInputStream(); 
              Scanner scanner = new Scanner(is, "UTF-8")) {
             
-            // Membaca seluruh isi file JSON sebagai satu string teks
             String isiJson = scanner.useDelimiter("\\A").next();
             
-            // Bersihkan karakter [ ] " dan spasi agar sisa katanya saja
             isiJson = isiJson.replace("[", "").replace("]", "").replace("\"", "");
             String[] words = isiJson.split(",");
             

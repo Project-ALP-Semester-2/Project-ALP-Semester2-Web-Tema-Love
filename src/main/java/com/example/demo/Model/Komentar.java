@@ -24,7 +24,6 @@ public class Komentar {
     @JoinColumn(name = "cerita_id")
     private Cerita cerita;
 
-    // Getter & Setter
     public Long getId_komentar() { return id_komentar; }
     public void setId_komentar(Long id_komentar) { this.id_komentar = id_komentar; }
 

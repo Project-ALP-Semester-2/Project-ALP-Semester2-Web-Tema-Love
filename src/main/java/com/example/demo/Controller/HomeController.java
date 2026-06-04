@@ -3,13 +3,15 @@ package com.example.demo.Controller;
 import com.example.demo.Model.Bookmark;
 import com.example.demo.Model.Cerita;
 import com.example.demo.Model.User;
-import com.example.demo.Model.Komentar; // Import Model Komentar
+import com.example.demo.Model.Komentar;
+import com.example.demo.Model.Notifikasi; 
 import com.example.demo.Repository.CeritaRepository;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Repository.RatingRepository;
 import com.example.demo.Repository.LikeCeritaRepository;
 import com.example.demo.Repository.BookmarkRepository;
-import com.example.demo.Repository.KomentarRepository; // Import Repository Komentar
+import com.example.demo.Repository.KomentarRepository;
+import com.example.demo.Repository.NotifikasiRepository; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -35,7 +37,8 @@ public class HomeController {
     @Autowired private RatingRepository ratingRepository;
     @Autowired private LikeCeritaRepository likeCeritaRepository;
     @Autowired private BookmarkRepository bookmarkRepository;
-    @Autowired private KomentarRepository komentarRepository; // Panggil Mesin Komentar
+    @Autowired private KomentarRepository komentarRepository;
+    @Autowired private NotifikasiRepository notifikasiRepository; 
 
     @GetMapping
     public String halamanUtamaApp(
@@ -151,7 +154,6 @@ public class HomeController {
         return "redirect:/homepage?userId=" + userId + "&token=" + token;
     }
 
-    // --- FUNGSI BARU UNTUK MENANGKAP KOMENTAR ---
     @PostMapping("/cerita/komentar")
     public String tambahKomentar(
             @RequestParam("ceritaId") Long ceritaId,
@@ -164,18 +166,32 @@ public class HomeController {
         Optional<User> userOpt = userRepository.findByUsername(userId);
         Optional<Cerita> ceritaOpt = ceritaRepository.findById(ceritaId);
 
-        // Pastikan User ada, Cerita ada, dan teks komentar tidak kosong
         if (userOpt.isPresent() && ceritaOpt.isPresent() && !isiKomentar.trim().isEmpty()) {
+            User pengirim = userOpt.get();
+            Cerita cerita = ceritaOpt.get();
+
             Komentar kBaru = new Komentar();
             kBaru.setIsiKomentar(isiKomentar); 
-            kBaru.setUser(userOpt.get());
-            kBaru.setCerita(ceritaOpt.get());
+            kBaru.setUser(pengirim);
+            kBaru.setCerita(cerita);
             kBaru.setTanggalKomentar(LocalDateTime.now());
-            
             komentarRepository.save(kBaru);
+
+            if (!pengirim.getUsername().equals(cerita.getUser().getUsername())) {
+                Notifikasi notif = new Notifikasi();
+                notif.setPenerima(cerita.getUser());
+                notif.setPengirim(pengirim);
+                notif.setJenis("KOMENTAR");
+                notif.setCerita(cerita);
+
+                String cuplikanKomen = isiKomentar.length() > 35 ? isiKomentar.substring(0, 35) + "..." : isiKomentar;
+                notif.setPesan("membalas: \"" + cuplikanKomen + "\"");
+                
+                notif.setWaktu(LocalDateTime.now());
+                notifikasiRepository.save(notif);
+            }
         }
         
-        // Kembalikan pengguna ke halaman beranda setelah berkomentar
         return "redirect:/homepage?userId=" + userId + "&token=" + token;
     }
 }

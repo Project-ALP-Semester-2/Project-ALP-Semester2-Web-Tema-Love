@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,7 +34,7 @@
                 <i class="bi bi-compass"></i> <span>Explore</span>
             </a>
             <a th:href="@{/notifications(userId=${param.userId}, token=${param.token})}" class="nav-link active">
-                <i class="bi bi-bell"></i> <span>Notifications</span>
+                <i class="bi bi-bell-fill"></i> <span>Notifications</span>
             </a>
             <a th:href="@{/follow(userId=${param.userId}, token=${param.token})}" class="nav-link">
                 <i class="bi bi-people"></i> <span>Follow</span>
@@ -46,41 +46,70 @@
                 <i class="bi bi-person"></i> <span>Profile</span>
             </a>
 
-            <button class="btn btn-primary w-100 py-3 mt-4 fw-bold d-none d-lg-block">
-                Bercerita
-            </button>
+            <button class="btn btn-primary w-100 py-3 mt-4 fw-bold d-none d-lg-block">Bercerita</button>
             <button class="btn btn-primary rounded-circle p-0 d-lg-none mt-4 flex-center" style="width:50px; height:50px;">
                 <i class="bi bi-pencil-square fs-5"></i>
             </button>
         </nav>
 
         <div class="profile-mini w-100 mt-auto p-2 d-flex align-items-center justify-content-center justify-content-lg-start gap-2 rounded-pill hover-effect" style="cursor: pointer; height: 56px;">
-            <img th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${userAktif}" 
-                class="rounded-circle bg-white border flex-shrink-0" 
-                style="width:42px; height:42px;" 
-                alt="Avatar">
-                
-            <div class="d-none d-lg-block fw-bold my-auto text-dark overflow-hidden w-100" 
-                style="font-size: 14px; line-height: 1.2;">
-                <span class="d-block text-truncate" th:text="${userAktif}">
-                    Username
-                </span>
+            <img th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${userAktif}" class="rounded-circle bg-white border flex-shrink-0" style="width:42px; height:42px;" alt="Avatar">
+            <div class="d-none d-lg-block fw-bold my-auto text-dark overflow-hidden w-100" style="font-size: 14px; line-height: 1.2;">
+                <span class="d-block text-truncate" th:text="${userAktif}">Username</span>
             </div>
         </div>
     </aside>
 
     <main class="col-10 col-md-8 col-lg-6 feed-area p-0">
 
-    <div class="sticky-top bg-blur border-bottom pt-3" style="z-index:50;">
-        <h5 class="font-display fw-bold mb-3 px-3 px-md-4" style="color:var(--primary-dark);font-size:1.4rem;">Notifikasi</h5>
-        
-        <div class="feed-tabs d-flex">
-            <div class="tab-item active flex-grow-1 text-center py-3" data-filter="semua">Semua</div>
-            <div class="tab-item flex-grow-1 text-center py-3" data-filter="interaksi">Interaksi Saja</div>
+        <div class="sticky-top bg-blur border-bottom pt-3" style="z-index:50;">
+            <h5 class="font-display fw-bold mb-3 px-3 px-md-4" style="color:var(--primary-dark);font-size:1.4rem;">Notifikasi</h5>
+            
+            <div class="feed-tabs d-flex">
+                <div class="tab-item active flex-grow-1 text-center py-3" data-filter="semua">Semua</div>
+                <div class="tab-item flex-grow-1 text-center py-3" data-filter="interaksi">Interaksi Saja</div>
+            </div>
         </div>
-    </div>
 
-    <div id="notificationsFeed" class="feed-posts pb-5">
+        <div id="notificationsFeed" class="feed-posts pb-5">
+            
+            <div th:if="${#lists.isEmpty(daftarNotifikasi)}" class="text-center py-5 mt-4 text-muted">
+                <div style="font-size: 3rem;">📭</div>
+                <h5 class="fw-bold mt-3 mb-2" style="color: var(--neutral);">Belum Ada Notifikasi</h5>
+                <p style="font-size: 14.5px;">Interaksi dari pengguna lain akan muncul di sini.</p>
+            </div>
+
+            <div th:each="notif : ${daftarNotifikasi}" class="p-3 px-md-4 border-bottom hover-effect d-flex gap-3 align-items-start bg-white notif-item" th:data-type="${notif.jenis}">
+                
+                <div th:if="${notif.jenis == 'LIKE'}" class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 45px; height: 45px; background-color: rgba(217,163,181,0.2); color: var(--secondary-dark);">
+                    <i class="bi bi-heart-fill fs-5"></i>
+                </div>
+                <div th:if="${notif.jenis == 'KOMENTAR'}" class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 45px; height: 45px; background-color: rgba(133,193,182,0.2); color: var(--primary-dark);">
+                    <i class="bi bi-chat-fill fs-5"></i>
+                </div>
+                <div th:if="${notif.jenis == 'FOLLOW'}" class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 45px; height: 45px; background-color: rgba(0,0,0,0.05); color: var(--neutral);">
+                    <i class="bi bi-person-plus-fill fs-5"></i>
+                </div>
+
+                <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <div>
+                            <img th:if="${notif.pengirim != null}" th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${notif.pengirim.username}" class="rounded-circle border me-1" style="width: 20px; height: 20px; margin-top: -2px;">
+                            
+                            <span class="fw-bold" style="color: var(--neutral);" th:text="${notif.pengirim != null ? notif.pengirim.username : 'Sistem'}">Nama Pengirim</span>
+                            <span class="text-muted" th:text="' ' + ${notif.pesan}" style="font-size: 14.5px;">pesan notif</span>
+                        </div>
+                        <span class="text-muted small ms-2 flex-shrink-0" th:text="${#temporals.format(notif.waktu, 'dd MMM, HH:mm')}">Waktu</span>
+                    </div>
+                    
+                    <div th:if="${notif.cerita != null}" class="mt-2 p-2 rounded-3 text-muted small" style="background-color: var(--neutral-pale); border-left: 3px solid var(--primary-dark);">
+                        "<span th:text="${#strings.abbreviate(notif.cerita.isiCerita, 70)}">Potongan cerita...</span>"
+                    </div>
+                </div>
+                
+                <div th:if="${!notif.sudahDibaca}" class="rounded-circle flex-shrink-0 mt-2" style="width: 8px; height: 8px; background-color: var(--primary-dark);"></div>
+            </div>
+
         </div>
 
     </main>
@@ -116,7 +145,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../js/interactions.js"></script> 
+
 <script src="../js/notifications.js"></script>
+
 </body>
 </html>

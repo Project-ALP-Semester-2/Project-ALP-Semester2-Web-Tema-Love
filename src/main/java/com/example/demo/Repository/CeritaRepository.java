@@ -16,6 +16,5 @@ public interface CeritaRepository extends JpaRepository<Cerita, Long> {
     @Query("SELECT c FROM Cerita c ORDER BY c.tanggalDibuat DESC")
     Page<Cerita> findAllCeritaTerbaru(Pageable pageable);
 
-    // TAMBAHKAN BARIS INI: Untuk mencari cerita berdasarkan User pembuatnya
     List<Cerita> findByUserOrderByTanggalDibuatDesc(User user);
 }

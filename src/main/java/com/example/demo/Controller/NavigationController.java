@@ -1,13 +1,15 @@
 package com.example.demo.Controller;
 
-import com.example.demo.Model.Bookmark; // TAMBAHAN
+import com.example.demo.Model.Bookmark;
 import com.example.demo.Model.Cerita;
 import com.example.demo.Model.LikeCerita;
+import com.example.demo.Model.Notifikasi; 
 import com.example.demo.Model.User;
-import com.example.demo.Repository.BookmarkRepository; // TAMBAHAN
+import com.example.demo.Repository.BookmarkRepository;
 import com.example.demo.Repository.CeritaRepository;
 import com.example.demo.Repository.FollowRepository;
 import com.example.demo.Repository.LikeCeritaRepository;
+import com.example.demo.Repository.NotifikasiRepository; 
 import com.example.demo.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,7 +38,10 @@ public class NavigationController {
     private LikeCeritaRepository likeCeritaRepository; 
 
     @Autowired
-    private BookmarkRepository bookmarkRepository; // TAMBAHAN REPOSITORY BOOKMARK
+    private BookmarkRepository bookmarkRepository;
+
+    @Autowired
+    private NotifikasiRepository notifikasiRepository; 
 
     private void setAtributUser(String userId, Model model) {
         if (userId != null && userId.startsWith("Anon-")) {
@@ -63,6 +68,14 @@ public class NavigationController {
     public String halamanNotifications(@RequestParam("userId") String userId, @RequestParam("token") Integer token, Model model) {
         if (token == null || !token.equals(LoginController.tokenServer)) return "redirect:/auth";
         setAtributUser(userId, model);
+
+        Optional<User> userOpt = userRepository.findByUsername(userId);
+        if (userOpt.isPresent()) {
+            // Tarik semua notifikasi milik user ini
+            List<Notifikasi> listNotif = notifikasiRepository.findByPenerimaOrderByWaktuDesc(userOpt.get());
+            model.addAttribute("daftarNotifikasi", listNotif);
+        }
+
         return "notifications"; 
     }
 
@@ -74,18 +87,15 @@ public class NavigationController {
         Optional<User> userOpt = userRepository.findByUsername(userId);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            
-            // Tarik data bookmark dari Repository
+
             List<Bookmark> listBookmark = bookmarkRepository.findByUser(user);
             List<Cerita> ceritaBookmarks = listBookmark.stream().map(Bookmark::getCerita).collect(Collectors.toList());
             
             model.addAttribute("daftarBookmark", ceritaBookmarks);
-            
-            // Lempar ID Bookmark agar tombol di UI berubah warna
+
             List<Long> bookmarkedIds = ceritaBookmarks.stream().map(Cerita::getId).collect(Collectors.toList());
             model.addAttribute("bookmarkedIds", bookmarkedIds);
-            
-            // Kirim daftar Like agar hati tetap merah jika sudah di-like
+
             kirimDaftarLike(user, model);
         }
         

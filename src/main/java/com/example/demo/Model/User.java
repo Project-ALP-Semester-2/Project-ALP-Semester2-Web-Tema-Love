@@ -19,20 +19,15 @@ public class User {
 
     private String role;
 
-    // HUBUNGAN: Satu user bisa punya banyak cerita
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Cerita> daftarCerita;
 
-    // HUBUNGAN: Satu user bisa punya banyak komentar
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Komentar> daftarKomentar;
 
-    // HUBUNGAN: Satu user bisa punya banyak rating
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Rating> daftarRating;
 
-    
-    // GETTER DAN SETTER
     public Long getId() { return id_user; }
     public void setId(Long id_user) { this.id_user = id_user; }
 

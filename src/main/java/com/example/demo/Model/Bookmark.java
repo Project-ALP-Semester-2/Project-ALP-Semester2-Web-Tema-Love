@@ -8,7 +8,7 @@ public class Bookmark {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_bookmark") // Tambahkan baris ini!
+    @Column(name = "id_bookmark") 
     private Long id; 
 
     @ManyToOne
@@ -19,7 +19,6 @@ public class Bookmark {
     @JoinColumn(name = "cerita_id")
     private Cerita cerita;
 
-    // Getter & Setter
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public User getUser() { return user; }

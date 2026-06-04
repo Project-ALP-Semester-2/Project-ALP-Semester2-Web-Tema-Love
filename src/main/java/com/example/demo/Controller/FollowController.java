@@ -41,22 +41,18 @@ public class FollowController {
         if (currentUserOpt.isPresent()) {
             User currentUser = currentUserOpt.get();
 
-            // 1. Tarik data "Mengikuti" (Orang yang user follow)
             List<User> listMengikuti = followRepository.findByFollower(currentUser)
                     .stream().map(Follow::getFollowing).collect(Collectors.toList());
 
-            // 2. Tarik data "Pengikut" (Orang yang follow user)
             List<User> listPengikut = followRepository.findByFollowing(currentUser)
                     .stream().map(Follow::getFollower).collect(Collectors.toList());
-
-            // 3. Tarik data "Disarankan" (Semua user KECUALI diri sendiri & yang sudah di-follow)
+ 
             List<User> semuaUser = userRepository.findAll();
             List<User> listDisarankan = semuaUser.stream()
-                    .filter(u -> !u.getUsername().equals(currentUser.getUsername())) // Jangan sarankan diri sendiri
-                    .filter(u -> !listMengikuti.contains(u)) // Jangan sarankan yang sudah di-follow
+                    .filter(u -> !u.getUsername().equals(currentUser.getUsername())) 
+                    .filter(u -> !listMengikuti.contains(u)) 
                     .collect(Collectors.toList());
 
-            // Kirim ke HTML
             model.addAttribute("mengikuti", listMengikuti);
             model.addAttribute("pengikut", listPengikut);
             model.addAttribute("disarankan", listDisarankan);

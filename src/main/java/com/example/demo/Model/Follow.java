@@ -19,17 +19,14 @@ public class Follow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // User yang menekan tombol follow (Pengikut)
     @ManyToOne
     @JoinColumn(name = "follower_id")
     private User follower;
 
-    // User yang diikuti
     @ManyToOne
     @JoinColumn(name = "following_id")
     private User following;
 
-    // Getter & Setter
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public User getFollower() { return follower; }

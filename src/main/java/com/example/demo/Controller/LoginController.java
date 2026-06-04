@@ -113,10 +113,8 @@ public class LoginController {
 
         userRepository.save(userAnonimBaru);
 
-
         this.tokenServer = (int)(Math.random() * 90000) + 10000;
 
-        // Langsung lempar masuk ke homepage membawa userId dan token rahasia
         return "redirect:/homepage?userId=" + usernameFinal + "&token=" + this.tokenServer;
     }
 }
