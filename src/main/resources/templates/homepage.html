@@ -183,34 +183,36 @@
                         </div>
                     </div>
 
-                    <div class="interaction-row d-flex justify-content-between text-muted" style="max-width: 360px;">
+                    <div class="interaction-row d-flex gap-4 text-muted" style="font-size: 14.5px;">
                         
-                        <form th:action="@{/like/toggle}" method="POST" class="m-0 p-0 d-inline">
-                            <input type="hidden" name="ceritaId" th:value="${cerita.id}">
-                            <input type="hidden" name="userId" th:value="${param.userId[0]}">
-                            <input type="hidden" name="token" th:value="${param.token}">
-                            <input type="hidden" name="redirect" value="home">
-                            
-                            <button th:if="${likedCeritaIds != null and #lists.contains(likedCeritaIds, cerita.id)}" 
-                                    type="submit" class="btn p-0 border-0 bg-transparent interaction-btn text-danger">
-                                <i class="bi bi-heart-fill"></i> <span th:text="${#lists.size(cerita.daftarLike)}">0</span>
-                            </button>
-                            
-                            <button th:unless="${likedCeritaIds != null and #lists.contains(likedCeritaIds, cerita.id)}" 
-                                    type="submit" class="btn p-0 border-0 bg-transparent interaction-btn hover-heart text-muted">
-                                <i class="bi bi-heart"></i> <span th:text="${#lists.size(cerita.daftarLike)}">0</span>
-                            </button>
-                        </form>
+                        <div class="d-flex align-items-center gap-1 interaction-btn hover-primary">
+                            <form th:action="@{/like/toggle}" method="POST" class="m-0 p-0 d-inline">
+                                <input type="hidden" name="ceritaId" th:value="${cerita.id}">
+                                <input type="hidden" name="userId" th:value="${param.userId[0]}">
+                                <input type="hidden" name="token" th:value="${param.token}">
+                                <input type="hidden" name="redirect" value="home">
+                                
+                                <button th:if="${likedCeritaIds != null and #lists.contains(likedCeritaIds, cerita.id)}" 
+                                        type="submit" class="btn p-0 border-0 bg-transparent text-danger m-0 d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-heart-fill"></i>
+                                </button>
+                                
+                                <button th:unless="${likedCeritaIds != null and #lists.contains(likedCeritaIds, cerita.id)}" 
+                                        type="submit" class="btn p-0 border-0 bg-transparent text-muted m-0 d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-heart"></i>
+                                </button>
+                            </form>
+                            <span th:text="${#lists.size(cerita.daftarLike)}" class="align-self-center">0</span>
+                        </div>
 
                         <div class="interaction-btn hover-primary" th:onclick="'toggleKomentar(' + ${cerita.id} + ')'" style="cursor: pointer;">
                             <i class="bi bi-chat"></i> <span th:text="${#lists.size(cerita.daftarKomentar)}">0</span>
                         </div>
                         
-                        <form th:action="@{/homepage/cerita/bookmark}" method="POST" class="d-inline">
+                        <form th:action="@{/api/bookmark/toggle}" method="POST" class="d-inline interaction-btn hover-primary form-bookmark-ajax">
                             <input type="hidden" name="ceritaId" th:value="${cerita.id}">
                             <input type="hidden" name="userId" th:value="${param.userId[0]}">
                             <input type="hidden" name="token" th:value="${param.token}">
-                            <input type="hidden" name="redirect" value="home">
                             
                             <button th:if="${bookmarkedIds != null and #lists.contains(bookmarkedIds, cerita.id)}" 
                                     type="submit" class="btn p-0 border-0 bg-transparent text-primary">
@@ -218,7 +220,7 @@
                             </button>
                             
                             <button th:unless="${bookmarkedIds != null and #lists.contains(bookmarkedIds, cerita.id)}" 
-                                    type="submit" class="btn p-0 border-0 bg-transparent text-muted hover-primary">
+                                    type="submit" class="btn p-0 border-0 bg-transparent text-muted">
                                 <i class="bi bi-bookmark"></i>
                             </button>
                         </form>

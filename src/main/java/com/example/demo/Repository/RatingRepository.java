@@ -6,7 +6,6 @@ import java.util.Optional;
 
 public interface RatingRepository extends JpaRepository<Rating, Long> {
     
-
     Optional<Rating> findByUserUsernameAndCeritaId(String username, Long ceritaId);
     long countByCeritaIdAndStatusRating(Long ceritaId, String statusRating);
     long countByCeritaId(Long ceritaId);

@@ -108,7 +108,7 @@
 }
 
 .hover-effect:hover {
-  background-color: var(--tertiary);
+  background-color: rgba(70, 74, 77, 0.04) !important;
 }
 
 /* Avatar warna sesuai palette */

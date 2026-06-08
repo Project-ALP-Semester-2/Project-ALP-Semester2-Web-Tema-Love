@@ -124,35 +124,6 @@ public class HomeController {
         return "redirect:/homepage?userId=" + userId + "&token=" + token;
     }
 
-    @PostMapping("/cerita/bookmark")
-    public String toggleBookmark(
-            @RequestParam("ceritaId") Long ceritaId,
-            @RequestParam("userId") String userId,
-            @RequestParam("token") Integer token,
-            @RequestParam(value = "redirect", defaultValue = "home") String redirect) {
-        
-        if (token == null || !token.equals(LoginController.tokenServer)) return "redirect:/auth";
-
-        Optional<User> userOpt = userRepository.findByUsername(userId);
-        Optional<Cerita> ceritaOpt = ceritaRepository.findById(ceritaId);
-
-        if (userOpt.isPresent() && ceritaOpt.isPresent()) {
-            User user = userOpt.get();
-            Cerita cerita = ceritaOpt.get();
-
-            if (bookmarkRepository.existsByUserAndCerita(user, cerita)) {
-                bookmarkRepository.deleteByUserAndCerita(user, cerita);
-            } else {
-                Bookmark bBaru = new Bookmark();
-                bBaru.setUser(user);
-                bBaru.setCerita(cerita);
-                bookmarkRepository.save(bBaru);
-            }
-        }
-        
-        if ("bookmarks".equals(redirect)) return "redirect:/bookmarks?userId=" + userId + "&token=" + token;
-        return "redirect:/homepage?userId=" + userId + "&token=" + token;
-    }
 
     @PostMapping("/cerita/komentar")
     public String tambahKomentar(

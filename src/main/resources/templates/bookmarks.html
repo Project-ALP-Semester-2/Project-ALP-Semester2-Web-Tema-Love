@@ -153,14 +153,19 @@
 
                             <div class="interaction-btn hover-primary"><i class="bi bi-chat"></i> <span>0</span></div>
                             
-                            <form th:action="@{/homepage/cerita/bookmark}" method="POST" class="d-inline">
+                            <form th:action="@{/api/bookmark/toggle}" method="POST" class="d-inline form-bookmark-ajax">
                                 <input type="hidden" name="ceritaId" th:value="${cerita.id}">
                                 <input type="hidden" name="userId" th:value="${param.userId[0]}">
                                 <input type="hidden" name="token" th:value="${param.token}">
-                                <input type="hidden" name="redirect" value="bookmarks">
                                 
-                                <button type="submit" class="btn p-0 border-0 bg-transparent text-primary">
+                                <button th:if="${bookmarkedIds != null and #lists.contains(bookmarkedIds, cerita.id)}" 
+                                        type="submit" class="btn p-0 border-0 bg-transparent text-primary interaction-btn">
                                     <i class="bi bi-bookmark-fill"></i>
+                                </button>
+                                
+                                <button th:unless="${bookmarkedIds != null and #lists.contains(bookmarkedIds, cerita.id)}" 
+                                        type="submit" class="btn p-0 border-0 bg-transparent text-muted hover-primary interaction-btn">
+                                    <i class="bi bi-bookmark"></i>
                                 </button>
                             </form>
                             
