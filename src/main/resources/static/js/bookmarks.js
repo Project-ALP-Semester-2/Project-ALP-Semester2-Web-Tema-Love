@@ -1,76 +1,100 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const bookmarksList = document.getElementById('bookmarksList');
-    const emptyBookmarks = document.getElementById('emptyBookmarks');
-    const searchInput = document.getElementById('searchBookmarks');
+// ==========================================================================
+// 1. LOGIKA AJAX BOOKMARK (FINAL & BERSIH TANPA SAMPAH LOCALSTORAGE)
+// ==========================================================================
+document.addEventListener("submit", function (e) {
+    // Deteksi lewat class form biar akurat dan anti-gagal
+    if (e.target && e.target.classList.contains('form-bookmark-ajax')) {
+        
+        // JINAKKAN REFRESH BROWSER!
+        e.preventDefault();
 
-    function renderBookmarks(query = '') {
+        const form = e.target;
+        const formData = new FormData(form);
+        const postCard = form.closest('.post-card') || form.closest('article');
 
-        const savedBookmarks = JSON.parse(localStorage.getItem('unsaid_bookmarks')) || [];
-
-        if (savedBookmarks.length === 0) {
-            emptyBookmarks.classList.remove('d-none');
-            bookmarksList.innerHTML = '';
-            return;
+        // --- OPTIMISTIC UPDATE (Kartu langsung hilang smooth dalam 1ms) ---
+        if (postCard) {
+            postCard.style.transition = "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)";
+            postCard.style.opacity = "0";
+            postCard.style.transform = "scale(0.95)";
+            postCard.style.maxHeight = postCard.offsetHeight + "px";
+            
+            setTimeout(() => {
+                postCard.style.maxHeight = "0px";
+                postCard.style.padding = "0px";
+                postCard.style.margin = "0px";
+                postCard.style.border = "none";
+                
+                setTimeout(() => {
+                    postCard.remove();
+                    
+                    // Cek jika sisa kartu di dalam '#bookmarksList' sudah habis
+                    const listDaftar = document.getElementById('bookmarksList');
+                    if (listDaftar && listDaftar.querySelectorAll('.post-card').length === 0) {
+                        listDaftar.innerHTML = `
+                            <div class="text-center py-5 mt-5">
+                                <h3 class="fw-bold mb-2" style="color: var(--neutral); font-family: var(--font-body); font-size: 1.5rem;">Save posts for later</h3>
+                                <p class="text-muted mx-auto" style="font-size: 14.5px; max-width: 320px; line-height: 1.5;">Bookmark posts to easily find them again in the future.</p>
+                            </div>`;
+                        }
+                }, 150);
+            }, 300);
         }
 
-        emptyBookmarks.classList.add('d-none');
-        
-        const filtered = savedBookmarks.filter(b => {
-            if (!query) return true;
-
-            return b.html.toLowerCase().includes(query.toLowerCase());
+        // --- PROSES BELAKANG LAYAR (Kirim data diam-diam ke Controller) ---
+        fetch("/api/bookmark/toggle", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "unauthorized") {
+                window.location.href = "/auth";
+            }
+        })
+        .catch(err => {
+            console.error("Error AJAX Bookmark:", err);
+            window.location.reload();
         });
-
-        bookmarksList.innerHTML = filtered.reverse().map(b => b.html).join('');
     }
+});
 
-    renderBookmarks();
+// ==========================================================================
+// 2. LOGIKA AJAX LIKE / EMPATI (SAMA PERSIS DENGAN KODE LU)
+// ==========================================================================
+document.addEventListener("submit", function (e) {
+    if (e.target && e.target.action && e.target.action.includes("/like/toggle")) {
+        e.preventDefault();
 
-    searchInput.addEventListener('input', (e) => {
-        renderBookmarks(e.target.value.trim());
-    });
+        const form = e.target;
+        const formData = new FormData(form);
+        
+        const button = form.querySelector("button");
+        const iconHeart = form.querySelector("i");
+        const likeCountSpan = form.nextElementSibling;
 
-    /* ==========================================================================
-       LOGIKA AJAX BOOKMARK (MURNI MEMBAJAK SUBMIT FORM ASLI)
-       ========================================================================== */
-    document.querySelectorAll('.form-bookmark-ajax').forEach(form => {
-        form.addEventListener("submit", function (e) {
-            // 1. Cegat pengiriman form standar agar browser tidak reload halaman
-            e.preventDefault();
-
-            // 2. Bungkus data input tersembunyi (ceritaId, userId, token)
-            const formData = new FormData(this);
-            
-            // 3. Ambil target button dan icon di dalam form ini untuk di-update komponennya
-            const button = this.querySelector("button");
-            const iconBookmark = this.querySelector("i");
-
-            // 4. Kirim data ke BookmarkRestController secara asinkron (background)
-            fetch("/api/bookmark/toggle", {
-                method: "POST",
-                body: formData
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === "success") {
-                    // 5. Ubah visual icon dan class warna tombol secara instan berdasarkan respons database
-                    if (data.bookmarked) {
-                        // Jika berhasil dibookmark: nyalakan warna biru dan isi penuh icon-nya
-                        button.className = "btn p-0 border-0 bg-transparent text-primary interaction-btn";
-                        if (iconBookmark) iconBookmark.className = "bi bi-bookmark-fill";
-                    } else {
-                        // Jika dibatalkan/dihapus dari bookmark: kembalikan ke abu-abu murni
-                        button.className = "btn p-0 border-0 bg-transparent text-muted hover-primary interaction-btn";
-                        if (iconBookmark) iconBookmark.className = "bi bi-bookmark";
-                    }
-                } else if (data.status === "unauthorized") {
-                    // Proteksi keamanan: Tendang ke halaman auth jika token kadaluwarsa/salah
-                    window.location.href = "/auth";
+        fetch("/api/like/toggle", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                if (data.liked) {
+                    button.className = "btn p-0 border-0 bg-transparent interaction-btn text-danger";
+                    if (iconHeart) iconHeart.className = "bi bi-heart-fill";
                 } else {
-                    console.error("Gagal melakukan bookmark:", data.message);
+                    button.className = "btn p-0 border-0 bg-transparent interaction-btn hover-heart text-muted";
+                    if (iconHeart) iconHeart.className = "bi bi-heart";
                 }
-            })
-            .catch(err => console.error("Error AJAX Bookmark:", err));
-        });
-    });
+                
+                if (likeCountSpan) {
+                    likeCountSpan.textContent = data.totalLike;
+                }
+            } else if (data.status === "unauthorized") {
+                window.location.href = "/auth";
+            }
+        })
+        .catch(err => console.error("Error AJAX Like:", err));
+    }
 });
