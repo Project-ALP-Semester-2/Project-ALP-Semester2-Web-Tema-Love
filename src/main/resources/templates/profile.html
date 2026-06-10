@@ -172,6 +172,31 @@
                               </span>
                           </div>
 
+                            <div class="voting-box rounded-4 p-3 mb-3 border" th:data-id="${cerita.id}" style="border-color: #EFEBE4 !important;">
+                                <div class="vote-question small fw-bold text-muted mb-2">Menurutmu, apakah hubungan ini?</div>
+                                
+                                <div class="d-flex justify-content-center gap-2 mb-2" th:classappend="${cerita.pilihanUserAktif != null} ? 'd-none' : ''">
+                                    <button class="btn btn-vote btn-vote-healthy flex-grow-1 py-2 rounded-pill" data-vote="HEALTHY">💚 Healthy</button>
+                                    <button class="btn btn-vote btn-vote-toxic flex-grow-1 py-2 rounded-pill" data-vote="TOXIC">🚩 Toxic</button>
+                                </div>
+                                
+                                <div class="vote-result" th:classappend="${cerita.pilihanUserAktif == null} ? 'd-none' : ''">
+                                    <div class="vote-bar-wrap rounded-pill mb-1" 
+                                        th:style="'height: 6px; width: 100%; transition: background 0.5s ease; background: linear-gradient(to right, var(--primary-dark) ' + ${cerita.pctHealthy} + '%, var(--secondary-dark) ' + ${cerita.pctHealthy} + '%);'">
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center" style="font-size:12px;">
+                                        <span class="vote-pct-healthy fw-bold" style="color: var(--primary-dark);" th:text="${cerita.pctHealthy} + '% Healthy'">0% Healthy</span>
+                                        <span class="vote-total text-muted" th:text="${cerita.totalVote} + ' suara'">0 suara</span>
+                                        <span class="vote-pct-toxic fw-bold" style="color: var(--secondary-dark);" th:text="${cerita.pctToxic} + '% Toxic'">0% Toxic</span>
+                                    </div>
+                                    
+                                    <div class="text-center text-muted small mt-1" th:if="${cerita.pilihanUserAktif != null}">
+                                        Kamu memilih: <span class="fw-bold" th:text="${cerita.pilihanUserAktif == 'HEALTHY' ? '💚 Healthy' : '🚩 Toxic'}"></span>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="interaction-row d-flex gap-4 text-muted mt-3" style="font-size: 14.5px;">
                                 
                                 <div class="d-flex align-items-center gap-1 interaction-btn hover-primary">
@@ -238,16 +263,27 @@
     </main>
 
     <aside class="col-lg-3 d-none d-lg-block sidebar-right py-3 px-4">
-      <div class="widget-box rounded-4 p-4 mb-4">
-        <h5 class="widget-title mb-3">Saran Koneksi</h5>
-        <div class="d-flex flex-column gap-3">
-          <div class="follow-item d-flex align-items-center gap-3">
-            <img src="https://api.dicebear.com/7.x/miniavs/svg?seed=writer1" class="rounded-circle avatar-teal" style="width:42px;height:42px;flex-shrink:0;" />
-            <div class="flex-grow-1"><div class="fw-bold" style="font-size:14px;color:var(--neutral);">Autumn Whisper</div></div>
-            <button class="btn-follow">Follow</button>
-          </div>
+        <div class="widget-box rounded-4 p-4 mb-4">
+            <h5 class="widget-title mb-3">Saran Koneksi</h5>
+            <div class="d-flex flex-column gap-3">
+            <div class="follow-item d-flex align-items-center gap-3">
+                <img src="https://api.dicebear.com/7.x/miniavs/svg?seed=writer1" class="rounded-circle avatar-teal" style="width:42px;height:42px;flex-shrink:0;" />
+                <div class="flex-grow-1"><div class="fw-bold" style="font-size:14px;color:var(--neutral);">Autumn Whisper</div></div>
+                <button class="btn-follow">Follow</button>
+            </div>
+            </div>
         </div>
-      </div>
+        <footer class="px-2 mt-4 pb-4">
+            <nav class="d-flex flex-wrap mb-2" style="column-gap: 12px; row-gap: 4px;">
+                <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">About</a>
+                <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Community Guidelines</a>
+                <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Privacy Policy</a>
+                <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Terms of Service</a>
+                <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Help Center</a>
+                <a href="#" class="text-muted text-decoration-none hover-primary" style="font-size: 12px;">Cookies</a>
+            </nav>
+            <div class="text-muted" style="font-size: 12px; line-height: 1.6;">© 2026 UnSaid. Safe Space for Stories.</div>
+        </footer>
     </aside>
 
   </div>

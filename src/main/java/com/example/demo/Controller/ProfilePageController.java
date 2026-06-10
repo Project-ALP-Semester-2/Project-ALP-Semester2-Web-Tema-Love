@@ -8,6 +8,7 @@ import com.example.demo.Repository.CeritaRepository;
 import com.example.demo.Repository.FollowRepository;
 import com.example.demo.Repository.LikeCeritaRepository;
 import com.example.demo.Repository.UserRepository;
+import com.example.demo.Repository.RatingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +29,7 @@ public class ProfilePageController {
     @Autowired private FollowRepository followRepository;
     @Autowired private LikeCeritaRepository likeCeritaRepository;
     @Autowired private BookmarkRepository bookmarkRepository;
+    @Autowired private RatingRepository ratingRepository;
     
     private void setAtributUser(String userId, Model model) {
         if (userId != null && userId.startsWith("Anon-")) {
@@ -62,9 +64,9 @@ public class ProfilePageController {
             int jumlahPengikut = followRepository.findByFollowing(user).size();
             
             List<Long> bookmarkedIds = bookmarkRepository.findByUser(user)
-                    .stream().map(b -> b.getCerita().getId()).collect(Collectors.toList());
+            .stream().map(b -> b.getCerita().getId()).collect(Collectors.toList());
             model.addAttribute("bookmarkedIds", bookmarkedIds);
-
+            
             model.addAttribute("daftarCeritaKu", ceritaKu);
             model.addAttribute("daftarCeritaDisukai", ceritaDisukai); 
             model.addAttribute("jumlahPostingan", ceritaKu.size());
@@ -74,7 +76,24 @@ public class ProfilePageController {
             
             kirimDaftarLike(user, model);
         }
+        
+        User user = userOpt.get();
+        List<LikeCerita> listLike = likeCeritaRepository.findByUserOrderByIdDesc(user);
+        List<Cerita> ceritaDisukai = listLike.stream().map(LikeCerita::getCerita).collect(Collectors.toList());
+        for (Cerita cerita : ceritaDisukai) {
+            long totalHealthy = ratingRepository.countByCeritaIdAndStatusRating(cerita.getId(), "HEALTHY");
+            long totalToxic = ratingRepository.countByCeritaIdAndStatusRating(cerita.getId(), "TOXIC");
+            long total = totalHealthy + totalToxic;
 
+            cerita.setTotalVote(total);
+            cerita.setPctHealthy(total > 0 ? (int) Math.round(((double) totalHealthy / total) * 100) : 0);
+            cerita.setPctToxic(total > 0 ? (int) Math.round(((double) totalToxic / total) * 100) : 0);
+
+            if (userId != null) {
+                ratingRepository.findByUserUsernameAndCeritaId(userId, cerita.getId())
+                .ifPresent(r -> cerita.setPilihanUserAktif(r.getStatusRating()));
+            }
+        }
         return "profile"; 
     }
 

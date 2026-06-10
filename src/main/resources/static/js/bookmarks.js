@@ -98,3 +98,71 @@ document.addEventListener("submit", function (e) {
         .catch(err => console.error("Error AJAX Like:", err));
     }
 });
+
+// ==========================================================================
+// 3. LOGIKA AJAX VOTING / RATING (ADAPTASI BERDASARKAN HTML LU 100%)
+// ==========================================================================
+document.addEventListener("click", function (e) {
+    const button = e.target.closest(".btn-vote");
+    if (button) {
+        e.preventDefault();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('userId'); 
+        const token = urlParams.get('token');
+
+        const votingBox = button.closest(".voting-box");
+        const ceritaId = votingBox.getAttribute("data-id"); 
+        const pilihanVote = button.getAttribute("data-vote"); 
+
+        if (!ceritaId) {
+            console.error("ID Cerita tidak ditemukan!");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("ceritaId", ceritaId);
+        formData.append("username", userId); 
+        formData.append("pilihan", pilihanVote);
+        formData.append("token", token);
+
+        fetch("/api/rating/vote", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                // SELEKTOR DISESUAIKAN: Cari pembungkus tombol berdasarkan tombol itu sendiri
+                const tombolContainer = button.parentElement;
+                if (tombolContainer) {
+                    tombolContainer.classList.add("d-none");
+                }
+
+                // Munculkan area hasil vote bawaan HTML lu
+                const voteResult = votingBox.querySelector(".vote-result");
+                if (voteResult) {
+                    voteResult.classList.remove("d-none");
+                }
+
+                // Update teks angka persentase baru ke element HTML lu yang sekarang
+                const pctHealthyText = votingBox.querySelector(".vote-pct-healthy");
+                const pctToxicText = votingBox.querySelector(".vote-pct-toxic");
+                const totalVoteText = votingBox.querySelector(".vote-total");
+
+                if (pctHealthyText) pctHealthyText.textContent = `${data.pctHealthy}% Healthy`;
+                if (pctToxicText) pctToxicText.textContent = `${data.pctToxic}% Toxic`;
+                if (totalVoteText) totalVoteText.textContent = `${data.totalVote} suara`;
+
+                // Update gradasi warna progress bar bawaan HTML lu (width tetep 100% sesuai gaya lu)
+                const barWrap = votingBox.querySelector(".vote-bar-wrap");
+                if (barWrap) {
+                    barWrap.style.background = `linear-gradient(to right, var(--primary-dark) ${data.pctHealthy}%, var(--secondary-dark) ${data.pctHealthy}%)`;
+                }
+            } else {
+                alert("Gagal menyimpan vote: " + data.message);
+            }
+        })
+        .catch(err => console.error("Error Fetch Voting:", err));
+    }
+});

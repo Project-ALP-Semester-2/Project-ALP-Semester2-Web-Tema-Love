@@ -107,12 +107,12 @@
                             </span>
                         </div>
 
-                        <div class="voting-box rounded-4 p-3 mb-3" th:data-id="${cerita.id}">
+                        <div class="voting-box rounded-4 p-3 mb-3 border" th:data-id="${cerita.id}" style="border-color: #EFEBE4 !important;">
                             <div class="vote-question small fw-bold text-muted mb-2">Menurutmu, apakah hubungan ini?</div>
                             
-                            <div class="d-flex gap-2 mb-2" th:classappend="${cerita.pilihanUserAktif != null} ? 'd-none' : ''">
-                                <button class="btn btn-vote btn-vote-healthy" data-vote="HEALTHY">💚 Healthy</button>
-                                <button class="btn btn-vote btn-vote-toxic" data-vote="TOXIC">🚩 Toxic</button>
+                            <div class="d-flex justify-content-center gap-2 mb-2" th:classappend="${cerita.pilihanUserAktif != null} ? 'd-none' : ''">
+                                <button class="btn btn-vote btn-vote-healthy flex-grow-1 py-2 rounded-pill" data-vote="HEALTHY">💚 Healthy</button>
+                                <button class="btn btn-vote btn-vote-toxic flex-grow-1 py-2 rounded-pill" data-vote="TOXIC">🚩 Toxic</button>
                             </div>
                             
                             <div class="vote-result" th:classappend="${cerita.pilihanUserAktif == null} ? 'd-none' : ''">
@@ -120,7 +120,7 @@
                                     th:style="'height: 6px; width: 100%; transition: background 0.5s ease; background: linear-gradient(to right, var(--primary-dark) ' + ${cerita.pctHealthy} + '%, var(--secondary-dark) ' + ${cerita.pctHealthy} + '%);'">
                                 </div>
                                 
-                                <div class="d-flex justify-content-between" style="font-size:12px;">
+                                <div class="d-flex justify-content-between align-items-center" style="font-size:12px;">
                                     <span class="vote-pct-healthy fw-bold" style="color: var(--primary-dark);" th:text="${cerita.pctHealthy} + '% Healthy'">0% Healthy</span>
                                     <span class="vote-total text-muted" th:text="${cerita.totalVote} + ' suara'">0 suara</span>
                                     <span class="vote-pct-toxic fw-bold" style="color: var(--secondary-dark);" th:text="${cerita.pctToxic} + '% Toxic'">0% Toxic</span>
