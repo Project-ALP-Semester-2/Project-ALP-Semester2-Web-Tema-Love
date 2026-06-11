@@ -75,6 +75,12 @@
         <div class="tab-item flex-grow-1 text-center py-3" data-tab="following">Following</div>
     </div>
 
+    <div th:if="${errorAI}" class="alert alert-danger alert-dismissible fade show rounded-4 mb-3" role="alert" style="border-left: 5px solid #dc3545;">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span th:text="${errorAI}">Pesan Eror Kasar</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    
     <form th:action="@{/homepage/cerita/tambah}" method="POST" class="create-post border-bottom p-3 p-md-4">
         <input type="hidden" name="userId" th:value="${param.userId}">
         <input type="hidden" name="token" th:value="${param.token}">
@@ -134,126 +140,282 @@
         </div>
     </form>
 
-    <div class="feed-posts" id="feed-foryou">
-        <div th:if="${#lists.isEmpty(daftarCerita)}" class="text-center py-5 text-muted">
-            <div style="font-size: 3rem;">📭</div>
-            <p class="mt-2">Belum ada cerita yang dibagikan.</p>
-        </div>
+    <div class="feed-posts">
+        <div id="foryou-tab" class="tab-content active">
+            <div th:if="${#lists.isEmpty(daftarCerita)}" class="text-center py-5 text-muted">
+                <div style="font-size: 3rem;">📭</div>
+                <p class="mt-2">Belum ada cerita yang dibagikan.</p>
+            </div>
 
-        <article class="post-card p-3 p-md-4 hover-effect" th:each="cerita : ${daftarCerita}">
-            <div class="d-flex gap-3">
-                <img th:src="'https://api.dicebear.com/7.x/miniavs/svg?seed=' + ${cerita.namaAnonim}" class="rounded-circle avatar-teal" style="width:48px; height:48px; flex-shrink: 0;">
-                <div class="flex-grow-1">
-                    <div class="d-flex align-items-center justify-content-between mb-1">
-                        <span class="fw-bold" style="color: var(--neutral);" th:text="${cerita.namaAnonim}">Nama Penulis</span>
-                        <span class="text-muted small" th:text="${#temporals.format(cerita.tanggalDibuat, 'dd MMM, HH:mm')}">Waktu</span>
-                    </div>
-                    
-                    <p class="post-text mb-2" th:text="${cerita.isiCerita}">Isi curhatan</p>
-                    
-                    <div class="mt-2 d-flex gap-1 flex-wrap">
-                        <span th:each="singleTag : ${#strings.arraySplit(cerita.tag, ',')}" 
-                            class="badge bg-light text-secondary border rounded-pill px-2 py-1 small">
-                            #<span th:text="${singleTag}"></span>
-                        </span>
-                    </div>
-
-                    <div class="voting-box rounded-4 p-3 mb-3 border" th:data-id="${cerita.id}" style="border-color: #EFEBE4 !important;">
-                        <div class="vote-question small fw-bold text-muted mb-2">Menurutmu, apakah hubungan ini?</div>
-                        
-                        <div class="d-flex justify-content-center gap-2 mb-2" th:classappend="${cerita.pilihanUserAktif != null} ? 'd-none' : ''">
-                            <button class="btn btn-vote btn-vote-healthy flex-grow-1 py-2 rounded-pill" data-vote="HEALTHY">💚 Healthy</button>
-                            <button class="btn btn-vote btn-vote-toxic flex-grow-1 py-2 rounded-pill" data-vote="TOXIC">🚩 Toxic</button>
+            <article class="post-card p-3 p-md-4 hover-effect" th:each="cerita : ${daftarCerita}">
+                <div class="d-flex gap-3">
+                    <img th:src="'https://api.dicebear.com/7.x/miniavs/svg?seed=' + ${cerita.namaAnonim}" class="rounded-circle avatar-teal" style="width:48px; height:48px; flex-shrink: 0;">
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <span class="fw-bold" style="color: var(--neutral);" th:text="${cerita.namaAnonim}">Nama Penulis</span>
+                            <span class="text-muted small" th:text="${#temporals.format(cerita.tanggalDibuat, 'dd MMM, HH:mm')}">Waktu</span>
                         </div>
                         
-                        <div class="vote-result" th:classappend="${cerita.pilihanUserAktif == null} ? 'd-none' : ''">
-                            <div class="vote-bar-wrap rounded-pill mb-1" 
-                                th:style="'height: 6px; width: 100%; transition: background 0.5s ease; background: linear-gradient(to right, var(--primary-dark) ' + ${cerita.pctHealthy} + '%, var(--secondary-dark) ' + ${cerita.pctHealthy} + '%);'">
+                        <p class="post-text mb-2" th:text="${cerita.isiCerita}">Isi curhatan</p>
+                        
+                        <div class="mt-2 d-flex gap-1 flex-wrap">
+                            <span th:each="singleTag : ${#strings.arraySplit(cerita.tag, ',')}" 
+                                class="badge bg-light text-secondary border rounded-pill px-2 py-1 small">
+                                #<span th:text="${singleTag}"></span>
+                            </span>
+                        </div>
+
+                        <div class="voting-box rounded-4 p-3 mb-3 border" th:data-id="${cerita.id}" style="border-color: #EFEBE4 !important;">
+                            <div class="vote-question small fw-bold text-muted mb-2">Menurutmu, apakah hubungan ini?</div>
+                            
+                            <div class="d-flex justify-content-center gap-2 mb-2" th:classappend="${cerita.pilihanUserAktif != null} ? 'd-none' : ''">
+                                <button class="btn btn-vote btn-vote-healthy flex-grow-1 py-2 rounded-pill" data-vote="HEALTHY">💚 Healthy</button>
+                                <button class="btn btn-vote btn-vote-toxic flex-grow-1 py-2 rounded-pill" data-vote="TOXIC">🚩 Toxic</button>
                             </div>
                             
-                            <div class="d-flex justify-content-between align-items-center" style="font-size:12px;">
-                                <span class="vote-pct-healthy fw-bold" style="color: var(--primary-dark);" th:text="${cerita.pctHealthy} + '% Healthy'">0% Healthy</span>
-                                <span class="vote-total text-muted" th:text="${cerita.totalVote} + ' suara'">0 suara</span>
-                                <span class="vote-pct-toxic fw-bold" style="color: var(--secondary-dark);" th:text="${cerita.pctToxic} + '% Toxic'">0% Toxic</span>
-                            </div>
-                            
-                            <div class="text-center text-muted small mt-1" th:if="${cerita.pilihanUserAktif != null}">
-                                Kamu memilih: <span class="fw-bold" th:text="${cerita.pilihanUserAktif == 'HEALTHY' ? '💚 Healthy' : '🚩 Toxic'}"></span>
+                            <div class="vote-result" th:classappend="${cerita.pilihanUserAktif == null} ? 'd-none' : ''">
+                                <div class="vote-bar-wrap rounded-pill mb-1" 
+                                    th:style="'height: 6px; width: 100%; transition: background 0.5s ease; background: linear-gradient(to right, var(--primary-dark) ' + ${cerita.pctHealthy} + '%, var(--secondary-dark) ' + ${cerita.pctHealthy} + '%);'">
+                                </div>
+                                
+                                <div class="d-flex justify-content-between align-items-center" style="font-size:12px;">
+                                    <span class="vote-pct-healthy fw-bold" style="color: var(--primary-dark);" th:text="${cerita.pctHealthy} + '% Healthy'">0% Healthy</span>
+                                    <span class="vote-total text-muted" th:text="${cerita.totalVote} + ' suara'">0 suara</span>
+                                    <span class="vote-pct-toxic fw-bold" style="color: var(--secondary-dark);" th:text="${cerita.pctToxic} + '% Toxic'">0% Toxic</span>
+                                </div>
+                                
+                                <div class="text-center text-muted small mt-1" th:if="${cerita.pilihanUserAktif != null}">
+                                    Kamu memilih: <span class="fw-bold" th:text="${cerita.pilihanUserAktif == 'HEALTHY' ? '💚 Healthy' : '🚩 Toxic'}"></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="interaction-row d-flex gap-4 text-muted" style="font-size: 14.5px;">
-                        
-                        <div class="d-flex align-items-center gap-1 interaction-btn hover-primary">
-                            <form th:action="@{/like/toggle}" method="POST" class="m-0 p-0 d-inline">
+                        <div class="interaction-row d-flex gap-4 text-muted" style="font-size: 14.5px;">
+                            
+                            <div class="d-flex align-items-center gap-1 interaction-btn hover-primary">
+                                <form th:action="@{/like/toggle}" method="POST" class="m-0 p-0 d-inline">
+                                    <input type="hidden" name="ceritaId" th:value="${cerita.id}">
+                                    <input type="hidden" name="userId" th:value="${param.userId[0]}">
+                                    <input type="hidden" name="token" th:value="${param.token}">
+                                    <input type="hidden" name="redirect" value="home">
+                                    
+                                    <button th:if="${likedCeritaIds != null and #lists.contains(likedCeritaIds, cerita.id)}" 
+                                            type="submit" class="btn p-0 border-0 bg-transparent text-danger m-0 d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-heart-fill"></i>
+                                    </button>
+                                    
+                                    <button th:unless="${likedCeritaIds != null and #lists.contains(likedCeritaIds, cerita.id)}" 
+                                            type="submit" class="btn p-0 border-0 bg-transparent text-muted m-0 d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </form>
+                                <span th:text="${#lists.size(cerita.daftarLike)}" class="align-self-center">0</span>
+                            </div>
+
+                            <div class="interaction-btn hover-primary" th:onclick="'toggleKomentar(' + ${cerita.id} + ')'" style="cursor: pointer;">
+                                <i class="bi bi-chat"></i> <span th:text="${#lists.size(cerita.daftarKomentar)}">0</span>
+                            </div>
+                            
+                            <form th:action="@{/api/bookmark/toggle}" method="POST" class="d-inline interaction-btn hover-primary form-bookmark-ajax">
                                 <input type="hidden" name="ceritaId" th:value="${cerita.id}">
                                 <input type="hidden" name="userId" th:value="${param.userId[0]}">
                                 <input type="hidden" name="token" th:value="${param.token}">
-                                <input type="hidden" name="redirect" value="home">
                                 
-                                <button th:if="${likedCeritaIds != null and #lists.contains(likedCeritaIds, cerita.id)}" 
-                                        type="submit" class="btn p-0 border-0 bg-transparent text-danger m-0 d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-heart-fill"></i>
+                                <button th:if="${bookmarkedIds != null and #lists.contains(bookmarkedIds, cerita.id)}" 
+                                        type="submit" class="btn p-0 border-0 bg-transparent text-primary">
+                                    <i class="bi bi-bookmark-fill"></i>
                                 </button>
                                 
-                                <button th:unless="${likedCeritaIds != null and #lists.contains(likedCeritaIds, cerita.id)}" 
-                                        type="submit" class="btn p-0 border-0 bg-transparent text-muted m-0 d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-heart"></i>
+                                <button th:unless="${bookmarkedIds != null and #lists.contains(bookmarkedIds, cerita.id)}" 
+                                        type="submit" class="btn p-0 border-0 bg-transparent text-muted">
+                                    <i class="bi bi-bookmark"></i>
                                 </button>
                             </form>
-                            <span th:text="${#lists.size(cerita.daftarLike)}" class="align-self-center">0</span>
+                            
+                            <div class="interaction-btn hover-primary"><i class="bi bi-share"></i></div>
                         </div>
 
-                        <div class="interaction-btn hover-primary" th:onclick="'toggleKomentar(' + ${cerita.id} + ')'" style="cursor: pointer;">
-                            <i class="bi bi-chat"></i> <span th:text="${#lists.size(cerita.daftarKomentar)}">0</span>
+                        <div th:id="'area-komentar-' + ${cerita.id}" class="mt-3 pt-3 border-top d-none">
+                            
+                            <div th:each="komen : ${cerita.daftarKomentar}" class="mb-2 d-flex gap-2">
+                                <img th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${komen.user.username}" class="rounded-circle border" style="width: 24px; height: 24px;">
+                                <div class="bg-light rounded-3 px-3 py-2 w-100">
+                                    <strong style="font-size: 0.85rem; color: var(--primary-dark);" th:text="${komen.user.username}">Username</strong>
+                                    <p class="mb-0 text-dark" style="font-size: 0.9rem;" th:text="${komen.isiKomentar}">Isi komentar ada di sini.</p>
+                                </div>
+                            </div>
+
+                            <form th:action="@{/homepage/cerita/komentar}" method="POST" class="d-flex gap-2 mt-3">
+                                <input type="hidden" name="ceritaId" th:value="${cerita.id}">
+                                <input type="hidden" name="userId" th:value="${param.userId[0]}">
+                                <input type="hidden" name="token" th:value="${param.token}">
+                                
+                                <img th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${userAktif}" class="rounded-circle border" style="width: 35px; height: 35px;">
+                                <input type="text" name="isiKomentar" class="form-control form-control-sm rounded-pill px-3" placeholder="Tulis komentar..." required style="font-size: 0.9rem; background: var(--neutral-pale); border: none;">
+                                <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3 fw-bold"><i class="bi bi-send"></i></button>
+                            </form>
                         </div>
-                        
-                        <form th:action="@{/api/bookmark/toggle}" method="POST" class="d-inline interaction-btn hover-primary form-bookmark-ajax">
-                            <input type="hidden" name="ceritaId" th:value="${cerita.id}">
-                            <input type="hidden" name="userId" th:value="${param.userId[0]}">
-                            <input type="hidden" name="token" th:value="${param.token}">
-                            
-                            <button th:if="${bookmarkedIds != null and #lists.contains(bookmarkedIds, cerita.id)}" 
-                                    type="submit" class="btn p-0 border-0 bg-transparent text-primary">
-                                <i class="bi bi-bookmark-fill"></i>
-                            </button>
-                            
-                            <button th:unless="${bookmarkedIds != null and #lists.contains(bookmarkedIds, cerita.id)}" 
-                                    type="submit" class="btn p-0 border-0 bg-transparent text-muted">
-                                <i class="bi bi-bookmark"></i>
-                            </button>
-                        </form>
-                        
-                        <div class="interaction-btn hover-primary"><i class="bi bi-share"></i></div>
+
                     </div>
+                </div>
+            </article>
+            <div class="d-flex justify-content-between align-items-center p-3 mb-0 border-top" style="border-color: #EFEBE4 !important;">
+                <a th:href="@{/homepage(userId=${param.userId}, token=${param.token}, page=${currentPage - 1}, activeTab='foryou')}" 
+                th:classappend="${currentPage == 0} ? 'disabled text-muted' : 'text-primary'"
+                class="btn btn-link text-decoration-none fw-bold d-flex align-items-center gap-2" style="font-size: 14px;">
+                    <i class="bi bi-arrow-left"></i> Sebelumnya
+                </a>
 
-                    <div th:id="'area-komentar-' + ${cerita.id}" class="mt-3 pt-3 border-top d-none">
+                <span class="text-muted small fw-medium">
+                    Halaman <span th:text="${currentPage + 1}">1</span>
+                </span>
+
+                <a th:href="@{/homepage(userId=${param.userId}, token=${param.token}, page=${currentPage + 1}, activeTab='foryou')}"
+                th:classappend="${isLastPageForYou} ? 'disabled text-muted' : 'text-primary'"
+                class="btn btn-link text-decoration-none fw-bold d-flex align-items-center gap-2" style="font-size: 14px;">
+                    Selanjutnya <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div id="following-tab" class="tab-content d-none">
+            <div th:if="${#lists.isEmpty(daftarFollowing)}" class="text-center py-5 mt-4 text-muted">
+                <div style="font-size: 3rem;">📭</div>
+                <h5 class="fw-bold mt-3 mb-2" style="color: var(--neutral);">Belum Ada Cerita</h5>
+                <p style="font-size: 14.5px;">User yang kamu ikuti belum membagikan cerita, atau kamu belum mengikuti siapapun.</p>
+            </div>
+
+            <article class="post-card p-3 p-md-4 hover-effect" th:each="cerita : ${daftarFollowing}">
+                <div class="d-flex gap-3">
+                    <img th:src="'https://api.dicebear.com/7.x/miniavs/svg?seed=' + ${cerita.namaAnonim}" class="rounded-circle avatar-teal" style="width:48px; height:48px; flex-shrink: 0;">
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <span class="fw-bold" style="color: var(--neutral);" th:text="${cerita.namaAnonim}">Nama Penulis</span>
+                            <span class="text-muted small" th:text="${#temporals.format(cerita.tanggalDibuat, 'dd MMM, HH:mm')}">Waktu</span>
+                        </div>
                         
-                        <div th:each="komen : ${cerita.daftarKomentar}" class="mb-2 d-flex gap-2">
-                            <img th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${komen.user.username}" class="rounded-circle border" style="width: 24px; height: 24px;">
-                            <div class="bg-light rounded-3 px-3 py-2 w-100">
-                                <strong style="font-size: 0.85rem; color: var(--primary-dark);" th:text="${komen.user.username}">Username</strong>
-                                <p class="mb-0 text-dark" style="font-size: 0.9rem;" th:text="${komen.isiKomentar}">Isi komentar ada di sini.</p>
+                        <p class="post-text mb-2" th:text="${cerita.isiCerita}">Isi curhatan</p>
+                        
+                        <div class="mt-2 d-flex gap-1 flex-wrap">
+                            <span th:each="singleTag : ${#strings.arraySplit(cerita.tag, ',')}" 
+                                class="badge bg-light text-secondary border rounded-pill px-2 py-1 small">
+                                #<span th:text="${singleTag}"></span>
+                            </span>
+                        </div>
+
+                        <div class="voting-box rounded-4 p-3 mb-3 border" th:data-id="${cerita.id}" style="border-color: #EFEBE4 !important;">
+                            <div class="vote-question small fw-bold text-muted mb-2">Menurutmu, apakah hubungan ini?</div>
+                            
+                            <div class="d-flex justify-content-center gap-2 mb-2" th:classappend="${cerita.pilihanUserAktif != null} ? 'd-none' : ''">
+                                <button class="btn btn-vote btn-vote-healthy flex-grow-1 py-2 rounded-pill" data-vote="HEALTHY">💚 Healthy</button>
+                                <button class="btn btn-vote btn-vote-toxic flex-grow-1 py-2 rounded-pill" data-vote="TOXIC">🚩 Toxic</button>
+                            </div>
+                            
+                            <div class="vote-result" th:classappend="${cerita.pilihanUserAktif == null} ? 'd-none' : ''">
+                                <div class="vote-bar-wrap rounded-pill mb-1" 
+                                    th:style="'height: 6px; width: 100%; transition: background 0.5s ease; background: linear-gradient(to right, var(--primary-dark) ' + ${cerita.pctHealthy} + '%, var(--secondary-dark) ' + ${cerita.pctHealthy} + '%);'">
+                                </div>
+                                
+                                <div class="d-flex justify-content-between align-items-center" style="font-size:12px;">
+                                    <span class="vote-pct-healthy fw-bold" style="color: var(--primary-dark);" th:text="${cerita.pctHealthy} + '% Healthy'">0% Healthy</span>
+                                    <span class="vote-total text-muted" th:text="${cerita.totalVote} + ' suara'">0 suara</span>
+                                    <span class="vote-pct-toxic fw-bold" style="color: var(--secondary-dark);" th:text="${cerita.pctToxic} + '% Toxic'">0% Toxic</span>
+                                </div>
+                                
+                                <div class="text-center text-muted small mt-1" th:if="${cerita.pilihanUserAktif != null}">
+                                    Kamu memilih: <span class="fw-bold" th:text="${cerita.pilihanUserAktif == 'HEALTHY' ? '💚 Healthy' : '🚩 Toxic'}"></span>
+                                </div>
                             </div>
                         </div>
 
-                        <form th:action="@{/homepage/cerita/komentar}" method="POST" class="d-flex gap-2 mt-3">
-                            <input type="hidden" name="ceritaId" th:value="${cerita.id}">
-                            <input type="hidden" name="userId" th:value="${param.userId[0]}">
-                            <input type="hidden" name="token" th:value="${param.token}">
+                        <div class="interaction-row d-flex gap-4 text-muted" style="font-size: 14.5px;">
                             
-                            <img th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${userAktif}" class="rounded-circle border" style="width: 35px; height: 35px;">
-                            <input type="text" name="isiKomentar" class="form-control form-control-sm rounded-pill px-3" placeholder="Tulis komentar..." required style="font-size: 0.9rem; background: var(--neutral-pale); border: none;">
-                            <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3 fw-bold"><i class="bi bi-send"></i></button>
-                        </form>
+                            <div class="d-flex align-items-center gap-1 interaction-btn hover-primary">
+                                <form th:action="@{/like/toggle}" method="POST" class="m-0 p-0 d-inline">
+                                    <input type="hidden" name="ceritaId" th:value="${cerita.id}">
+                                    <input type="hidden" name="userId" th:value="${param.userId[0]}">
+                                    <input type="hidden" name="token" th:value="${param.token}">
+                                    <input type="hidden" name="redirect" value="home">
+                                    
+                                    <button th:if="${likedCeritaIds != null and #lists.contains(likedCeritaIds, cerita.id)}" 
+                                            type="submit" class="btn p-0 border-0 bg-transparent text-danger m-0 d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-heart-fill"></i>
+                                    </button>
+                                    
+                                    <button th:unless="${likedCeritaIds != null and #lists.contains(likedCeritaIds, cerita.id)}" 
+                                            type="submit" class="btn p-0 border-0 bg-transparent text-muted m-0 d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </form>
+                                <span th:text="${#lists.size(cerita.daftarLike)}" class="align-self-center">0</span>
+                            </div>
+
+                            <div class="interaction-btn hover-primary" th:onclick="'toggleKomentar(' + ${cerita.id} + ')'" style="cursor: pointer;">
+                                <i class="bi bi-chat"></i> <span th:text="${#lists.size(cerita.daftarKomentar)}">0</span>
+                            </div>
+                            
+                            <form th:action="@{/api/bookmark/toggle}" method="POST" class="d-inline interaction-btn hover-primary form-bookmark-ajax">
+                                <input type="hidden" name="ceritaId" th:value="${cerita.id}">
+                                <input type="hidden" name="userId" th:value="${param.userId[0]}">
+                                <input type="hidden" name="token" th:value="${param.token}">
+                                
+                                <button th:if="${bookmarkedIds != null and #lists.contains(bookmarkedIds, cerita.id)}" 
+                                        type="submit" class="btn p-0 border-0 bg-transparent text-primary">
+                                    <i class="bi bi-bookmark-fill"></i>
+                                </button>
+                                
+                                <button th:unless="${bookmarkedIds != null and #lists.contains(bookmarkedIds, cerita.id)}" 
+                                        type="submit" class="btn p-0 border-0 bg-transparent text-muted">
+                                    <i class="bi bi-bookmark"></i>
+                                </button>
+                            </form>
+                            
+                            <div class="interaction-btn hover-primary"><i class="bi bi-share"></i></div>
+                        </div>
+
+                        <div th:id="'area-komentar-' + ${cerita.id}" class="mt-3 pt-3 border-top d-none">
+                            
+                            <div th:each="komen : ${cerita.daftarKomentar}" class="mb-2 d-flex gap-2">
+                                <img th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${komen.user.username}" class="rounded-circle border" style="width: 24px; height: 24px;">
+                                <div class="bg-light rounded-3 px-3 py-2 w-100">
+                                    <strong style="font-size: 0.85rem; color: var(--primary-dark);" th:text="${komen.user.username}">Username</strong>
+                                    <p class="mb-0 text-dark" style="font-size: 0.9rem;" th:text="${komen.isiKomentar}">Isi komentar ada di sini.</p>
+                                </div>
+                            </div>
+
+                            <form th:action="@{/homepage/cerita/komentar}" method="POST" class="d-flex gap-2 mt-3">
+                                <input type="hidden" name="ceritaId" th:value="${cerita.id}">
+                                <input type="hidden" name="userId" th:value="${param.userId[0]}">
+                                <input type="hidden" name="token" th:value="${param.token}">
+                                
+                                <img th:src="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + ${userAktif}" class="rounded-circle border" style="width: 35px; height: 35px;">
+                                <input type="text" name="isiKomentar" class="form-control form-control-sm rounded-pill px-3" placeholder="Tulis komentar..." required style="font-size: 0.9rem; background: var(--neutral-pale); border: none;">
+                                <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3 fw-bold"><i class="bi bi-send"></i></button>
+                            </form>
+                        </div>
+
                     </div>
-
                 </div>
-            </div>
-        </article>
-    </div>
+            </article>
+            <div class="d-flex justify-content-between align-items-center p-3 mb-0 border-top" style="border-color: #EFEBE4 !important;">
+                <a th:href="@{/homepage(userId=${param.userId}, token=${param.token}, page=${currentPage - 1}, activeTab='following')}" 
+                th:classappend="${currentPage == 0} ? 'disabled text-muted' : 'text-primary'"
+                class="btn btn-link text-decoration-none fw-bold d-flex align-items-center gap-2" style="font-size: 14px;">
+                    <i class="bi bi-arrow-left"></i> Sebelumnya
+                </a>
 
+                <span class="text-muted small fw-medium">
+                    Halaman <span th:text="${currentPage + 1}">1</span>
+                </span>
+
+                <a th:href="@{/homepage(userId=${param.userId}, token=${param.token}, page=${currentPage + 1}, activeTab='following')}"
+                th:classappend="${isLastPageFollowing} ? 'disabled text-muted' : 'text-primary'"
+                class="btn btn-link text-decoration-none fw-bold d-flex align-items-center gap-2" style="font-size: 14px;">
+                    Selanjutnya <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
 </main>
 
     <aside class="col-lg-3 d-none d-lg-block sidebar-right py-3 px-4">

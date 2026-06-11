@@ -16,13 +16,31 @@ document.addEventListener('DOMContentLoaded', function () {
     const checkboxes = document.querySelectorAll(".tag-checkbox");
     const finalTagsInput = document.getElementById("finalTagsInput");
     const labelDropdown = document.getElementById("selectedTagsLabel");
-    const tabItems = document.querySelectorAll('.tab-item');
-    const feedForYou = document.getElementById('feed-foryou');
-    const feedFollowing = document.getElementById('feed-following');
+    const tabItems = document.querySelectorAll('.feed-tabs .tab-item');
+    const forYouTabContent = document.getElementById('foryou-tab');
+    const followingTabContent = document.getElementById('following-tab');
     const imageInput = document.getElementById('imageInput');
     const imagePreviewContainer = document.getElementById('imagePreviewContainer');
     const imagePreview = document.getElementById('imagePreview');
     const tagInputContainer = document.getElementById('tagInputContainer');
+    // --- TAMBAHKAN LOGIKA INI AGAR POSISI TAB TIDAK RESET SAAT RELOAD ---
+    const activeTabParam = urlParams.get('activeTab');
+    if (activeTabParam === 'following') {
+        // 1. Pindahkan status tombol aktif ke tab following
+        tabItems.forEach(t => t.classList.remove('active', 'fw-bold'));
+        const followingBtn = document.querySelector('.feed-tabs .tab-item[data-tab="following"]');
+        if (followingBtn) followingBtn.classList.add('active', 'fw-bold');
+
+        // 2. Tampilkan konten following dan sembunyikan foryou
+        if (forYouTabContent) {
+            forYouTabContent.classList.remove('active');
+            forYouTabContent.classList.add('d-none');
+        }
+        if (followingTabContent) {
+            followingTabContent.classList.add('active');
+            followingTabContent.classList.remove('d-none');
+        }
+    }
     let currentImageBase64 = '';
 
     /* LOGIKA AJAX VOTING / RATING */
@@ -101,21 +119,43 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    /* LOGIKA TAB SWITCHING (DUPLIKASI SUDAH DIHAPUS) */
+    /* ==========================================================================
+       LOGIKA TAB SWITCHING (KONSISTEN & BERSIH — ZERO REFRESH)
+       ========================================================================== */
     tabItems.forEach(tab => {
         tab.addEventListener('click', function () {
-            tabItems.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
+            // 1. Reset status aktif visual pada teks tab button
+            tabItems.forEach(t => t.classList.remove('active', 'fw-bold'));
+            
+            // 2. Beri efek tebal dan aktif pada tab yang dipilih
+            this.classList.add('active', 'fw-bold');
 
-            if (feedFollowing) {
-                if (this.getAttribute('data-tab') === 'foryou') {
-                    feedForYou.classList.remove('d-none'); 
-                    feedFollowing.classList.add('d-none');
-                } else {
-                    feedForYou.classList.add('d-none'); 
-                    feedFollowing.classList.remove('d-none');
+            // 3. Ambil tanda pengenal tab (foryou / following)
+            const targetTab = this.getAttribute('data-tab');
+
+            // 4. Lakukan manipulasi class active / d-none secara bergantian
+            if (targetTab === 'foryou') {
+                if (forYouTabContent) {
+                    forYouTabContent.classList.add('active');
+                    forYouTabContent.classList.remove('d-none');
+                }
+                if (followingTabContent) {
+                    followingTabContent.classList.remove('active');
+                    followingTabContent.classList.add('d-none');
+                }
+            } else if (targetTab === 'following') {
+                if (followingTabContent) {
+                    followingTabContent.classList.add('active');
+                    followingTabContent.classList.remove('d-none');
+                }
+                if (forYouTabContent) {
+                    forYouTabContent.classList.remove('active');
+                    forYouTabContent.classList.add('d-none');
                 }
             }
+            // Tambahkan ini di baris paling bawah sebelum penutupan event listener click tabItems
+            urlParams.set('activeTab', targetTab);
+            window.history.replaceState({}, '', `${window.location.pathname}?${urlParams.toString()}`);
         });
     });
 

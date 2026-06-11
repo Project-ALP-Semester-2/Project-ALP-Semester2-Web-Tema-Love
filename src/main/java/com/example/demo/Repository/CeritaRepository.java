@@ -17,4 +17,6 @@ public interface CeritaRepository extends JpaRepository<Cerita, Long> {
     Page<Cerita> findAllCeritaTerbaru(Pageable pageable);
 
     List<Cerita> findByUserOrderByTanggalDibuatDesc(User user);
+    // Ubah di dalam interface CeritaRepository kamu menjadi seperti ini:
+    Page<Cerita> findByUserInOrderByTanggalDibuatDesc(List<User> users, Pageable pageable);
 }
